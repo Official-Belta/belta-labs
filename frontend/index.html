@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BELTA Labs — DeFi IL Hedging Protocol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #0a0e17;
+      --bg-secondary: #111827;
+      --bg-card: #151c2c;
+      --bg-card-hover: #1a2236;
+      --border: #1e293b;
+      --border-glow: rgba(0, 255, 136, 0.15);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #00ff88;
+      --accent-dim: rgba(0, 255, 136, 0.12);
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #00ff88;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    html { font-size: 15px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ─── Layout ────────────────────────────────────── */
+    .app-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+
+    /* ─── Header ────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+      position: sticky;
+      top: 0;
+      background: var(--bg-primary);
+      z-index: 100;
+    }
+    .logo-section { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-blue));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 18px; color: #0a0e17;
+      box-shadow: 0 0 20px rgba(0,255,136,0.2);
+    }
+    .logo-text {
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .logo-tag {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .network-badge {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .network-dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent);
+    }
+    #btn-connect {
+      padding: 10px 22px;
+      background: linear-gradient(135deg, var(--accent), #00cc6a);
+      color: #0a0e17;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    #btn-connect:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,255,136,0.3); }
+    #btn-connect.connected {
+      background: var(--bg-card);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    #wallet-info {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ─── Status Bar ────────────────────────────────── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 24px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    #btn-refresh {
+      background: none; border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    #btn-refresh:hover { border-color: var(--accent); color: var(--accent); }
+    #btn-refresh.spinning { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── Grid ──────────────────────────────────────── */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .full-width { grid-column: 1 / -1; }
+
+    /* ─── Cards ─────────────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: rgba(255,255,255,0.08); }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title .icon { font-size: 1rem; }
+    .card-body { padding: 20px; }
+
+    /* ─── Stats Grid ───────────────────────────────── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+    .stat-box {
+      padding: 16px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+    }
+    .stat-value.accent { color: var(--accent); }
+    .stat-value.blue { color: var(--accent-blue); }
+
+    /* ─── Health Bar ───────────────────────────────── */
+    .health-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 3px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .health-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+    .health-fill.healthy { background: var(--accent); box-shadow: 0 0 8px rgba(0,255,136,0.4); }
+    .health-fill.warning { background: var(--warning); box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+    .health-fill.critical { background: var(--danger); box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+
+    /* ─── Forms ─────────────────────────────────────── */
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--text-muted); }
+    .form-hint {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+
+    .btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #00cc6a);
+      color: #0a0e17;
+    }
+    .btn-primary:hover { box-shadow: 0 4px 16px rgba(0,255,136,0.3); transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--text-muted); }
+    .btn-danger {
+      background: rgba(239,68,68,0.12);
+      color: var(--danger);
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); }
+    .btn-blue {
+      background: rgba(59,130,246,0.12);
+      color: var(--accent-blue);
+      border: 1px solid rgba(59,130,246,0.2);
+    }
+    .btn-blue:hover { background: rgba(59,130,246,0.2); }
+
+    /* ─── Cooldown ─────────────────────────────────── */
+    .cooldown-status {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+    .cooldown-none { background: rgba(255,255,255,0.04); color: var(--text-muted); }
+    .cooldown-waiting { background: rgba(245,158,11,0.1); color: var(--warning); }
+    .cooldown-ready { background: rgba(0,255,136,0.1); color: var(--accent); }
+
+    /* ─── Alert ────────────────────────────────────── */
+    .alert { color: var(--danger) !important; font-weight: 600; }
+
+    /* ─── Separator ────────────────────────────────── */
+    .separator {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+
+    /* ─── Canvas Chart ─────────────────────────────── */
+    .chart-container {
+      width: 100%;
+      padding: 8px 0;
+    }
+    .chart-container canvas { display: block; }
+    .chart-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    /* ─── Oracle Params Row ─────────────────────────── */
+    .param-row {
+      display: flex; gap: 12px; margin-bottom: 16px;
+    }
+    .param-chip {
+      flex: 1;
+      padding: 10px 14px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .param-chip .label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .param-chip .value {
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    /* ─── Toast ─────────────────────────────────────── */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toast {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 500;
+      backdrop-filter: blur(12px);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      max-width: 380px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .toast.show { transform: translateX(0); }
+    .toast-success { background: rgba(0,255,136,0.12); color: var(--accent); border: 1px solid rgba(0,255,136,0.2); }
+    .toast-error { background: rgba(239,68,68,0.12); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); }
+    .toast-info { background: rgba(59,130,246,0.12); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.2); }
+    .toast-icon { font-size: 1rem; }
+
+    /* ─── Scrollbar ────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ─── Responsive ───────────────────────────────── */
+    @media (max-width: 768px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .header { flex-wrap: wrap; gap: 12px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .param-row { flex-wrap: wrap; }
+    }
+
+    /* ─── Glow effects ─────────────────────────────── */
+    .glow-green { box-shadow: inset 0 1px 0 rgba(0,255,136,0.06), 0 0 0 1px var(--border-glow); }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- ─── Header ──────────────────────────────────── -->
+    <header class="header">
+      <div class="logo-section">
+        <div class="logo-icon">B</div>
+        <div>
+          <div class="logo-text">BELTA Labs</div>
+          <div class="logo-tag">IL Hedging Protocol</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="network-badge">
+          <span class="network-dot"></span>
+          Sepolia
+        </div>
+        <div id="wallet-info">
+          <span id="wallet-address"></span>
+        </div>
+        <button id="btn-connect">Connect Wallet</button>
+      </div>
+    </header>
+
+    <!-- ─── Status Bar ──────────────────────────────── -->
+    <div class="status-bar">
+      <span id="status-text">Ready</span>
+      <button id="btn-refresh" title="Refresh data">&#8635;</button>
+    </div>
+
+    <!-- ─── Dashboard Grid ──────────────────────────── -->
+    <div class="dashboard-grid">
+
+      <!-- ── Protocol Stats ───────────────────────── -->
+      <div class="card full-width glow-green">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">&#9670;</span> Protocol Overview</div>
+        </div>
+        <div class="card-body">
+          <div class="stats-row">
+            <div class="stat-box">
+              <div class="stat-label">Pool TVL</div>
+              <div class="stat-value accent" id="pool-tvl">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Total Shares</div>
+              <div class="stat-value" id="pool-shares">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Treasury Buffer</div>
+              <div class="stat-value accent" id="treasury-buffer">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Utilization</div>
+              <div class="stat-value blue" id="utilization-rate">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Premiums Earned</div>
+              <div class="stat-value" id="premiums-earned">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Claims Paid</div>
+              <div class="stat-value" id="claims-paid">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Treasury Health ──────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">&#9748;</span> Treasury Health</div>
+        </div>
+        <div class="card-body">
+          <div class="stat-box" style="margin-bottom: 14px;">
+            <div class="stat-label">Buffer Balance</div>
+            <div class="stat-value accent" id="treasury-buffer">--</div>
+            <div class="health-bar">
+              <div class="health-fill healthy" id="buffer-health-bar" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="stats-row" style="grid-template-columns: 1fr 1fr;">
+            <div class="stat-box">
+              <div class="stat-label">Health</div>
+              <div class="stat-value" id="buffer-health">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Target</div>
+              <div class="stat-value" id="treasury-target">--</div>
+            </div>
+          </div>
+          <div style="margin-top: 14px;">
+            <div class="stat-box">
+              <div class="stat-label">Needs Self-Healing</div>
+              <div class="stat-value" id="needs-healing">--</div>
+            </div>
+          </div>
+          <div style="margin-top: 14px;">
+            <div class="stat-box">
+              <div class="stat-label">Net Premium Income</div>
+              <div class="stat-value" id="net-income">--</div>
+            </div>
+          </div>
+          <div style="margin-top: 14px;">
+            <div class="stat-box">
+              <div class="stat-label">Daily Payout / Limit</div>
+              <div class="stat-value" id="daily-payout">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Premium Oracle ───────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">&#9889;</span> Premium Oracle</div>
+        </div>
+        <div class="card-body">
+          <div class="param-row">
+            <div class="param-chip">
+              <div class="label">Base Rate</div>
+              <div class="value" id="oracle-base-rate">--</div>
+            </div>
+            <div class="param-chip">
+              <div class="label">Kink</div>
+              <div class="value" id="oracle-kink">--</div>
+            </div>
+            <div class="param-chip">
+              <div class="label">Max Mult</div>
+              <div class="value" id="oracle-max-mult">--</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="util-chart"></canvas>
+            <div class="chart-label">Utilization vs Premium Rate</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Underwriter Panel ────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">&#9878;</span> Underwriter Pool</div>
+        </div>
+        <div class="card-body">
+          <!-- User balances -->
+          <div class="stats-row" style="grid-template-columns: 1fr 1fr; margin-bottom: 16px;">
+            <div class="stat-box">
+              <div class="stat-label">Your USDC</div>
+              <div class="stat-value" id="usdc-balance">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Your Shares (bUW)</div>
+              <div class="stat-value accent" id="share-balance">--</div>
+            </div>
+          </div>
+          <div class="stat-box" style="margin-bottom: 16px;">
+            <div class="stat-label">Share Value</div>
+            <div class="stat-value" id="share-value">--</div>
+          </div>
+
+          <div class="separator"></div>
+
+          <!-- Deposit -->
+          <div class="form-group">
+            <label class="form-label">Deposit USDC</label>
+            <input type="number" class="form-input" id="deposit-amount" placeholder="0.00" step="0.01" min="0">
+            <div class="form-hint">Allowance: <span id="current-allowance">--</span> USDC</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="btn-approve">Approve</button>
+            <button class="btn btn-primary" id="btn-deposit">Deposit</button>
+          </div>
+
+          <div class="separator"></div>
+
+          <!-- Withdraw -->
+          <div class="form-group">
+            <label class="form-label">Withdraw USDC</label>
+            <input type="number" class="form-input" id="withdraw-amount" placeholder="0.00" step="0.01" min="0">
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-blue" id="btn-request-withdraw">Request Withdrawal</button>
+            <button class="btn btn-danger" id="btn-withdraw">Withdraw</button>
+          </div>
+          <div class="cooldown-status cooldown-none" id="cooldown-status">No request pending</div>
+        </div>
+      </div>
+
+      <!-- ── LP Panel ────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">&#9733;</span> LP Positions &amp; IL Claims</div>
+        </div>
+        <div class="card-body">
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
+            Enter your position details to check claimable IL payouts and claim them.
+          </p>
+          <div class="form-group">
+            <label class="form-label">Pool ID (bytes32)</label>
+            <input type="text" class="form-input" id="claim-pool-id" placeholder="0x...">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label">Tick Lower</label>
+              <input type="number" class="form-input" id="claim-tick-lower" placeholder="-887220">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tick Upper</label>
+              <input type="number" class="form-input" id="claim-tick-upper" placeholder="887220">
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="btn-claim-il">Claim IL Payout</button>
+          </div>
+
+          <div class="separator"></div>
+
+          <div class="stat-box">
+            <div class="stat-label">Protocol Parameters</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+              <div>
+                <span style="font-size: 0.7rem; color: var(--text-muted);">Coverage Cap</span>
+                <div style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600;">45%</div>
+              </div>
+              <div>
+                <span style="font-size: 0.7rem; color: var(--text-muted);">Epoch Duration</span>
+                <div style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600;">7 days</div>
+              </div>
+              <div>
+                <span style="font-size: 0.7rem; color: var(--text-muted);">Daily Pay Limit</span>
+                <div style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600;">5%</div>
+              </div>
+              <div>
+                <span style="font-size: 0.7rem; color: var(--text-muted);">Cooldown</span>
+                <div style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600;">7 days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /dashboard-grid -->
+
+    <!-- ─── Footer ──────────────────────────────────── -->
+    <footer style="text-align: center; padding: 40px 0 20px; border-top: 1px solid var(--border); margin-top: 40px;">
+      <div style="font-size: 0.75rem; color: var(--text-muted);">
+        BELTA Labs &mdash; Impermanent Loss Hedging Protocol
+        &nbsp;&middot;&nbsp; Sepolia Testnet
+        &nbsp;&middot;&nbsp; <a href="https://sepolia.etherscan.io/address/0x67b0e434be06fc63224ee0d0b2e4b08ebd9b1622" target="_blank" rel="noopener">View Contracts</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ─── Toast Container ───────────────────────────── -->
+  <div id="toast-container"></div>
+
+  <!-- ─── Scripts ───────────────────────────────────── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+  <script src="abi.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

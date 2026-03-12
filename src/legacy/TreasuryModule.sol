@@ -4,22 +4,10 @@ pragma solidity ^0.8.26;
 import {ERC20} from "solmate/src/tokens/ERC20.sol";
 import {SafeTransferLib} from "solmate/src/utils/SafeTransferLib.sol";
 
-/// @notice Minimal Aave V3 Pool interface for yield stacking
-interface IAavePool {
-    function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
-    function withdraw(address asset, uint256 amount, address to) external returns (uint256);
-}
-
-/// @notice Minimal aToken interface
-interface IAToken {
-    function balanceOf(address account) external view returns (uint256);
-}
-
 /// @title TreasuryModule
-/// @notice Treasury buffer management + self-healing + Aave yield stacking (Layer 2)
+/// @notice Treasury buffer management + self-healing mechanism
 /// @dev Phase 1-2: integrated with single UnderwriterPool
 ///      Phase 3+: manages Treasury/Senior split (20:80)
-///      Layer 2: Idle buffer funds deposited to Aave for base yield (4-8% APR)
 contract TreasuryModule {
     using SafeTransferLib for ERC20;
 
@@ -35,9 +23,6 @@ contract TreasuryModule {
     event FirstLossAbsorbed(uint256 amount, uint256 remainingBuffer);
     event SelfHealingTriggered(uint256 targetAmount, uint256 healedAmount);
     event ProfitDistributed(uint256 toTreasury, uint256 toSenior);
-    event AaveDeposited(uint256 amount, uint256 totalInAave);
-    event AaveWithdrawn(uint256 amount, uint256 totalInAave);
-    event AaveYieldHarvested(uint256 yieldAmount);
 
     // ─── Constants ──────────────────────────────────────────
     uint256 public constant BUFFER_RATIO_BPS = 2000; // 20% of Senior balance
@@ -62,14 +47,6 @@ contract TreasuryModule {
     // Phase 3+ split tracking
     uint256 public seniorBalance;
     bool public dualPoolEnabled;
-
-    // ─── Aave Yield Stacking (Layer 2) ──────────────────────
-    IAavePool public aavePool;
-    IAToken public aToken;            // aUSDC token
-    bool public aaveEnabled;
-    uint256 public aaveDeposited;     // Tracks principal deposited (not yield)
-    uint256 public totalYieldEarned;
-    uint256 public reserveRatioBps = 3000; // Keep 30% liquid, deposit 70% to Aave
 
     // ─── Constructor ────────────────────────────────────────
     constructor(ERC20 _asset) {
@@ -143,101 +120,7 @@ contract TreasuryModule {
         emit ProfitDistributed(toTreasury, toSenior);
     }
 
-    // ─── Aave Yield Stacking (Layer 2) ────────────────────
-
-    /// @notice Deposit idle buffer funds to Aave for yield
-    /// @dev Keeps reserveRatioBps liquid for IL claims, deposits the rest
-    function depositToAave() external onlyAuthorized {
-        if (!aaveEnabled || address(aavePool) == address(0)) return;
-
-        uint256 liquidReserve = bufferBalance * reserveRatioBps / BPS;
-        uint256 deployable = bufferBalance > liquidReserve ? bufferBalance - liquidReserve : 0;
-
-        // Only deploy if there's meaningful amount (avoid dust deposits)
-        if (deployable < 100e6) return; // 100 USDC minimum (6 decimals)
-
-        // Reduce buffer balance (funds leave treasury to Aave)
-        bufferBalance -= deployable;
-        aaveDeposited += deployable;
-
-        // Approve and supply to Aave
-        asset.safeApprove(address(aavePool), deployable);
-        aavePool.supply(address(asset), deployable, address(this), 0);
-
-        emit AaveDeposited(deployable, aaveDeposited);
-    }
-
-    /// @notice Withdraw from Aave back to buffer (for IL claims or rebalance)
-    /// @param amount Amount to withdraw (0 = withdraw all)
-    function withdrawFromAave(uint256 amount) external onlyAuthorized {
-        if (!aaveEnabled || aaveDeposited == 0) return;
-
-        uint256 toWithdraw = amount == 0 ? type(uint256).max : amount;
-        uint256 withdrawn = aavePool.withdraw(address(asset), toWithdraw, address(this));
-
-        // Calculate yield earned
-        if (withdrawn > aaveDeposited) {
-            uint256 yield_ = withdrawn - aaveDeposited;
-            totalYieldEarned += yield_;
-            bufferBalance += withdrawn;
-            aaveDeposited = 0;
-            emit AaveYieldHarvested(yield_);
-        } else {
-            bufferBalance += withdrawn;
-            aaveDeposited -= withdrawn;
-        }
-
-        emit AaveWithdrawn(withdrawn, aaveDeposited);
-    }
-
-    /// @notice Harvest Aave yield without withdrawing principal
-    /// @dev aToken balance grows over time; excess over principal is yield
-    function harvestAaveYield() external onlyAuthorized {
-        if (!aaveEnabled || address(aToken) == address(0)) return;
-
-        uint256 aTokenBalance = aToken.balanceOf(address(this));
-        if (aTokenBalance <= aaveDeposited) return; // No yield yet
-
-        uint256 yield_ = aTokenBalance - aaveDeposited;
-
-        // Withdraw only the yield portion
-        uint256 withdrawn = aavePool.withdraw(address(asset), yield_, address(this));
-        totalYieldEarned += withdrawn;
-        bufferBalance += withdrawn;
-
-        emit AaveYieldHarvested(withdrawn);
-    }
-
-    /// @notice Get total assets including Aave deposits
-    function totalManagedAssets() external view returns (uint256) {
-        uint256 aaveBalance = aaveEnabled && address(aToken) != address(0)
-            ? aToken.balanceOf(address(this))
-            : 0;
-        return bufferBalance + aaveBalance;
-    }
-
-    /// @notice Get current Aave yield (unrealized)
-    function pendingAaveYield() external view returns (uint256) {
-        if (!aaveEnabled || address(aToken) == address(0)) return 0;
-        uint256 aTokenBalance = aToken.balanceOf(address(this));
-        return aTokenBalance > aaveDeposited ? aTokenBalance - aaveDeposited : 0;
-    }
-
     // ─── Admin ──────────────────────────────────────────────
-
-    function setAavePool(address _aavePool, address _aToken) external onlyOwner {
-        aavePool = IAavePool(_aavePool);
-        aToken = IAToken(_aToken);
-    }
-
-    function setAaveEnabled(bool _enabled) external onlyOwner {
-        aaveEnabled = _enabled;
-    }
-
-    function setReserveRatio(uint256 _ratioBps) external onlyOwner {
-        require(_ratioBps <= BPS, "ratio > 100%");
-        reserveRatioBps = _ratioBps;
-    }
 
     function setAuthorized(address addr, bool isAuthorized) external onlyOwner {
         authorized[addr] = isAuthorized;

@@ -169,7 +169,7 @@ Treasury 순수익 → xBELTA 환율 상승
 
 | 파일 | 경로 | 설명 |
 |---|---|---|
-| 백서 | `BELTA_LABS_Whitepaper_v6.0.html` | 최신 백서 (3-Layer Hedging) |
+| 백서 | `BELTA_LABS_Whitepaper_v5.0.1.html` | 최신 백서 |
 | 홈페이지 | `index.html` (= BELTA_Home.html) | GitHub Pages 메인 |
 | 로드맵 | `BELTA_Roadmap_KR_v3.html` | 홈에서 iframe 연결 |
 | 백테스트 | `phase_backtest_v4_2_0.py` | Python, 로컬 실행 |

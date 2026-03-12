@@ -11,11 +11,8 @@ import {BeforeSwapDelta} from "@v4-core/types/BeforeSwapDelta.sol";
 import {StateLibrary} from "@v4-core/libraries/StateLibrary.sol";
 import {TickMath} from "@v4-core/libraries/TickMath.sol";
 import {ModifyLiquidityParams, SwapParams} from "@v4-core/types/PoolOperation.sol";
-import {LPFeeLibrary} from "@v4-core/libraries/LPFeeLibrary.sol";
-import {BeforeSwapDeltaLibrary} from "@v4-core/types/BeforeSwapDelta.sol";
 
 import {PremiumOracle} from "./PremiumOracle.sol";
-import {VolatilityOracle} from "./VolatilityOracle.sol";
 
 interface IUnderwriterPool {
     function receivePremium(uint256 amount) external;
@@ -23,16 +20,14 @@ interface IUnderwriterPool {
 }
 
 /// @title BELTAHook
-/// @notice Uniswap V4 Hook for IL measurement, premium collection, and dynamic fees
+/// @notice Uniswap V4 Hook for IL measurement and premium collection
 /// @dev Core hook contract for BELTA Labs IL hedging protocol.
 ///      Hook callbacks only perform accounting. Actual token transfers
 ///      happen via claimILPayout() and collectPremiums() outside hook context.
-///      Layer 1: Dynamic Fee — beforeSwap returns volatility-adjusted swap fee
 contract BELTAHook is IHooks {
     using PoolIdLibrary for PoolKey;
     using StateLibrary for IPoolManager;
     using BalanceDeltaLibrary for BalanceDelta;
-    using LPFeeLibrary for uint24;
 
     // ─── Errors ─────────────────────────────────────────────
     error OnlyPoolManager();
@@ -52,7 +47,6 @@ contract BELTAHook is IHooks {
     event ILClaimed(PoolId indexed poolId, address indexed lp, uint256 amount);
     event PremiumsCollected(PoolId indexed poolId, uint256 amount);
     event EpochAdvanced(PoolId indexed poolId, uint256 epoch, uint256 timestamp);
-    event DynamicFeeApplied(PoolId indexed poolId, uint24 fee);
 
     // ─── Constants ──────────────────────────────────────────
     uint256 public constant COVERAGE_CAP_BPS = 4500; // 45% max IL coverage
@@ -94,7 +88,6 @@ contract BELTAHook is IHooks {
     // Connected contracts
     IUnderwriterPool public underwriterPool;
     PremiumOracle public premiumOracle;
-    VolatilityOracle public volatilityOracle;
     address public epochSettlement;
 
     // ─── Modifiers ──────────────────────────────────────────
@@ -124,7 +117,7 @@ contract BELTAHook is IHooks {
             afterAddLiquidity: true,
             beforeRemoveLiquidity: false,
             afterRemoveLiquidity: true,
-            beforeSwap: true,
+            beforeSwap: false,
             afterSwap: true,
             beforeDonate: false,
             afterDonate: false,
@@ -278,19 +271,12 @@ contract BELTAHook is IHooks {
         }
     }
 
-    /// @notice Dynamic Fee: returns volatility-adjusted swap fee before each swap
-    /// @dev Fee is only applied if pool was initialized with DYNAMIC_FEE_FLAG (0x800000)
-    ///      High volatility → higher fee → more LP revenue → offsets IL risk
-    function beforeSwap(address, PoolKey calldata key, SwapParams calldata, bytes calldata)
+    function beforeSwap(address, PoolKey calldata, SwapParams calldata, bytes calldata)
         external
-        onlyPoolManager
+        pure
         returns (bytes4, BeforeSwapDelta, uint24)
     {
-        uint24 fee = _getDynamicSwapFee(key.toId());
-        // Set OVERRIDE_FEE_FLAG so PoolManager uses this fee for this swap
-        uint24 feeWithFlag = fee | LPFeeLibrary.OVERRIDE_FEE_FLAG;
-        emit DynamicFeeApplied(key.toId(), fee);
-        return (IHooks.beforeSwap.selector, BeforeSwapDeltaLibrary.ZERO_DELTA, feeWithFlag);
+        revert("not implemented");
     }
 
     function afterSwap(address, PoolKey calldata key, SwapParams calldata, BalanceDelta, bytes calldata)
@@ -399,16 +385,6 @@ contract BELTAHook is IHooks {
         ilBps = ilV3 * BPS / 1e18;
     }
 
-    // ─── Dynamic Swap Fee (Layer 1) ────────────────────────
-
-    /// @notice Get dynamic swap fee from VolatilityOracle, with 0.3% fallback
-    function _getDynamicSwapFee(PoolId poolId) internal view returns (uint24) {
-        if (address(volatilityOracle) != address(0)) {
-            return volatilityOracle.getDynamicFee(poolId);
-        }
-        return 3000; // 0.3% default
-    }
-
     // ─── Dynamic Premium ────────────────────────────────────
 
     function _getDynamicPremiumRate(PoolId poolId) internal view returns (uint256) {
@@ -459,10 +435,6 @@ contract BELTAHook is IHooks {
 
     function setPremiumOracle(address _oracle) external onlyOwner {
         premiumOracle = PremiumOracle(_oracle);
-    }
-
-    function setVolatilityOracle(address _oracle) external onlyOwner {
-        volatilityOracle = VolatilityOracle(_oracle);
     }
 
     function setEpochSettlement(address _settlement) external onlyOwner {

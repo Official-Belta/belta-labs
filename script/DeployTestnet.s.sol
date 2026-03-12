@@ -17,8 +17,6 @@ import {UnderwriterPool} from "../src/UnderwriterPool.sol";
 import {EpochSettlement} from "../src/EpochSettlement.sol";
 import {PremiumOracle} from "../src/PremiumOracle.sol";
 import {TreasuryModule} from "../src/TreasuryModule.sol";
-import {VolatilityOracle} from "../src/VolatilityOracle.sol";
-import {HedgeManager} from "../src/HedgeManager.sol";
 import {HookMiner} from "./HookMiner.sol";
 
 /// @title DeployTestnet
@@ -35,11 +33,10 @@ contract DeployTestnet is Script {
     // Deterministic CREATE2 deployer (available on all EVM chains)
     address constant CREATE2_DEPLOYER = 0x4e59b44847b379578588920cA78FbF26c0B4956C;
 
-    // Hook 퍼미션 플래그 (Layer 1: beforeSwap 추가 for dynamic fee)
+    // Hook 퍼미션 플래그
     uint160 constant HOOK_FLAGS = uint160(
         Hooks.AFTER_INITIALIZE_FLAG | Hooks.AFTER_ADD_LIQUIDITY_FLAG
-            | Hooks.AFTER_REMOVE_LIQUIDITY_FLAG | Hooks.BEFORE_SWAP_FLAG
-            | Hooks.AFTER_SWAP_FLAG
+            | Hooks.AFTER_REMOVE_LIQUIDITY_FLAG | Hooks.AFTER_SWAP_FLAG
     );
 
     // 테스트넷 시드 금액
@@ -99,18 +96,9 @@ contract DeployTestnet is Script {
         EpochSettlement settlement = new EpochSettlement(address(hook), address(pool));
         console.log("[6] EpochSettlement:", address(settlement));
 
-        // ─── 7. Deploy VolatilityOracle (Layer 1: Dynamic Fee) ─
-        VolatilityOracle volOracle = new VolatilityOracle();
-        console.log("[7] VolatilityOracle:", address(volOracle));
-
-        // ─── 8. Deploy HedgeManager (Layer 3: Perps Hedging) ─
-        HedgeManager hedger = new HedgeManager(ERC20(address(usdc)));
-        console.log("[8] HedgeManager:", address(hedger));
-
-        // ─── 9. Wire contracts ────────────────────────────────
+        // ─── 7. Wire contracts ────────────────────────────────
         hook.setUnderwriterPool(address(pool));
         hook.setPremiumOracle(address(oracle));
-        hook.setVolatilityOracle(address(volOracle));
         hook.setEpochSettlement(address(settlement));
 
         pool.setTreasuryModule(address(treasury));
@@ -120,19 +108,17 @@ contract DeployTestnet is Script {
         treasury.setAuthorized(address(pool), true);
         treasury.setAuthorized(address(settlement), true);
 
-        hedger.setUnderwriterPool(address(pool));
-
         settlement.setTreasury(address(treasury));
-        console.log("[9] Wiring complete");
+        console.log("[7] Wiring complete");
 
-        // ─── 10. Seed pool & treasury ─────────────────────────
+        // ─── 8. Seed pool & treasury ──────────────────────────
         usdc.approve(address(pool), type(uint256).max);
         pool.deposit(POOL_SEED, deployer);
-        console.log("[10] Pool seeded:", POOL_SEED / 1e6, "tUSDC");
+        console.log("[8] Pool seeded:", POOL_SEED / 1e6, "tUSDC");
 
         usdc.approve(address(treasury), type(uint256).max);
         treasury.seedBuffer(TREASURY_SEED);
-        console.log("[10] Treasury seeded:", TREASURY_SEED / 1e6, "tUSDC");
+        console.log("[8] Treasury seeded:", TREASURY_SEED / 1e6, "tUSDC");
 
         // ─── Summary ──────────────────────────────────────────
         console.log("");
@@ -145,8 +131,6 @@ contract DeployTestnet is Script {
         console.log("  TreasuryModule: ", address(treasury));
         console.log("  PremiumOracle:  ", address(oracle));
         console.log("  EpochSettlement:", address(settlement));
-        console.log("  VolatilityOracle:", address(volOracle));
-        console.log("  HedgeManager:   ", address(hedger));
         console.log("============================================");
         console.log("");
         console.log("  Next: initPool() via PoolManager or front-end");

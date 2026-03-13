@@ -10,7 +10,7 @@
 const { ethers } = require("ethers");
 
 // ─── Config ───────────────────────────────────────────────
-const RPC_URL = process.env.RPC_URL || "https://rpc.sepolia.org";
+const RPC_URL = process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com";
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const CHECK_INTERVAL_MS = 60 * 60 * 1000; // Check every 1 hour
 
@@ -81,12 +81,11 @@ async function checkAndSettle(settlement, wallet) {
   console.log(`[${now}] Checking...`);
 
   try {
-    // For now, we use a placeholder pool key
-    // In production, this would iterate over registered pools
-    // The pool key must match the one used during deployment
+    // Pool key from InitPool deployment (2026-03-13)
+    // WETH(token0) / USDC(token1) - sorted by address
     const poolKey = {
-      currency0: ethers.ZeroAddress,
-      currency1: ethers.ZeroAddress,
+      currency0: "0x45921423FdA7260efBE844d4479254d5169355D5", // Mock WETH
+      currency1: "0xA64b084D47657A799885aAC2dC861A7C432b6D12", // Mock USDC
       fee: 3000,
       tickSpacing: 60,
       hooks: ADDRESSES.BELTA_HOOK,

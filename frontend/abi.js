@@ -12,6 +12,16 @@ const ADDRESSES = {
 
 const CHAIN_ID = 11155111;
 
+// V4 Pool Info (from InitPool deployment)
+const POOL_INFO = {
+  MOCK_WETH: "0x45921423FdA7260efBE844d4479254d5169355D5",
+  POOL_ID: "0x7276cdf48ec2aa56c889cb646da8366d917cdabdfe7cb1e66c625767cb1f9446",
+  FEE: 3000,
+  TICK_SPACING: 60,
+  INITIAL_TICK: 202200,
+  INITIAL_PRICE: "~$2000 ETH/USDC",
+};
+
 // ERC20 (MockUSDC)
 const ERC20_ABI = [
   "function name() view returns (string)",

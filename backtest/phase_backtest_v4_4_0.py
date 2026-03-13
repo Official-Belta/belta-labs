@@ -429,10 +429,10 @@ ax_tvl1.yaxis.set_major_formatter(
 ax_tvl2 = fig.add_subplot(gs[1, 1])
 r2 = results[1]
 n2 = len(r2["tvl_hist"]) - 1
-ax_tvl2.stackplot(range(n2+1),
-    [list(r2["seg_tvl"]["institutional"][:n2]) + [0],
-     list(r2["seg_tvl"]["active_retail"][:n2]) + [0],
-     list(r2["seg_tvl"]["passive_retail"][:n2]) + [0]],
+ax_tvl2.stackplot(range(n2),
+    [r2["seg_tvl"]["institutional"][:n2],
+     r2["seg_tvl"]["active_retail"][:n2],
+     r2["seg_tvl"]["passive_retail"][:n2]],
     labels=["기관/MM", "액티브 리테일", "패시브 리테일"],
     colors=["#c8a96e","#3498db","#e74c3c"], alpha=0.8)
 ax_tvl2.set_title("Phase 3~4 | 세그먼트별 BELTA 가입 TVL 동학", fontsize=10)

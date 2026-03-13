@@ -199,7 +199,11 @@ belta-labs/
 
 ## Backtest Results
 
-Backtested against 2020-2024 ETH/USDC data (including COVID, LUNA, FTX events):
+```bash
+python backtest/phase_backtest_v4_4_0.py  # Multi-LP cohort model (latest)
+```
+
+Backtested against 2020-2025 ETH/USDC data (including COVID, LUNA, FTX events):
 
 | Phase | Treasury CAGR | Senior APY | Sharpe | Pool MDD |
 |---|---|---|---|---|

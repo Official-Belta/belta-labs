@@ -7,7 +7,7 @@
 [![Solidity](https://img.shields.io/badge/Solidity-%5E0.8.26-blue)](https://soliditylang.org/)
 [![Foundry](https://img.shields.io/badge/Built%20with-Foundry-orange)](https://getfoundry.sh/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Testnet](https://img.shields.io/badge/Sepolia-Live-brightgreen)](https://sepolia.etherscan.io/address/0x07f4f427378ef485931999ace2917a210f0b9540)
+[![Testnet](https://img.shields.io/badge/Sepolia-Live-brightgreen)](https://sepolia.etherscan.io/address/0x1609e47BE1504F29Ed6DBb5dcdF57dEea9405540)
 [![Tests](https://img.shields.io/badge/Tests-17%2F17%20PASS-brightgreen)]()
 
 ---
@@ -48,11 +48,11 @@ LP Position (Uniswap V4)
 
 | Contract | Description | Address |
 |---|---|---|
-| `BELTAHook.sol` | V4 Hook — IL tracking + premium collection | [`0x07f4...9540`](https://sepolia.etherscan.io/address/0x07f4f427378ef485931999ace2917a210f0b9540) |
-| `UnderwriterPool.sol` | ERC-4626 vault — deposit/withdraw/shares | [`0x67b0...1622`](https://sepolia.etherscan.io/address/0x67b0e434be06fc63224ee0d0b2e4b08ebd9b1622) |
-| `TreasuryModule.sol` | Treasury buffer + self-healing mechanism | [`0xc84b...850e`](https://sepolia.etherscan.io/address/0xc84b9df70cbdf35945b2230f0f9e1d09ee35850e) |
-| `PremiumOracle.sol` | Dynamic premium rate (Aave-style curve) | [`0x3fdf...801f`](https://sepolia.etherscan.io/address/0x3fdf2ac8b75aa5043763c9615e20eca88d2a801f) |
-| `EpochSettlement.sol` | 7-day epoch settlement coordinator | [`0x064f...ec30`](https://sepolia.etherscan.io/address/0x064f6ada17f51575b11c538ed5c5b6a6d7f0ec30) |
+| `BELTAHook.sol` | V4 Hook — IL tracking + premium collection | [`0x1609...5540`](https://sepolia.etherscan.io/address/0x1609e47BE1504F29Ed6DBb5dcdF57dEea9405540) |
+| `UnderwriterPool.sol` | ERC-4626 vault — deposit/withdraw/shares | [`0x4296...a5DD`](https://sepolia.etherscan.io/address/0x4296A225D8077b614DAf25862Bc9F780aFDea5DD) |
+| `TreasuryModule.sol` | Treasury buffer + self-healing mechanism | [`0xa0B3...51f3`](https://sepolia.etherscan.io/address/0xa0B315D9bAb3fCAF21F750BD3C8b9D0fc5Bd51f3) |
+| `PremiumOracle.sol` | Dynamic premium rate (Aave-style curve) | [`0x2d11...Bf58`](https://sepolia.etherscan.io/address/0x2d11850A62AaC9dc10Bc67Bb2056685e4cF1Bf58) |
+| `EpochSettlement.sol` | 7-day epoch settlement coordinator | [`0x693D...E9a1`](https://sepolia.etherscan.io/address/0x693DB559c3bCc243470D31025E7BF5B7f08EE9a1) |
 
 **Pool Manager**: [`0xE03A...3543`](https://sepolia.etherscan.io/address/0xE03A1074c86CFeDd5C142C4F04F1a1536e203543) (Uniswap V4 Sepolia)
 

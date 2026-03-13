@@ -14,7 +14,7 @@
 
 ## What is BELTA?
 
-BELTA is a DeFi protocol that **automatically hedges Impermanent Loss** for Uniswap V4 liquidity providers. LPs pay a small premium (12% of fee income), and in return receive automatic IL compensation (up to 45% coverage) settled every 7-day epoch.
+BELTA is a DeFi protocol that **automatically hedges Impermanent Loss** for Uniswap V4 liquidity providers. LPs pay a small premium (12% of fee income), and in return receive automatic IL compensation (up to 35% coverage) settled every 7-day epoch.
 
 ### The Problem
 
@@ -39,7 +39,7 @@ LP Position (Uniswap V4)
     |                             +---------+---------+
     |                        IL Settlement     Underwriter Pool
     |                        (Epoch 7d)        (ERC-4626)
-    |                        Coverage 45%      Treasury Buffer
+    |                        Coverage 35%      Treasury Buffer
     |                             |
     +-- IL Payout <---------------+
 ```
@@ -60,7 +60,7 @@ LP Position (Uniswap V4)
 
 | Parameter | Value | Notes |
 |---|---|---|
-| Coverage Cap | **45%** | Max IL compensation per position |
+| Coverage Cap | **35%** | Max IL compensation per position |
 | Premium Rate | **12%** | Of LP fee income (6% in Phase 4) |
 | Epoch Duration | **7 days** | Settlement cycle |
 | Daily Pay Limit | **5%** | Max pool payout per day |
@@ -149,7 +149,7 @@ IL_V3 = IL_V2 * 1 / (1 - sqrt(Pa/Pb))  where Pa = range lower, Pb = range upper
 Payout = min(IL_V3, COVERAGE_CAP) * positionValue
 ```
 
-Tighter ranges amplify IL — BELTA compensates up to 45% of the calculated IL.
+Tighter ranges amplify IL — BELTA compensates up to 35% of the calculated IL.
 
 ## Dynamic Premium Rate
 

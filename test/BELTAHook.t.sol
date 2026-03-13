@@ -268,7 +268,7 @@ contract BELTAHookTest is Test, Deployers {
     // ─── Constants Tests ────────────────────────────────────
 
     function test_constants() public view {
-        assertEq(hook.COVERAGE_CAP_BPS(), 4500);
+        assertEq(hook.COVERAGE_CAP_BPS(), 3500);
         assertEq(hook.EPOCH_DURATION(), 7 days);
         assertEq(hook.DAILY_PAY_LIMIT_BPS(), 500);
     }

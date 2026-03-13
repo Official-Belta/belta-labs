@@ -218,9 +218,9 @@ contract ForkBlackSwanTest is Test, Deployers {
             hook.getPosition(poolId, address(modifyLiquidityRouter), -60, 60);
         assertFalse(narrowPos.active, "narrow LP should be closed");
 
-        // IL claimable should be capped at COVERAGE_CAP_BPS (45%)
+        // IL claimable should be capped at COVERAGE_CAP_BPS (35%)
         // The actual payout = liquidity * coveredIL / BPS
-        // coveredIL is min(ilBps, 4500)
+        // coveredIL is min(ilBps, 3500)
         emit log_named_uint("Narrow LP IL claimable", narrowPos.ilClaimable);
 
         // ── Epoch advance + settle ──
@@ -444,16 +444,16 @@ contract ForkBlackSwanTest is Test, Deployers {
         BELTAHook.LPPosition memory pos =
             hook.getPosition(poolId, address(modifyLiquidityRouter), -60, 60);
 
-        // Coverage cap is 45% (4500 bps)
-        // Max payout = liquidity * 4500 / 10000 = 20e18 * 0.45 = 9e18
+        // Coverage cap is 35% (3500 bps)
+        // Max payout = liquidity * 3500 / 10000 = 20e18 * 0.35 = 7e18
         if (pos.ilClaimable > 0) {
-            uint256 maxPayout = 20e18 * 4500 / 10000;
-            assertLe(pos.ilClaimable, maxPayout, "IL payout should be capped at 45%");
+            uint256 maxPayout = 20e18 * 3500 / 10000;
+            assertLe(pos.ilClaimable, maxPayout, "IL payout should be capped at 35%");
             emit log_named_uint("IL claimable (capped)", pos.ilClaimable);
         }
 
         // Daily pay limit should also apply
         assertEq(hook.DAILY_PAY_LIMIT_BPS(), 500, "daily limit should be 5%");
-        assertEq(hook.COVERAGE_CAP_BPS(), 4500, "coverage cap should be 45%");
+        assertEq(hook.COVERAGE_CAP_BPS(), 3500, "coverage cap should be 35%");
     }
 }

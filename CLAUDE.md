@@ -21,7 +21,7 @@ LP 포지션 (Uniswap V3/V4)
     │                        │
     │                ┌───────┴────────┐
     │           IL 정산 (Epoch 7일)   Underwriter Pool
-    │           Coverage 45%          Senior APY 7%
+    │           Coverage 35%          Senior APY 7%
     │                │                Treasury 버퍼
     └─ IL 보상 ←────┘
 ```
@@ -36,7 +36,7 @@ LP 포지션 (Uniswap V3/V4)
 
 | 파라미터 | 값 | 비고 |
 |---|---|---|
-| Coverage Cap | **45%** | IL의 최대 45% 보상 |
+| Coverage Cap | **35%** | IL의 최대 35% 보상 |
 | 프리미엄율 | **12%** | fee 수익 × 12% (Phase 4: 6%) |
 | Senior APY | **7%** | Phase 3+ 확정 |
 | Treasury 버퍼 | **Senior의 20%** | `max(initial_treasury, senior_bal × 0.20)` |
@@ -189,8 +189,8 @@ Treasury 순수익 → xBELTA 환율 상승
 
 ## 자주 묻는 것들
 
-**Q. Coverage 45%인데 왜 백서에 "손실 94% 방어"라고 나오나?**
-A. 다른 맥락. Coverage 45%는 IL 자체의 보상 한도. "94% 방어"는 ETH -50% 시 수수료 수익까지 합산한 LP 순손익(-5.4%) 기준으로 -0.33%까지 줄었다는 의미.
+**Q. Coverage 35%인데 왜 백서에 "손실 방어"라고 나오나?**
+A. 다른 맥락. Coverage 35%는 IL 자체의 보상 한도. 수수료 수익까지 합산한 LP 순손익 기준으로는 훨씬 높은 방어율 달성.
 
 **Q. IL은 하락장에서만 발생하나?**
 A. 아님. 급등=급락 동일. 가격 변동 방향 무관, 폭에만 비례. 하락장이 더 나쁘게 느껴지는 건 거래량 감소로 수수료가 줄기 때문.

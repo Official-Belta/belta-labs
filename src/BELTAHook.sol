@@ -49,7 +49,7 @@ contract BELTAHook is IHooks {
     event EpochAdvanced(PoolId indexed poolId, uint256 epoch, uint256 timestamp);
 
     // ─── Constants ──────────────────────────────────────────
-    uint256 public constant COVERAGE_CAP_BPS = 4500; // 45% max IL coverage
+    uint256 public constant COVERAGE_CAP_BPS = 3500; // 35% max IL coverage
     uint256 public constant EPOCH_DURATION = 7 days;
     uint256 public constant BPS = 10_000;
     uint256 public constant DAILY_PAY_LIMIT_BPS = 500; // 5% of pool per day

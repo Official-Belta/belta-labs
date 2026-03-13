@@ -1,0 +1,13 @@
+{
+  "name": "belta-keeper",
+  "version": "1.0.0",
+  "description": "BELTA Labs Epoch Settlement Keeper",
+  "main": "keeper.js",
+  "scripts": {
+    "start": "node keeper.js",
+    "keeper": "node keeper.js"
+  },
+  "dependencies": {
+    "ethers": "^6.13.0"
+  }
+}

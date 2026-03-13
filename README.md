@@ -1,56 +1,95 @@
-# BELTA Labs — IL Hedge Protocol
+# BELTA Labs — IL Hedge Protocol for Uniswap V4
 
-> Uniswap V4 Hook 기반 LP 비영구적 손실(Impermanent Loss) 자동 헤지 프로토콜
+> Automated Impermanent Loss hedging via Uniswap V4 Hooks — no governance changes required.
 
-**월가의 전략을 모두에게**
+**Wall Street strategies for everyone.**
+
+[![Solidity](https://img.shields.io/badge/Solidity-%5E0.8.26-blue)](https://soliditylang.org/)
+[![Foundry](https://img.shields.io/badge/Built%20with-Foundry-orange)](https://getfoundry.sh/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Testnet](https://img.shields.io/badge/Sepolia-Live-brightgreen)](https://sepolia.etherscan.io/address/0x07f4f427378ef485931999ace2917a210f0b9540)
 
 ---
 
-## Overview
+## What is BELTA?
 
-BELTA IL Hedge Protocol은 Uniswap V4 Hook만으로 구현되는 LP 비영구적 손실 헤지 인프라입니다. LP는 수수료 수익의 일부를 프리미엄으로 납부하고, IL 발생 시 자동으로 보상받습니다.
+BELTA is a DeFi protocol that **automatically hedges Impermanent Loss** for Uniswap V4 liquidity providers. LPs pay a small premium (12% of fee income), and in return receive automatic IL compensation (up to 45% coverage) settled every 7-day epoch.
 
-- Uniswap V4 Hook 네이티브 — 거버넌스 변경 불필요
-- IL의 45% 자동 커버리지
-- 7일 Epoch 기반 정산
-- ERC-4626 Underwriter Pool
+### The Problem
+
+Concentrated liquidity on Uniswap V3/V4 amplifies both fee income **and** impermanent loss. LPs using tight ranges can earn 3-5x more fees, but face devastating IL during volatility. Most LPs avoid tight ranges entirely — leaving yield on the table.
+
+### The Solution
+
+BELTA acts as an IL insurance layer built natively into V4 Hooks:
+
+- **LPs** opt-in when adding liquidity, pay 12% of fee income as premium
+- **Underwriter Pool** absorbs IL claims using collected premiums
+- **Treasury Buffer** provides first-loss protection during black swan events
+- **Epoch Settlement** (7 days) ensures predictable, gas-efficient payouts
 
 ## Architecture
 
 ```
 LP Position (Uniswap V4)
-    │
-    ├── Premium (12% of fee income) → BELTAHook.sol
-    │                                      │
-    │                              ┌───────┴────────┐
-    │                         IL Settlement     Underwriter Pool
-    │                         (Epoch 7d)        (ERC-4626)
-    │                         Coverage 45%      Treasury Buffer
-    │                              │
-    └── IL Payout ←───────────────┘
+    |
+    +-- Premium (12% of fee income) --> BELTAHook.sol
+    |                                       |
+    |                             +---------+---------+
+    |                        IL Settlement     Underwriter Pool
+    |                        (Epoch 7d)        (ERC-4626)
+    |                        Coverage 45%      Treasury Buffer
+    |                             |
+    +-- IL Payout <---------------+
 ```
 
-## Smart Contracts
+## Smart Contracts (Sepolia Testnet)
 
-| Contract | Description | Sepolia |
+| Contract | Description | Address |
 |---|---|---|
-| `BELTAHook.sol` | V4 Hook — IL tracking, premium collection | [`0x07f4...9540`](https://sepolia.etherscan.io/address/0x07f4f427378ef485931999ace2917a210f0b9540) |
+| `BELTAHook.sol` | V4 Hook — IL tracking + premium collection | [`0x07f4...9540`](https://sepolia.etherscan.io/address/0x07f4f427378ef485931999ace2917a210f0b9540) |
 | `UnderwriterPool.sol` | ERC-4626 vault — deposit/withdraw/shares | [`0x67b0...1622`](https://sepolia.etherscan.io/address/0x67b0e434be06fc63224ee0d0b2e4b08ebd9b1622) |
 | `TreasuryModule.sol` | Treasury buffer + self-healing mechanism | [`0xc84b...850e`](https://sepolia.etherscan.io/address/0xc84b9df70cbdf35945b2230f0f9e1d09ee35850e) |
 | `PremiumOracle.sol` | Dynamic premium rate (Aave-style curve) | [`0x3fdf...801f`](https://sepolia.etherscan.io/address/0x3fdf2ac8b75aa5043763c9615e20eca88d2a801f) |
 | `EpochSettlement.sol` | 7-day epoch settlement coordinator | [`0x064f...ec30`](https://sepolia.etherscan.io/address/0x064f6ada17f51575b11c538ed5c5b6a6d7f0ec30) |
-| `MockUSDC` | Test USDC (6 decimals) | [`0xa64b...6d12`](https://sepolia.etherscan.io/address/0xa64b084d47657a799885aac2dc861a7c432b6d12) |
 
-## Parameters
+**Pool Manager**: [`0xE03A...3543`](https://sepolia.etherscan.io/address/0xE03A1074c86CFeDd5C142C4F04F1a1536e203543) (Uniswap V4 Sepolia)
 
-| Parameter | Value |
-|---|---|
-| Coverage Cap | 45% of IL |
-| Premium Rate | 12% of fee income |
-| Epoch Duration | 7 days |
-| Daily Pay Limit | 5% of pool |
-| Cooldown Period | 7 days |
-| Treasury Target | 20% of Senior |
+## Protocol Parameters
+
+| Parameter | Value | Notes |
+|---|---|---|
+| Coverage Cap | **45%** | Max IL compensation per position |
+| Premium Rate | **12%** | Of LP fee income (6% in Phase 4) |
+| Epoch Duration | **7 days** | Settlement cycle |
+| Daily Pay Limit | **5%** | Max pool payout per day |
+| Cooldown Period | **7 days** | Withdrawal delay |
+| Treasury Target | **20%** | Of Senior pool balance |
+| Dynamic Rate Kink | **80%** | Utilization threshold for rate spike |
+
+## Test Results
+
+All contracts are deployed on Sepolia and verified via fork tests:
+
+### Unit Tests (`BELTAFlow.t.sol`) — 8/8 PASS
+- Deposit/withdraw flow, share calculation, cooldown enforcement, premium collection
+
+### Full LP Lifecycle (`FakeLPFlow.t.sol`) — PASS
+Simulates 3 LPs with different risk profiles on a Sepolia fork:
+
+| LP | Range | Liquidity | IL Claim |
+|---|---|---|---|
+| LP1 (Whale) | Wide ±6% | 500M | 2.30 USDC |
+| LP2 (Medium) | Medium ±3% | 200M | 1.84 USDC |
+| LP3 (Tight) | Tight ±1.2% | 50M | 1.14 USDC |
+
+- **Price movement**: -4.6% (tick 202200 → 201733) — realistic market conditions
+- **Premiums collected**: 64.8 USDC
+- **Total IL claims**: 5.28 USDC (8% of premiums — healthy ratio)
+- **Full flow verified**: Opt-in → Swap → Epoch advance → Settlement → IL Claim → Zero pending
+
+### E2E Flow (`E2EFlow.t.sol`) — PASS
+- Pool initialization, epoch state, capacity, TVL, treasury buffer, oracle rates, settlement
 
 ## Quick Start
 
@@ -67,19 +106,17 @@ forge build
 forge test -vvv
 ```
 
+### Fork Test (Sepolia)
+
+```bash
+forge test --match-test test_FullLPLifecycle --fork-url https://ethereum-sepolia-rpc.publicnode.com -vv
+```
+
 ### Deploy to Sepolia
 
 ```bash
 source .env  # DEPLOYER_PRIVATE_KEY, SEPOLIA_RPC_URL
 forge script script/DeployTestnet.s.sol --rpc-url $SEPOLIA_RPC_URL --broadcast
-```
-
-### Frontend (Local)
-
-```bash
-cd frontend
-python -m http.server 8080
-# Open http://localhost:8080
 ```
 
 ### Keeper (Epoch Settlement)
@@ -90,29 +127,85 @@ npm install
 PRIVATE_KEY=0x... node keeper.js
 ```
 
-## Dashboard
-
-The web dashboard connects to Sepolia via MetaMask and shows:
-- Pool TVL, Treasury Buffer, Utilization
-- Premium Oracle parameters & rate curve
-- Deposit/Withdraw interface
-- IL claim interface
-
-## Backtest
+### Dashboard
 
 ```bash
-python backtest/engine_v3.py  # Phase 1-5 simulation
+cd frontend
+python -m http.server 8080
+# Open http://localhost:8080
 ```
+
+Or visit the live dashboard: [official-belta.github.io/belta-labs](https://official-belta.github.io/belta-labs/)
+
+## IL Calculation
+
+BELTA uses the V3 concentrated liquidity IL formula with correction factor:
+
+```
+IL_V2 = 2*sqrt(r) / (1+r) - 1          where r = priceEnd / priceStart
+IL_V3 = IL_V2 * 1 / (1 - sqrt(Pa/Pb))  where Pa = range lower, Pb = range upper
+
+Payout = min(IL_V3, COVERAGE_CAP) * positionValue
+```
+
+Tighter ranges amplify IL — BELTA compensates up to 45% of the calculated IL.
+
+## Dynamic Premium Rate
+
+Uses an Aave-style utilization curve to self-regulate demand:
+
+```
+Utilization U = Total Hedged TVL / Pool TVL
+
+U < 80%:  Rate = base_rate (12%)
+U >= 80%: Rate = base_rate + slope * (U - 80%) / 20%
+          -> Up to 2-3x base rate at 100% utilization
+```
+
+High utilization = higher premiums = natural demand throttling.
 
 ## Roadmap
 
 | Phase | Timeline | Pool Size | Milestone |
 |---|---|---|---|
-| 0 | Now | — | Smart contract development |
-| 1 Testnet | 1-3 months | — | Sepolia deployment, Audit |
-| 2 Mainnet Pilot | 4-9 months | $100K | 24 epochs, Grant application |
-| 3 Open Market | 11+ months | $10M | VC round, dual pool |
-| 4 DEX Payment | 36+ months | $20M | DEX LP TVL 2% payment |
+| **0** | Now | — | Smart contract development |
+| **1 Testnet** | 1-3 months | — | Sepolia deployment, 1st Audit |
+| **2 Mainnet Pilot** | 4-9 months | $100K | 24 epochs, Grant application |
+| **3 Open Market** | 11+ months | $10M | VC round, Treasury/Senior dual pool |
+| **4 DEX Integration** | 36+ months | $20M | Premium 6%, DEX LP TVL 2% |
+| **5 Global** | 60+ months | ~$170M | Multi-chain expansion |
+
+## Project Structure
+
+```
+belta-labs/
+├── src/                    # Smart contracts (Solidity)
+│   ├── BELTAHook.sol       # V4 Hook — core IL + premium logic
+│   ├── UnderwriterPool.sol # ERC-4626 vault
+│   ├── EpochSettlement.sol # 7-day epoch settlement
+│   ├── PremiumOracle.sol   # Dynamic rate oracle
+│   └── TreasuryModule.sol  # Treasury buffer management
+├── test/                   # Foundry tests
+│   ├── BELTAFlow.t.sol     # Unit tests (8 tests)
+│   ├── FakeLPFlow.t.sol    # Full LP lifecycle fork test
+│   └── E2EFlow.t.sol       # E2E Sepolia fork test
+├── script/                 # Deployment scripts
+├── keeper/                 # Epoch settlement bot (Node.js)
+├── frontend/               # Dashboard (HTML/JS)
+├── backtest/               # Python backtesting engine
+└── broadcast/              # Deployment transaction records
+```
+
+## Backtest Results
+
+Backtested against 2020-2024 ETH/USDC data (including COVID, LUNA, FTX events):
+
+| Phase | Treasury CAGR | Senior APY | Sharpe | Pool MDD |
+|---|---|---|---|---|
+| 1-2 Single Pool | +5.1% | 5-6% | 0.71 | -8% |
+| 3-4 Dual Pool | +2.7% | 7.3% | 0.99 | -10.0% |
+
+Treasury absorbs tail risk (MDD up to -61.6% during LUNA), but the overall pool MDD stays below -10% thanks to Senior tranche buffering.
 
 ## License
 
@@ -120,4 +213,4 @@ MIT
 
 ---
 
-*BELTA Labs Pte. Ltd. — Singapore*
+*BELTA Labs — Singapore*

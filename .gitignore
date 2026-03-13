@@ -12,3 +12,15 @@ out/
 
 # Dotenv file
 .env
+
+# Claude Code session files
+.claude/
+
+# Node modules
+node_modules/
+
+# Python cache
+__pycache__/
+
+# Misc
+img_b64.txt

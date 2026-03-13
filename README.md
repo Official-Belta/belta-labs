@@ -8,6 +8,7 @@
 [![Foundry](https://img.shields.io/badge/Built%20with-Foundry-orange)](https://getfoundry.sh/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Testnet](https://img.shields.io/badge/Sepolia-Live-brightgreen)](https://sepolia.etherscan.io/address/0x07f4f427378ef485931999ace2917a210f0b9540)
+[![Tests](https://img.shields.io/badge/Tests-17%2F17%20PASS-brightgreen)]()
 
 ---
 
@@ -168,8 +169,8 @@ High utilization = higher premiums = natural demand throttling.
 
 | Phase | Timeline | Pool Size | Milestone |
 |---|---|---|---|
-| **0** | Now | — | Smart contract development |
-| **1 Testnet** | 1-3 months | — | Sepolia deployment, 1st Audit |
+| ~~0~~ | ~~Done~~ | — | ~~Smart contract development~~ |
+| **1 Testnet** | **Now** | — | Sepolia deployed, fork tests passing, Audit next |
 | **2 Mainnet Pilot** | 4-9 months | $100K | 24 epochs, Grant application |
 | **3 Open Market** | 11+ months | $10M | VC round, Treasury/Senior dual pool |
 | **4 DEX Integration** | 36+ months | $20M | Premium 6%, DEX LP TVL 2% |

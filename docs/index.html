@@ -82,6 +82,16 @@
       letter-spacing: 2px;
       text-transform: uppercase;
     }
+    .header-nav { display: flex; align-items: center; gap: 20px; }
+    .header-nav a {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .header-nav a:hover { color: var(--accent); }
     .header-right { display: flex; align-items: center; gap: 12px; }
     .network-badge {
       display: flex; align-items: center; gap: 6px;
@@ -419,6 +429,12 @@
           <div class="logo-tag">IL Hedging Protocol</div>
         </div>
       </div>
+      <nav class="header-nav">
+        <a href="whitepaper.html" target="_blank">Whitepaper</a>
+        <a href="https://github.com/Official-Belta/belta-labs" target="_blank">GitHub</a>
+        <a href="https://discord.gg/q8ZKnKaH" target="_blank">Discord</a>
+        <a href="https://x.com/BELTA_LABS" target="_blank">Twitter</a>
+      </nav>
       <div class="header-right">
         <div class="network-badge">
           <span class="network-dot"></span>
@@ -684,10 +700,15 @@
 
     <!-- ─── Footer ──────────────────────────────────── -->
     <footer style="text-align: center; padding: 40px 0 20px; border-top: 1px solid var(--border); margin-top: 40px;">
-      <div style="font-size: 0.75rem; color: var(--text-muted);">
-        BELTA Labs &mdash; IL Hedging Protocol &middot; Whitepaper v5.6.2
-        &nbsp;&middot;&nbsp; Sepolia Testnet
-        &nbsp;&middot;&nbsp; <a href="https://sepolia.etherscan.io/address/0x1609e47BE1504F29Ed6DBb5dcdF57dEea9405540" target="_blank" rel="noopener">View Contracts</a>
+      <div style="display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; font-size: 0.8rem;">
+        <a href="whitepaper.html" target="_blank">📄 Whitepaper</a>
+        <a href="https://github.com/Official-Belta/belta-labs" target="_blank">💻 GitHub</a>
+        <a href="https://discord.gg/q8ZKnKaH" target="_blank">💬 Discord</a>
+        <a href="https://x.com/BELTA_LABS" target="_blank">🐦 Twitter</a>
+        <a href="https://sepolia.etherscan.io/address/0x1609e47BE1504F29Ed6DBb5dcdF57dEea9405540" target="_blank">🔗 Contracts</a>
+      </div>
+      <div style="font-size: 0.7rem; color: var(--text-muted);">
+        &copy; 2025 BELTA Labs &middot; IL Hedging Protocol &middot; Whitepaper v5.6.2 &middot; Sepolia Testnet
       </div>
     </footer>
   </div>

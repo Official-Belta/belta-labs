@@ -130,6 +130,7 @@ async function refreshAll() {
       loadProtocolStats(),
       loadUserData(),
       loadOracleData(),
+      loadEpochData(),
     ]);
     updateStatus("Data loaded");
   } catch (err) {
@@ -271,6 +272,37 @@ async function loadOracleData() {
     renderUtilizationChart(rates);
   } catch (err) {
     console.error("Error loading oracle data:", err);
+  }
+}
+
+// ─── Epoch Data ──────────────────────────────────────────
+
+async function loadEpochData() {
+  try {
+    const poolId = POOL_INFO.POOL_ID;
+    const [epochData, capacity] = await Promise.all([
+      hook.epochs(poolId),
+      hook.poolCapacity(poolId),
+    ]);
+
+    const epochNumber = Number(epochData.epochNumber);
+    const startTimestamp = Number(epochData.startTimestamp);
+    const epochDuration = 7 * 24 * 3600; // 7 days
+    const now = Math.floor(Date.now() / 1000);
+    const endTimestamp = startTimestamp + epochDuration;
+    const elapsed = now - startTimestamp;
+    const progressPct = Math.min((elapsed / epochDuration) * 100, 100);
+
+    setVal("epoch-number", epochNumber.toString());
+    setVal("epoch-start", new Date(startTimestamp * 1000).toLocaleDateString());
+    setVal("epoch-next", formatDuration(Math.max(endTimestamp - now, 0)));
+    setVal("pool-capacity", formatUSDC(capacity));
+
+    const bar = document.getElementById("epoch-progress-bar");
+    if (bar) bar.style.width = progressPct.toFixed(1) + "%";
+    setVal("epoch-progress-text", `Epoch ${progressPct.toFixed(0)}% complete — ${formatDuration(Math.max(endTimestamp - now, 0))} remaining`);
+  } catch (err) {
+    console.error("Error loading epoch data:", err);
   }
 }
 
@@ -422,8 +454,8 @@ function renderUtilizationChart(rates) {
 
   // Gradient fill
   const grad = ctx.createLinearGradient(0, pad.top, 0, h - pad.bottom);
-  grad.addColorStop(0, "rgba(0, 255, 136, 0.25)");
-  grad.addColorStop(1, "rgba(0, 255, 136, 0.01)");
+  grad.addColorStop(0, "rgba(200, 169, 110, 0.25)");
+  grad.addColorStop(1, "rgba(200, 169, 110, 0.01)");
 
   ctx.beginPath();
   ctx.moveTo(pad.left, h - pad.bottom);
@@ -440,9 +472,9 @@ function renderUtilizationChart(rates) {
 
   // Line
   ctx.beginPath();
-  ctx.strokeStyle = "#00ff88";
+  ctx.strokeStyle = "#c8a96e";
   ctx.lineWidth = 2.5;
-  ctx.shadowColor = "#00ff88";
+  ctx.shadowColor = "#c8a96e";
   ctx.shadowBlur = 8;
   rates.forEach((r, i) => {
     const x = pad.left + (r.util / 100) * pw;

@@ -9,6 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Testnet](https://img.shields.io/badge/Sepolia-Live-brightgreen)](https://sepolia.etherscan.io/address/0x1609e47BE1504F29Ed6DBb5dcdF57dEea9405540)
 [![Tests](https://img.shields.io/badge/Tests-17%2F17%20PASS-brightgreen)]()
+[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?logo=discord&logoColor=white)](https://discord.gg/DneWWwxQ)
 
 ---
 
@@ -211,6 +212,12 @@ Backtested against 2020-2025 ETH/USDC data (including COVID, LUNA, FTX events):
 | 3-4 Dual Pool | +2.7% | 7.3% | 0.99 | -10.0% |
 
 Treasury absorbs tail risk (MDD up to -61.6% during LUNA), but the overall pool MDD stays below -10% thanks to Senior tranche buffering.
+
+## Community
+
+- **Discord**: [discord.gg/DneWWwxQ](https://discord.gg/DneWWwxQ)
+- **GitHub**: [github.com/Official-Belta/belta-labs](https://github.com/Official-Belta/belta-labs)
+- **Dashboard**: [official-belta.github.io/belta-labs](https://official-belta.github.io/belta-labs/)
 
 ## License
 

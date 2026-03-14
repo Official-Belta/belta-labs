@@ -10,22 +10,22 @@
     /* ─── Reset & Base ─────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg-primary: #0a0e17;
-      --bg-secondary: #111827;
-      --bg-card: #151c2c;
-      --bg-card-hover: #1a2236;
-      --border: #1e293b;
-      --border-glow: rgba(0, 255, 136, 0.15);
-      --text-primary: #f1f5f9;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --accent: #00ff88;
-      --accent-dim: rgba(0, 255, 136, 0.12);
-      --accent-blue: #3b82f6;
+      --bg-primary: #0a1628;
+      --bg-secondary: #0e1d35;
+      --bg-card: #102040;
+      --bg-card-hover: #142850;
+      --border: #1e3050;
+      --border-glow: rgba(200, 169, 110, 0.15);
+      --text-primary: #e8eaed;
+      --text-secondary: #aabbcc;
+      --text-muted: #667788;
+      --accent: #c8a96e;
+      --accent-dim: rgba(200, 169, 110, 0.12);
+      --accent-blue: #5b8def;
       --accent-purple: #8b5cf6;
       --danger: #ef4444;
       --warning: #f59e0b;
-      --success: #00ff88;
+      --success: #4ade80;
       --radius: 12px;
       --radius-sm: 8px;
     }
@@ -62,16 +62,16 @@
     .logo-section { display: flex; align-items: center; gap: 14px; }
     .logo-icon {
       width: 42px; height: 42px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-blue));
+      background: linear-gradient(135deg, var(--accent), #a08040);
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 18px; color: #0a0e17;
-      box-shadow: 0 0 20px rgba(0,255,136,0.2);
+      font-weight: 700; font-size: 18px; color: #0a1628;
+      box-shadow: 0 0 20px rgba(200,169,110,0.25);
     }
     .logo-text {
       font-size: 1.4rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--accent), var(--accent-blue));
+      background: linear-gradient(135deg, var(--accent), #dcc896);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -0.5px;
@@ -100,8 +100,8 @@
     }
     #btn-connect {
       padding: 10px 22px;
-      background: linear-gradient(135deg, var(--accent), #00cc6a);
-      color: #0a0e17;
+      background: linear-gradient(135deg, var(--accent), #a08040);
+      color: #0a1628;
       border: none;
       border-radius: var(--radius-sm);
       font-weight: 600;
@@ -110,7 +110,7 @@
       transition: all 0.2s;
       font-family: inherit;
     }
-    #btn-connect:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,255,136,0.3); }
+    #btn-connect:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,169,110,0.3); }
     #btn-connect.connected {
       background: var(--bg-card);
       color: var(--accent);
@@ -228,7 +228,7 @@
       border-radius: 3px;
       transition: width 0.6s ease;
     }
-    .health-fill.healthy { background: var(--accent); box-shadow: 0 0 8px rgba(0,255,136,0.4); }
+    .health-fill.healthy { background: var(--success); box-shadow: 0 0 8px rgba(74,222,128,0.4); }
     .health-fill.warning { background: var(--warning); box-shadow: 0 0 8px rgba(245,158,11,0.4); }
     .health-fill.critical { background: var(--danger); box-shadow: 0 0 8px rgba(239,68,68,0.4); }
 
@@ -280,10 +280,10 @@
       gap: 6px;
     }
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent), #00cc6a);
-      color: #0a0e17;
+      background: linear-gradient(135deg, var(--accent), #a08040);
+      color: #0a1628;
     }
-    .btn-primary:hover { box-shadow: 0 4px 16px rgba(0,255,136,0.3); transform: translateY(-1px); }
+    .btn-primary:hover { box-shadow: 0 4px 16px rgba(200,169,110,0.3); transform: translateY(-1px); }
     .btn-secondary {
       background: var(--bg-secondary);
       color: var(--text-primary);
@@ -313,7 +313,7 @@
     }
     .cooldown-none { background: rgba(255,255,255,0.04); color: var(--text-muted); }
     .cooldown-waiting { background: rgba(245,158,11,0.1); color: var(--warning); }
-    .cooldown-ready { background: rgba(0,255,136,0.1); color: var(--accent); }
+    .cooldown-ready { background: rgba(74,222,128,0.1); color: var(--success); }
 
     /* ─── Alert ────────────────────────────────────── */
     .alert { color: var(--danger) !important; font-weight: 600; }
@@ -386,7 +386,7 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
     .toast.show { transform: translateX(0); }
-    .toast-success { background: rgba(0,255,136,0.12); color: var(--accent); border: 1px solid rgba(0,255,136,0.2); }
+    .toast-success { background: rgba(74,222,128,0.12); color: var(--success); border: 1px solid rgba(74,222,128,0.2); }
     .toast-error { background: rgba(239,68,68,0.12); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); }
     .toast-info { background: rgba(59,130,246,0.12); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.2); }
     .toast-icon { font-size: 1rem; }
@@ -405,7 +405,7 @@
     }
 
     /* ─── Glow effects ─────────────────────────────── */
-    .glow-green { box-shadow: inset 0 1px 0 rgba(0,255,136,0.06), 0 0 0 1px var(--border-glow); }
+    .glow-gold { box-shadow: inset 0 1px 0 rgba(200,169,110,0.08), 0 0 0 1px var(--border-glow); }
   </style>
 </head>
 <body>
@@ -441,7 +441,7 @@
     <div class="dashboard-grid">
 
       <!-- ── Protocol Stats ───────────────────────── -->
-      <div class="card full-width glow-green">
+      <div class="card full-width glow-gold">
         <div class="card-header">
           <div class="card-title"><span class="icon">&#9670;</span> Protocol Overview</div>
         </div>
@@ -596,6 +596,37 @@
         </div>
       </div>
 
+      <!-- ── Epoch Status ───────────────────────── -->
+      <div class="card full-width">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">&#9201;</span> Epoch Status</div>
+        </div>
+        <div class="card-body">
+          <div class="stats-row" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="stat-box">
+              <div class="stat-label">Current Epoch</div>
+              <div class="stat-value accent" id="epoch-number">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Epoch Started</div>
+              <div class="stat-value" id="epoch-start">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Next Settlement</div>
+              <div class="stat-value" id="epoch-next">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Pool Capacity</div>
+              <div class="stat-value accent" id="pool-capacity">--</div>
+            </div>
+          </div>
+          <div class="health-bar" style="margin-top: 16px;">
+            <div class="health-fill healthy" id="epoch-progress-bar" style="width: 0%"></div>
+          </div>
+          <div style="text-align: center; margin-top: 6px; font-size: 0.7rem; color: var(--text-muted);" id="epoch-progress-text">Epoch progress</div>
+        </div>
+      </div>
+
       <!-- ── LP Panel ────────────────────────────── -->
       <div class="card">
         <div class="card-header">
@@ -630,7 +661,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
               <div>
                 <span style="font-size: 0.7rem; color: var(--text-muted);">Coverage Cap</span>
-                <div style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600;">45%</div>
+                <div style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600;">35%</div>
               </div>
               <div>
                 <span style="font-size: 0.7rem; color: var(--text-muted);">Epoch Duration</span>
@@ -654,9 +685,9 @@
     <!-- ─── Footer ──────────────────────────────────── -->
     <footer style="text-align: center; padding: 40px 0 20px; border-top: 1px solid var(--border); margin-top: 40px;">
       <div style="font-size: 0.75rem; color: var(--text-muted);">
-        BELTA Labs &mdash; Impermanent Loss Hedging Protocol
+        BELTA Labs &mdash; IL Hedging Protocol &middot; Whitepaper v5.6.2
         &nbsp;&middot;&nbsp; Sepolia Testnet
-        &nbsp;&middot;&nbsp; <a href="https://sepolia.etherscan.io/address/0x67b0e434be06fc63224ee0d0b2e4b08ebd9b1622" target="_blank" rel="noopener">View Contracts</a>
+        &nbsp;&middot;&nbsp; <a href="https://sepolia.etherscan.io/address/0x1609e47BE1504F29Ed6DBb5dcdF57dEea9405540" target="_blank" rel="noopener">View Contracts</a>
       </div>
     </footer>
   </div>

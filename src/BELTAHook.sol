@@ -36,6 +36,7 @@ contract BELTAHook is IHooks {
     error NothingToClaim();
     error OnlyOwner();
     error OnlySettlement();
+    error OnlyRangeProtection();
 
     // ─── Events ─────────────────────────────────────────────
     event PositionRegistered(
@@ -47,10 +48,11 @@ contract BELTAHook is IHooks {
     event ILClaimed(PoolId indexed poolId, address indexed lp, uint256 amount);
     event PremiumsCollected(PoolId indexed poolId, uint256 amount);
     event EpochAdvanced(PoolId indexed poolId, uint256 epoch, uint256 timestamp);
+    event ForceLiquidated(PoolId indexed poolId, address indexed lp, int24 tickLower, int24 tickUpper);
 
     // ─── Constants ──────────────────────────────────────────
     uint256 public constant COVERAGE_CAP_BPS = 3500; // 35% max IL coverage
-    uint256 public constant EPOCH_DURATION = 7 days;
+    uint256 public constant EPOCH_DURATION = 1 days;
     uint256 public constant BPS = 10_000;
     uint256 public constant DAILY_PAY_LIMIT_BPS = 500; // 5% of pool per day
 
@@ -89,6 +91,7 @@ contract BELTAHook is IHooks {
     IUnderwriterPool public underwriterPool;
     PremiumOracle public premiumOracle;
     address public epochSettlement;
+    address public rangeProtection;
 
     // ─── Modifiers ──────────────────────────────────────────
     modifier onlyPoolManager() {
@@ -361,6 +364,9 @@ contract BELTAHook is IHooks {
             sqrtR = sqrtStart * 1e18 / sqrtEnd;
         }
 
+        // Cap extreme price moves to avoid overflow in sqrtR * sqrtR
+        if (sqrtR > 1e28) return COVERAGE_CAP_BPS;
+
         uint256 r = sqrtR * sqrtR / 1e18;
         uint256 numerator = 2 * sqrtR;
         uint256 denominator = 1e18 + r;
@@ -439,6 +445,42 @@ contract BELTAHook is IHooks {
 
     function setEpochSettlement(address _settlement) external onlyOwner {
         epochSettlement = _settlement;
+    }
+
+    function setRangeProtection(address _rangeProtection) external onlyOwner {
+        rangeProtection = _rangeProtection;
+    }
+
+    /// @notice RangeProtection 컨트랙트가 범위 이탈 직전 LP를 강제 청산
+    /// @dev 유동성 제거 없이 BELTA 포지션만 정산 (IL 계산 + 프리미엄 정산)
+    ///      실제 V4 유동성 제거는 LP가 직접 수행해야 함
+    function forceRemovePosition(PoolKey calldata key, address lp, int24 tickLower, int24 tickUpper) external {
+        if (msg.sender != rangeProtection && msg.sender != owner) revert OnlyRangeProtection();
+
+        PoolId poolId = key.toId();
+        bytes32 posKey = _positionKey(tickLower, tickUpper);
+        LPPosition storage pos = positions[poolId][lp][posKey];
+        if (!pos.active) revert PositionNotFound();
+
+        // IL 계산 + 프리미엄 정산 (feesAccrued = 0 for force liquidation)
+        (uint160 sqrtPriceX96,,,) = poolManager.getSlot0(poolId);
+        uint256 ilBps = _calculateIL(pos.sqrtPriceAtEntry, sqrtPriceX96, tickLower, tickUpper);
+        uint256 coveredIL = ilBps > COVERAGE_CAP_BPS ? COVERAGE_CAP_BPS : ilBps;
+
+        if (coveredIL > 0) {
+            uint256 payout = uint256(pos.liquidity) * coveredIL / BPS;
+            pos.ilClaimable += payout;
+            pendingILClaims[poolId] += payout;
+            emit ILCalculated(poolId, lp, ilBps, payout);
+        }
+
+        // 포지션 비활성화
+        totalHedgedValue[poolId] -= uint256(pos.liquidity);
+        pos.active = false;
+        pos.liquidity = 0;
+
+        emit ForceLiquidated(poolId, lp, tickLower, tickUpper);
+        emit PositionRemoved(poolId, lp, tickLower, tickUpper);
     }
 
     function setPoolCapacity(PoolId poolId, uint256 capacity) external {

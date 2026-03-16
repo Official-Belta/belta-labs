@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BELTA Labs — LP Position Tracker</title>
+<style>
+  :root {
+    --bg-primary: #0a1628;
+    --bg-secondary: #0e1d35;
+    --bg-card: #102040;
+    --border: #1e3050;
+    --accent: #c8a96e;
+    --accent-dim: #a08050;
+    --accent-blue: #5b8def;
+    --text-primary: #e8eaed;
+    --text-secondary: #aabbcc;
+    --text-muted: #667788;
+    --green: #4caf50;
+    --red: #ef5350;
+    --yellow: #ffc107;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header */
+  .header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 24px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo h1 {
+    font-size: 18px; font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), #e8d5a8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .logo .badge {
+    font-size: 11px; padding: 2px 8px; border-radius: 4px;
+    background: rgba(200,169,110,0.15); color: var(--accent); border: 1px solid var(--accent-dim);
+  }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .nav-links { display: flex; gap: 16px; font-size: 13px; }
+  .nav-links a { color: var(--text-secondary); }
+  .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+  .btn-connect {
+    padding: 8px 16px; border-radius: 6px; border: 1px solid var(--accent);
+    background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+    color: #0a1628; font-weight: 600; font-size: 13px; cursor: pointer;
+  }
+  .btn-connect:hover { opacity: 0.9; }
+  .btn-connect.connected { background: rgba(76,175,80,0.2); color: var(--green); border-color: var(--green); }
+
+  /* Pool Status Bar */
+  .status-bar {
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 12px 24px; background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border); font-size: 13px;
+  }
+  .status-item { text-align: center; }
+  .status-item .label { color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+  .status-item .value { color: var(--text-primary); font-weight: 600; margin-top: 2px; }
+
+  /* Main Grid */
+  .main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+  }
+  .card h2 {
+    font-size: 14px; color: var(--accent); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .card .row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; font-size: 14px;
+  }
+  .card .row .label { color: var(--text-secondary); }
+  .card .row .value { font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+  .card .row .value.green { color: var(--green); }
+  .card .row .value.red { color: var(--red); }
+  .card .row .value.gold { color: var(--accent); }
+
+  /* Position Input */
+  .input-group { margin-bottom: 12px; }
+  .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .input-group input, .input-group select {
+    width: 100%; padding: 8px 12px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--bg-secondary);
+    color: var(--text-primary); font-size: 14px; font-family: 'JetBrains Mono', monospace;
+  }
+  .input-group input:focus { outline: none; border-color: var(--accent); }
+  .presets { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .presets button {
+    padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--bg-secondary); color: var(--text-secondary);
+    font-size: 12px; cursor: pointer;
+  }
+  .presets button:hover, .presets button.active {
+    border-color: var(--accent); color: var(--accent);
+  }
+  .btn-load {
+    width: 100%; padding: 10px; border-radius: 6px; border: none;
+    background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+    color: #0a1628; font-weight: 600; font-size: 14px; cursor: pointer;
+    margin-top: 8px;
+  }
+  .btn-load:hover { opacity: 0.9; }
+
+  /* IL Gauge */
+  .gauge-container { text-align: center; margin: 16px 0; }
+  .gauge-value { font-size: 36px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .gauge-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .gauge-bar {
+    width: 100%; height: 8px; background: var(--bg-secondary);
+    border-radius: 4px; margin-top: 12px; position: relative; overflow: hidden;
+  }
+  .gauge-fill {
+    height: 100%; border-radius: 4px; transition: width 0.5s ease;
+    background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));
+  }
+  .gauge-cap {
+    position: absolute; top: -4px; width: 2px; height: 16px;
+    background: var(--accent); transform: translateX(-50%);
+  }
+
+  /* PnL Comparison */
+  .pnl-box {
+    padding: 12px; border-radius: 8px; margin-bottom: 12px;
+    background: var(--bg-secondary); border: 1px solid var(--border);
+  }
+  .pnl-box h3 { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
+  .pnl-value { font-size: 24px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .pnl-detail { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+  .belta-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px;
+    background: rgba(200,169,110,0.15); color: var(--accent); border: 1px solid var(--accent-dim);
+  }
+
+  /* Epoch History Table */
+  .epoch-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .epoch-table th {
+    text-align: left; padding: 8px; color: var(--text-muted);
+    border-bottom: 1px solid var(--border); font-weight: 500;
+  }
+  .epoch-table td { padding: 8px; border-bottom: 1px solid rgba(30,48,80,0.5); }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 20px; right: 20px; padding: 12px 20px;
+    border-radius: 8px; font-size: 13px; z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  }
+  .toast.error { background: rgba(239,83,80,0.9); color: white; }
+  .toast.info { background: rgba(91,141,239,0.9); color: white; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; }
+    .status-bar { flex-wrap: wrap; gap: 12px; }
+    .header { flex-direction: column; gap: 12px; }
+  }
+  .full-width { grid-column: 1 / -1; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="logo">
+    <h1>BELTA Labs</h1>
+    <span class="badge">LP Tracker</span>
+  </div>
+  <div class="header-right">
+    <div class="nav-links">
+      <a href="index.html">Dashboard</a>
+      <a href="lp.html" class="active">LP Tracker</a>
+      <a href="../docs/whitepaper.html" target="_blank">Whitepaper</a>
+      <a href="https://github.com/BELTA-LABS" target="_blank">GitHub</a>
+    </div>
+    <button class="btn-connect" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+  </div>
+</div>
+
+<!-- Pool Status Bar -->
+<div class="status-bar">
+  <div class="status-item">
+    <div class="label">Epoch</div>
+    <div class="value" id="currentEpoch">—</div>
+  </div>
+  <div class="status-item">
+    <div class="label">Epoch Start Price</div>
+    <div class="value" id="epochPrice">—</div>
+  </div>
+  <div class="status-item">
+    <div class="label">Pool TVL</div>
+    <div class="value" id="poolTVL">—</div>
+  </div>
+  <div class="status-item">
+    <div class="label">Premium Rate</div>
+    <div class="value" id="premiumRate">—</div>
+  </div>
+  <div class="status-item">
+    <div class="label">Utilization</div>
+    <div class="value" id="utilization">—</div>
+  </div>
+  <div class="status-item">
+    <div class="label">Network</div>
+    <div class="value" id="network" style="color: var(--accent);">Sepolia</div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+<div class="grid">
+
+  <!-- Position Input Card -->
+  <div class="card">
+    <h2>Your Position</h2>
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">
+      Enter your LP position tick range to view IL analysis and BELTA coverage.
+    </p>
+    <div class="presets">
+      <button onclick="setPreset(-600, 600)">Wide ±600</button>
+      <button onclick="setPreset(-300, 300)">Medium ±300</button>
+      <button onclick="setPreset(-120, 120)">Tight ±120</button>
+      <button onclick="setPreset(0, 0)">Custom</button>
+    </div>
+    <div style="display:flex; gap:12px;">
+      <div class="input-group" style="flex:1;">
+        <label>Tick Lower</label>
+        <input type="number" id="tickLower" placeholder="-600" step="60">
+      </div>
+      <div class="input-group" style="flex:1;">
+        <label>Tick Upper</label>
+        <input type="number" id="tickUpper" placeholder="600" step="60">
+      </div>
+    </div>
+    <div class="input-group">
+      <label>LP Address (optional — defaults to connected wallet)</label>
+      <input type="text" id="lpAddress" placeholder="0x...">
+    </div>
+    <button class="btn-load" onclick="loadPosition()">Load Position</button>
+
+    <!-- Position Details (shown after load) -->
+    <div id="positionDetails" class="hidden" style="margin-top:16px;">
+      <div class="row"><span class="label">Status</span><span class="value" id="posStatus">—</span></div>
+      <div class="row"><span class="label">Liquidity</span><span class="value" id="posLiquidity">—</span></div>
+      <div class="row"><span class="label">Entry Price</span><span class="value" id="posEntryPrice">—</span></div>
+      <div class="row"><span class="label">Epoch Started</span><span class="value" id="posEpochStart">—</span></div>
+      <div class="row"><span class="label">Premium Owed</span><span class="value" id="posPremium">—</span></div>
+      <div class="row"><span class="label">IL Claimable</span><span class="value" id="posClaimable">—</span></div>
+    </div>
+  </div>
+
+  <!-- IL Analysis Card -->
+  <div class="card">
+    <h2>Impermanent Loss Analysis</h2>
+    <div class="gauge-container">
+      <div class="gauge-value" id="ilPercent">—</div>
+      <div class="gauge-label">Current IL (basis points)</div>
+      <div class="gauge-bar">
+        <div class="gauge-fill" id="ilFill" style="width:0%"></div>
+        <div class="gauge-cap" id="ilCap" style="left:35%"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:11px; color:var(--text-muted);">
+        <span>0 bps</span>
+        <span style="color:var(--accent);">Cap: 3500 bps (35%)</span>
+        <span>10000 bps</span>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="row">
+        <span class="label">Raw IL (V3 adjusted)</span>
+        <span class="value" id="rawIL">—</span>
+      </div>
+      <div class="row">
+        <span class="label">BELTA Coverage (capped 35%)</span>
+        <span class="value gold" id="coveredIL">—</span>
+      </div>
+      <div class="row">
+        <span class="label">IL Payout (from pool)</span>
+        <span class="value green" id="ilPayout">—</span>
+      </div>
+      <div class="row">
+        <span class="label">Uncovered IL</span>
+        <span class="value red" id="uncoveredIL">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Net P&L Comparison Card -->
+  <div class="card">
+    <h2>Net P&L Comparison</h2>
+    <div class="pnl-box">
+      <h3>Without BELTA</h3>
+      <div class="pnl-value" id="pnlWithout" style="color:var(--text-primary);">—</div>
+      <div class="pnl-detail">Fee Income - Full IL Exposure</div>
+    </div>
+    <div class="pnl-box" style="border-color: var(--accent);">
+      <h3>With BELTA <span class="belta-badge">HEDGED</span></h3>
+      <div class="pnl-value" id="pnlWith" style="color:var(--accent);">—</div>
+      <div class="pnl-detail">Fee Income - Premium (12%) - IL + IL Payout (up to 35%)</div>
+    </div>
+    <div class="row">
+      <span class="label">BELTA Benefit</span>
+      <span class="value green" id="beltaBenefit">—</span>
+    </div>
+    <div style="margin-top:12px; padding:12px; background:var(--bg-secondary); border-radius:8px; font-size:12px; color:var(--text-secondary);">
+      <strong style="color:var(--accent);">How it works:</strong> You pay 12% of your fee income as premium.
+      In return, BELTA covers up to 35% of your IL from the Underwriter Pool.
+      Net benefit is highest during volatile markets with significant IL.
+    </div>
+  </div>
+
+  <!-- Fee Estimates Card -->
+  <div class="card">
+    <h2>Fee & Premium Estimates</h2>
+    <div class="row">
+      <span class="label">Pool Fee Tier</span>
+      <span class="value">0.30%</span>
+    </div>
+    <div class="row">
+      <span class="label">Your Liquidity Share</span>
+      <span class="value" id="liqShare">—</span>
+    </div>
+    <div class="row">
+      <span class="label">Current Premium Rate</span>
+      <span class="value gold" id="feesPremiumRate">—</span>
+    </div>
+    <div class="row" style="border-top:1px solid var(--border); margin-top:8px; padding-top:8px;">
+      <span class="label">Est. Weekly Fee Income</span>
+      <span class="value green" id="weeklyFees">—</span>
+    </div>
+    <div class="row">
+      <span class="label">Est. Weekly Premium</span>
+      <span class="value red" id="weeklyPremium">—</span>
+    </div>
+    <div class="row">
+      <span class="label">Est. Weekly Net (fees - premium)</span>
+      <span class="value" id="weeklyNet">—</span>
+    </div>
+    <div style="margin-top:12px; font-size:11px; color:var(--text-muted);">
+      * Estimates based on current pool parameters. Actual fees depend on swap volume.
+    </div>
+  </div>
+
+  <!-- Epoch History Card -->
+  <div class="card full-width">
+    <h2>Epoch Settlement History</h2>
+    <table class="epoch-table">
+      <thead>
+        <tr>
+          <th>Epoch</th>
+          <th>Settled</th>
+          <th>Premiums</th>
+          <th>IL Claims</th>
+          <th>Net</th>
+        </tr>
+      </thead>
+      <tbody id="epochHistory">
+        <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Connect wallet to view history</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Protocol Parameters Card -->
+  <div class="card full-width">
+    <h2>Protocol Parameters</h2>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+      <div class="row"><span class="label">Coverage Cap</span><span class="value gold">35%</span></div>
+      <div class="row"><span class="label">Base Premium</span><span class="value">12%</span></div>
+      <div class="row"><span class="label">Epoch Duration</span><span class="value">1 day</span></div>
+      <div class="row"><span class="label">Daily Pay Limit</span><span class="value">5% of pool</span></div>
+      <div class="row"><span class="label">Kink Utilization</span><span class="value">80%</span></div>
+      <div class="row"><span class="label">Max Premium Mult.</span><span class="value">3x</span></div>
+    </div>
+    <div style="margin-top:12px; text-align:center;">
+      <a href="https://sepolia.etherscan.io/address/0xB54135f42212eB13c709C74F3F3EE5C4D53F5540" target="_blank" style="font-size:12px;">
+        View BELTAHook on Etherscan
+      </a>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js"></script>
+<script src="abi.js"></script>
+<script>
+// ─── State ──────────────────────────────────────────────
+let provider, signer, userAddress;
+let hookContract, poolContract, settlementContract, oracleContract;
+
+const POOL_MANAGER_ADDR = "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543";
+
+// ─── Wallet Connection ──────────────────────────────────
+async function connectWallet() {
+  if (!window.ethereum) {
+    showToast("Install MetaMask to use this dashboard", "error");
+    return;
+  }
+  try {
+    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    provider = new ethers.BrowserProvider(window.ethereum);
+    signer = await provider.getSigner();
+    userAddress = accounts[0];
+
+    const network = await provider.getNetwork();
+    if (Number(network.chainId) !== CHAIN_ID) {
+      showToast("Please switch to Sepolia testnet", "error");
+      return;
+    }
+
+    document.getElementById("connectBtn").textContent = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+    document.getElementById("connectBtn").classList.add("connected");
+
+    initContracts();
+    loadPoolStatus();
+    loadEpochHistory();
+  } catch (e) {
+    showToast("Connection failed: " + e.message, "error");
+  }
+}
+
+function initContracts() {
+  hookContract = new ethers.Contract(ADDRESSES.BELTA_HOOK, BELTA_HOOK_ABI, provider);
+  poolContract = new ethers.Contract(ADDRESSES.UNDERWRITER_POOL, UNDERWRITER_POOL_ABI, provider);
+  settlementContract = new ethers.Contract(ADDRESSES.EPOCH_SETTLEMENT, EPOCH_SETTLEMENT_ABI, provider);
+  oracleContract = new ethers.Contract(ADDRESSES.PREMIUM_ORACLE, PREMIUM_ORACLE_ABI, provider);
+}
+
+// ─── Pool Status ────────────────────────────────────────
+async function loadPoolStatus() {
+  try {
+    const poolId = POOL_INFO.POOL_ID;
+
+    const [epochData, tvl, utilization, premiumRate] = await Promise.all([
+      hookContract.epochs(poolId),
+      poolContract.totalAssets(),
+      hookContract.getUtilization(poolId),
+      hookContract.getCurrentPremiumRate(poolId),
+    ]);
+
+    document.getElementById("currentEpoch").textContent = epochData.epochNumber.toString();
+
+    // Convert sqrtPriceAtEpochStart to human-readable
+    const sqrtPrice = epochData.sqrtPriceAtEpochStart;
+    if (sqrtPrice > 0n) {
+      const price = sqrtPriceToPrice(sqrtPrice);
+      document.getElementById("epochPrice").textContent = "$" + price.toFixed(2);
+    }
+
+    document.getElementById("poolTVL").textContent = formatUSDC(tvl);
+    document.getElementById("premiumRate").textContent = (Number(premiumRate) / 100).toFixed(1) + "%";
+    document.getElementById("utilization").textContent = (Number(utilization) / 100).toFixed(1) + "%";
+    document.getElementById("feesPremiumRate").textContent = (Number(premiumRate) / 100).toFixed(1) + "%";
+  } catch (e) {
+    console.error("loadPoolStatus:", e);
+  }
+}
+
+// ─── Load Position ──────────────────────────────────────
+async function loadPosition() {
+  if (!hookContract) {
+    showToast("Connect wallet first", "error");
+    return;
+  }
+
+  const tickLower = parseInt(document.getElementById("tickLower").value);
+  const tickUpper = parseInt(document.getElementById("tickUpper").value);
+  const lpAddr = document.getElementById("lpAddress").value || userAddress;
+
+  if (isNaN(tickLower) || isNaN(tickUpper)) {
+    showToast("Enter valid tick range", "error");
+    return;
+  }
+
+  try {
+    const poolId = POOL_INFO.POOL_ID;
+    const pos = await hookContract.getPosition(poolId, lpAddr, tickLower, tickUpper);
+
+    document.getElementById("positionDetails").classList.remove("hidden");
+    document.getElementById("posStatus").textContent = pos.active ? "ACTIVE" : "INACTIVE";
+    document.getElementById("posStatus").style.color = pos.active ? "var(--green)" : "var(--red)";
+    document.getElementById("posLiquidity").textContent = pos.liquidity.toString();
+    document.getElementById("posEpochStart").textContent = "Epoch " + pos.epochStart.toString();
+    document.getElementById("posPremium").textContent = pos.premiumOwed.toString();
+    document.getElementById("posClaimable").textContent = pos.ilClaimable.toString();
+
+    // Entry price from sqrtPriceAtEntry
+    if (pos.sqrtPriceAtEntry > 0n) {
+      const entryPrice = sqrtPriceToPrice(pos.sqrtPriceAtEntry);
+      document.getElementById("posEntryPrice").textContent = "$" + entryPrice.toFixed(2);
+    }
+
+    // Calculate IL
+    const epochData = await hookContract.epochs(poolId);
+    if (pos.active && pos.sqrtPriceAtEntry > 0n && epochData.sqrtPriceAtEpochStart > 0n) {
+      calculateAndDisplayIL(pos, epochData.sqrtPriceAtEpochStart, tickLower, tickUpper);
+    }
+
+    // Calculate P&L comparison
+    calculatePnL(pos, tickLower, tickUpper);
+
+  } catch (e) {
+    console.error("loadPosition:", e);
+    showToast("Failed to load position: " + e.message, "error");
+  }
+}
+
+// ─── IL Calculation (port from Solidity) ────────────────
+function calculateIL(sqrtPriceStart, sqrtPriceEnd, tickLower, tickUpper) {
+  if (sqrtPriceStart === 0n || sqrtPriceEnd === 0n) return 0;
+  if (sqrtPriceStart === sqrtPriceEnd) return 0;
+
+  const scale = 10n ** 18n;
+  let sqrtR;
+  if (sqrtPriceEnd >= sqrtPriceStart) {
+    sqrtR = sqrtPriceEnd * scale / sqrtPriceStart;
+  } else {
+    sqrtR = sqrtPriceStart * scale / sqrtPriceEnd;
+  }
+
+  const r = sqrtR * sqrtR / scale;
+  const numerator = 2n * sqrtR;
+  const denominator = scale + r;
+  const ratio = numerator * scale / denominator;
+
+  let ilV2;
+  if (ratio >= scale) {
+    ilV2 = 0n;
+  } else {
+    ilV2 = scale - ratio;
+  }
+
+  // V3 correction for concentrated liquidity
+  const sqrtPa = tickToSqrtPriceX96(tickLower);
+  const sqrtPb = tickToSqrtPriceX96(tickUpper);
+  const sqrtPaOverPb = sqrtPa * scale / sqrtPb;
+
+  if (sqrtPaOverPb >= scale) return 3500; // cap
+
+  const correction = scale * scale / (scale - sqrtPaOverPb);
+  const ilV3 = ilV2 * correction / scale;
+  const ilBps = Number(ilV3 * 10000n / scale);
+
+  return ilBps;
+}
+
+function calculateAndDisplayIL(pos, currentSqrtPrice, tickLower, tickUpper) {
+  const ilBps = calculateIL(pos.sqrtPriceAtEntry, currentSqrtPrice, tickLower, tickUpper);
+  const coveredBps = Math.min(ilBps, 3500);
+  const uncoveredBps = Math.max(ilBps - 3500, 0);
+
+  document.getElementById("ilPercent").textContent = ilBps + " bps";
+  document.getElementById("ilPercent").style.color = ilBps > 1000 ? "var(--red)" : ilBps > 500 ? "var(--yellow)" : "var(--green)";
+  document.getElementById("rawIL").textContent = (ilBps / 100).toFixed(2) + "%";
+  document.getElementById("coveredIL").textContent = (coveredBps / 100).toFixed(2) + "%";
+  document.getElementById("uncoveredIL").textContent = (uncoveredBps / 100).toFixed(2) + "%";
+
+  // IL payout estimate
+  if (pos.liquidity > 0n) {
+    const payout = pos.liquidity * BigInt(coveredBps) / 10000n;
+    document.getElementById("ilPayout").textContent = payout.toString();
+  }
+
+  // Gauge
+  const fillPct = Math.min(ilBps / 100, 100); // 0-100%
+  document.getElementById("ilFill").style.width = fillPct + "%";
+}
+
+function calculatePnL(pos, tickLower, tickUpper) {
+  // Simplified P&L based on position data
+  const premium = pos.premiumOwed;
+  const ilPayout = pos.ilClaimable;
+
+  // Without BELTA: LP bears full IL, no premium cost, no payout
+  // With BELTA: LP pays premium, gets IL payout
+
+  if (premium > 0n || ilPayout > 0n) {
+    // Net BELTA benefit = IL payout - premium
+    if (ilPayout >= premium) {
+      const benefit = ilPayout - premium;
+      document.getElementById("pnlWith").textContent = "+" + benefit.toString();
+      document.getElementById("pnlWith").style.color = "var(--green)";
+      document.getElementById("beltaBenefit").textContent = "+" + benefit.toString();
+    } else {
+      const cost = premium - ilPayout;
+      document.getElementById("pnlWith").textContent = "-" + cost.toString();
+      document.getElementById("pnlWith").style.color = "var(--red)";
+      document.getElementById("beltaBenefit").textContent = "-" + cost.toString() + " (low IL period)";
+    }
+
+    document.getElementById("pnlWithout").textContent = "Full IL exposure";
+    document.getElementById("pnlWithout").style.color = "var(--text-muted)";
+  }
+}
+
+// ─── Epoch History ──────────────────────────────────────
+async function loadEpochHistory() {
+  try {
+    const poolId = POOL_INFO.POOL_ID;
+    const lastSettled = await settlementContract.lastSettledEpoch(poolId);
+    const tbody = document.getElementById("epochHistory");
+    tbody.innerHTML = "";
+
+    if (lastSettled === 0n) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No settlements yet</td></tr>';
+      return;
+    }
+
+    for (let i = Number(lastSettled); i >= 1 && i > Number(lastSettled) - 10; i--) {
+      try {
+        const s = await settlementContract.getSettlement(poolId, i);
+        if (!s.settled) continue;
+
+        const net = s.premiumsCollected >= s.pendingClaims
+          ? "+" + (s.premiumsCollected - s.pendingClaims).toString()
+          : "-" + (s.pendingClaims - s.premiumsCollected).toString();
+        const netColor = s.premiumsCollected >= s.pendingClaims ? "var(--green)" : "var(--red)";
+
+        const date = new Date(Number(s.timestamp) * 1000).toLocaleDateString();
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${i}</td>
+            <td>${date}</td>
+            <td>${s.premiumsCollected.toString()}</td>
+            <td>${s.pendingClaims.toString()}</td>
+            <td style="color:${netColor}">${net}</td>
+          </tr>`;
+      } catch (e) {
+        // skip
+      }
+    }
+
+    if (tbody.innerHTML === "") {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No settlement records found</td></tr>';
+    }
+  } catch (e) {
+    console.error("loadEpochHistory:", e);
+  }
+}
+
+// ─── Presets ────────────────────────────────────────────
+function setPreset(lower, upper) {
+  if (lower === 0 && upper === 0) {
+    document.getElementById("tickLower").value = "";
+    document.getElementById("tickUpper").value = "";
+    return;
+  }
+  // These are offsets from initial tick
+  const baseTick = POOL_INFO.INITIAL_TICK || -202200;
+  const aligned = (val) => Math.floor(val / 60) * 60;
+  document.getElementById("tickLower").value = aligned(baseTick + lower);
+  document.getElementById("tickUpper").value = aligned(baseTick + upper);
+
+  // Highlight active preset
+  document.querySelectorAll(".presets button").forEach(b => b.classList.remove("active"));
+  event.target.classList.add("active");
+}
+
+// ─── Utils ──────────────────────────────────────────────
+function sqrtPriceToPrice(sqrtPriceX96) {
+  // price = (sqrtPriceX96 / 2^96)^2
+  // For USDC(token0)/WETH(token1): price = WETH/USDC
+  // ETH price in USD = 1 / price (inverted)
+  const sqrtPrice = Number(sqrtPriceX96) / (2 ** 96);
+  const price = sqrtPrice * sqrtPrice;
+  // price = WETH per USDC. ETH price = 1/price * (10^6 / 10^18) adjustment for decimals
+  // Actually: price = token1/token0 with raw amounts
+  // With USDC(6 dec) as token0 and WETH(18 dec) as token1:
+  // Real price = price * 10^6 / 10^18 = price * 10^(-12)
+  // ETH/USD = 1 / (price * 10^(-12)) = 10^12 / price
+  if (price === 0) return 0;
+  return 1e12 / price;
+}
+
+function tickToSqrtPriceX96(tick) {
+  // sqrtPrice = sqrt(1.0001^tick) * 2^96
+  // Using BigInt approximation
+  const sqrtRatio = Math.sqrt(Math.pow(1.0001, tick));
+  const q96 = 2n ** 96n;
+  return BigInt(Math.floor(sqrtRatio * Number(q96)));
+}
+
+function formatUSDC(amount) {
+  const val = Number(amount) / 1e6;
+  if (val >= 1e6) return (val / 1e6).toFixed(2) + "M";
+  if (val >= 1e3) return (val / 1e3).toFixed(1) + "K";
+  return val.toFixed(2);
+}
+
+function showToast(msg, type) {
+  const toast = document.createElement("div");
+  toast.className = "toast " + type;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+
+// ─── Auto-connect ───────────────────────────────────────
+window.addEventListener("load", () => {
+  if (window.ethereum && window.ethereum.selectedAddress) {
+    connectWallet();
+  }
+});
+
+if (window.ethereum) {
+  window.ethereum.on("accountsChanged", () => location.reload());
+  window.ethereum.on("chainChanged", () => location.reload());
+}
+</script>
+</body>
+</html>

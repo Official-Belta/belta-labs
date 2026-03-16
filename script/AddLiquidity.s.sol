@@ -26,19 +26,19 @@ contract AddLiquidity is Script {
     using StateLibrary for IPoolManager;
 
     // ─── Deployed contract addresses ─────────────────────────
-    address constant MOCK_USDC = 0x3A6262e69a845D93F4b518d28BbA3abb456618d6;
-    address constant MOCK_WETH = 0x4ABD7D9b2D8EAb6c158F84C7b786CF82e7Aff8f2;
-    address constant BELTA_HOOK = 0x1609e47BE1504F29Ed6DBb5dcdF57dEea9405540;
+    address constant MOCK_USDC = 0xCc5edffA546f6B8863247b4cEAbFcdDecD6a954E;
+    address constant MOCK_WETH = 0x341009d75D39dB7bb69A9f08a41ce62b2226b7C7;
+    address constant BELTA_HOOK = 0xB54135f42212eB13c709C74F3F3EE5C4D53F5540;
 
     // ─── Pool parameters ─────────────────────────────────────
     uint24 constant POOL_FEE = 3000;
     int24 constant TICK_SPACING = 60;
 
     // ─── LP parameters ───────────────────────────────────────
-    // Current price tick ≈ -202200 (~$2000 ETH/USDC)
+    // Current price tick ≈ 202200 (~$2000 ETH/USDC, WETH is token0)
     // Range: ±3000 ticks ≈ $1500 ~ $2700
-    int24 constant TICK_LOWER = -205200;
-    int24 constant TICK_UPPER = -199200;
+    int24 constant TICK_LOWER = 199200;
+    int24 constant TICK_UPPER = 205200;
     int256 constant LIQUIDITY_DELTA = 1e8; // moderate liquidity (USDC 6 dec needs small values)
 
     // Mint amounts for LP
@@ -74,10 +74,10 @@ contract AddLiquidity is Script {
         console.log("[3] Tokens approved to router");
 
         // ─── 4. Construct PoolKey ────────────────────────────
-        // USDC < WETH by address, so USDC = currency0
+        // WETH < USDC by address, so WETH = currency0
         PoolKey memory key = PoolKey({
-            currency0: Currency.wrap(MOCK_USDC),
-            currency1: Currency.wrap(MOCK_WETH),
+            currency0: Currency.wrap(MOCK_WETH),
+            currency1: Currency.wrap(MOCK_USDC),
             fee: POOL_FEE,
             tickSpacing: TICK_SPACING,
             hooks: IHooks(BELTA_HOOK)

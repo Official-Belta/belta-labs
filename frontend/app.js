@@ -287,7 +287,7 @@ async function loadEpochData() {
 
     const epochNumber = Number(epochData.epochNumber);
     const startTimestamp = Number(epochData.startTimestamp);
-    const epochDuration = 7 * 24 * 3600; // 7 days
+    const epochDuration = 1 * 24 * 3600; // 1 day
     const now = Math.floor(Date.now() / 1000);
     const endTimestamp = startTimestamp + epochDuration;
     const elapsed = now - startTimestamp;

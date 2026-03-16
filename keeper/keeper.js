@@ -7,17 +7,18 @@
 // Or with .env file:
 //   npm install dotenv && node keeper/keeper.js
 
+require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
 const { ethers } = require("ethers");
 
 // ─── Config ───────────────────────────────────────────────
-const RPC_URL = process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com";
+const RPC_URL = process.env.RPC_URL || process.env.SEPOLIA_RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com";
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
-const CHECK_INTERVAL_MS = 60 * 60 * 1000; // Check every 1 hour
+const CHECK_INTERVAL_MS = 30 * 60 * 1000; // Check every 30 min (1-day epochs)
 
-// Contract addresses (Sepolia)
+// Contract addresses (Sepolia — 1-day epoch deployment, March 2026)
 const ADDRESSES = {
-  EPOCH_SETTLEMENT: "0x064f6ada17f51575b11c538ed5c5b6a6d7f0ec30",
-  BELTA_HOOK: "0x07f4f427378ef485931999ace2917a210f0b9540",
+  EPOCH_SETTLEMENT: "0xbC87a063377d479e344C9Ad475D2208446D235F8",
+  BELTA_HOOK: "0xB54135f42212eB13c709C74F3F3EE5C4D53F5540",
 };
 
 // Minimal ABIs
@@ -81,11 +82,11 @@ async function checkAndSettle(settlement, wallet) {
   console.log(`[${now}] Checking...`);
 
   try {
-    // Pool key from InitPool deployment (2026-03-13)
+    // Pool key from InitPool deployment (2026-03-17, 1-day epoch)
     // WETH(token0) / USDC(token1) - sorted by address
     const poolKey = {
-      currency0: "0x45921423FdA7260efBE844d4479254d5169355D5", // Mock WETH
-      currency1: "0xA64b084D47657A799885aAC2dC861A7C432b6D12", // Mock USDC
+      currency0: "0x341009d75D39dB7bb69A9f08a41ce62b2226b7C7", // Mock WETH (token0, lower addr)
+      currency1: "0xCc5edffA546f6B8863247b4cEAbFcdDecD6a954E", // Mock USDC (token1)
       fee: 3000,
       tickSpacing: 60,
       hooks: ADDRESSES.BELTA_HOOK,

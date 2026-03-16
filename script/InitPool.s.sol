@@ -26,9 +26,9 @@ contract InitPool is Script {
     using PoolIdLibrary for PoolKey;
 
     // ─── 배포된 컨트랙트 주소 (최신 배포 기준) ─────────────
-    address constant MOCK_USDC = 0xA64b084D47657A799885aAC2dC861A7C432b6D12;
-    address constant BELTA_HOOK = 0x07F4F427378eF485931999ACE2917a210F0b9540;
-    address constant UNDERWRITER_POOL = 0x67B0e434BE06fC63224ee0d0B2E4B08Ebd9b1622;
+    address constant MOCK_USDC = 0xCc5edffA546f6B8863247b4cEAbFcdDecD6a954E;
+    address constant BELTA_HOOK = 0xB54135f42212eB13c709C74F3F3EE5C4D53F5540;
+    address constant UNDERWRITER_POOL = 0x9d3DEf5a86E01C2E21DFc53A62cfa40A200d3A97;
 
     // ─── 풀 파라미터 ───────────────────────────────────────
     uint24 constant POOL_FEE = 3000;       // 0.3% 수수료

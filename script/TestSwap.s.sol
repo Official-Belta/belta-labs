@@ -26,9 +26,9 @@ contract TestSwap is Script {
     using StateLibrary for IPoolManager;
 
     // ─── Deployed contract addresses ─────────────────────────
-    address constant MOCK_USDC = 0x3A6262e69a845D93F4b518d28BbA3abb456618d6;
-    address constant MOCK_WETH = 0x4ABD7D9b2D8EAb6c158F84C7b786CF82e7Aff8f2;
-    address constant BELTA_HOOK = 0x1609e47BE1504F29Ed6DBb5dcdF57dEea9405540;
+    address constant MOCK_USDC = 0xCc5edffA546f6B8863247b4cEAbFcdDecD6a954E;
+    address constant MOCK_WETH = 0x341009d75D39dB7bb69A9f08a41ce62b2226b7C7;
+    address constant BELTA_HOOK = 0xB54135f42212eB13c709C74F3F3EE5C4D53F5540;
 
     // ─── Pool parameters ─────────────────────────────────────
     uint24 constant POOL_FEE = 3000;
@@ -67,9 +67,10 @@ contract TestSwap is Script {
         console.log("[3] Tokens approved");
 
         // ─── 4. Construct PoolKey ────────────────────────────
+        // WETH < USDC by address, so WETH = currency0
         PoolKey memory key = PoolKey({
-            currency0: Currency.wrap(MOCK_USDC),
-            currency1: Currency.wrap(MOCK_WETH),
+            currency0: Currency.wrap(MOCK_WETH),
+            currency1: Currency.wrap(MOCK_USDC),
             fee: POOL_FEE,
             tickSpacing: TICK_SPACING,
             hooks: IHooks(BELTA_HOOK)
@@ -81,7 +82,7 @@ contract TestSwap is Script {
         (uint160 sqrtPriceBefore, int24 tickBefore,,) = poolManager.getSlot0(poolId);
         console.log("[4] Before swaps - tick:", uint256(uint24(tickBefore)));
 
-        // ─── 5. Swap #1: USDC → WETH (zeroForOne = true) ────
+        // ─── 5. Swap #1: WETH → USDC (zeroForOne = true) ────
         // amountSpecified < 0 means exact input
         PoolSwapTest.TestSettings memory settings = PoolSwapTest.TestSettings({
             takeClaims: false,
@@ -90,26 +91,26 @@ contract TestSwap is Script {
 
         SwapParams memory params1 = SwapParams({
             zeroForOne: true,
-            amountSpecified: -int256(SWAP_AMOUNT_USDC),
+            amountSpecified: -int256(SWAP_AMOUNT_WETH),
             sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
         });
 
         BalanceDelta delta1 = swapRouter.swap(key, params1, settings, "");
-        console.log("[5] Swap #1: 100 USDC -> WETH done");
+        console.log("[5] Swap #1: 0.05 WETH -> USDC done");
 
         // Check tick after swap 1
         (, int24 tickAfter1,,) = poolManager.getSlot0(poolId);
         console.log("    Tick after:", uint256(uint24(tickAfter1)));
 
-        // ─── 6. Swap #2: WETH → USDC (zeroForOne = false) ───
+        // ─── 6. Swap #2: USDC → WETH (zeroForOne = false) ───
         SwapParams memory params2 = SwapParams({
             zeroForOne: false,
-            amountSpecified: -int256(SWAP_AMOUNT_WETH),
+            amountSpecified: -int256(SWAP_AMOUNT_USDC),
             sqrtPriceLimitX96: TickMath.MAX_SQRT_PRICE - 1
         });
 
         BalanceDelta delta2 = swapRouter.swap(key, params2, settings, "");
-        console.log("[6] Swap #2: 0.05 WETH -> USDC done");
+        console.log("[6] Swap #2: 100 USDC -> WETH done");
 
         (, int24 tickAfter2,,) = poolManager.getSlot0(poolId);
         console.log("    Tick after:", uint256(uint24(tickAfter2)));
@@ -120,8 +121,8 @@ contract TestSwap is Script {
         console.log("  Test Swaps Complete!");
         console.log("============================================");
         console.log("  SwapRouter:  ", address(swapRouter));
-        console.log("  Swap 1: 100 USDC -> WETH (price down)");
-        console.log("  Swap 2: 0.05 WETH -> USDC (price up)");
+        console.log("  Swap 1: 0.05 WETH -> USDC (price down)");
+        console.log("  Swap 2: 100 USDC -> WETH (price up)");
         console.log("  Hook afterSwap triggered on each swap");
         console.log("============================================");
 

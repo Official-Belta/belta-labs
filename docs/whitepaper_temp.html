@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+/* ── Reset ── */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* ── Base ── */
+body {
+  font-family: "Noto Sans CJK KR", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  font-size: 9.5pt;
+  color: #1a1a2e;
+  line-height: 1.65;
+  background: #fff;
+}
+
+/* ── Cover ── */
+.cover {
+  margin: -12mm 0 -10mm 0;
+  width: 100%;
+  min-height: 100vh;
+  background: #0a1628;
+  display: flex;
+  flex-direction: column;
+  page-break-after: always;
+}
+.cover-header {
+  background: #102040;
+  padding: 28px 52px;
+  border-bottom: 3px solid #c8a96e;
+}
+.cover-logo {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #c8a96e;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.cover-body {
+  flex: 1;
+  padding: 64px 52px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cover-label {
+  font-size: 8.5pt;
+  color: #8899aa;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  border-left: 3px solid #c8a96e;
+  padding-left: 12px;
+}
+.cover-title {
+  font-size: 28pt;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+.cover-title span { color: #c8a96e; }
+.cover-subtitle {
+  font-size: 12pt;
+  color: #aabbcc;
+  line-height: 1.5;
+  margin-bottom: 40px;
+  max-width: 480px;
+}
+.cover-divider {
+  width: 60px;
+  height: 2px;
+  background: #c8a96e;
+  margin-bottom: 32px;
+}
+.cover-meta {
+  display: flex;
+  gap: 40px;
+}
+.cover-meta-item { }
+.cover-meta-label {
+  font-size: 7.5pt;
+  color: #667788;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.cover-meta-value {
+  font-size: 9.5pt;
+  color: #aabbcc;
+  font-weight: 600;
+}
+.cover-footer {
+  padding: 24px 52px;
+  background: #071020;
+  border-top: 1px solid #1e3050;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cover-footer-left {
+  font-size: 8pt;
+  color: #445566;
+}
+.cover-footer-right {
+  font-size: 8pt;
+  color: #445566;
+  font-style: italic;
+}
+
+/* ── Page header/footer ── */
+.page-header {
+  background: #0a1628;
+  padding: 8px 20mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0;
+}
+.page-header-left {
+  font-size: 7.5pt;
+  color: #c8a96e;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.page-header-right {
+  font-size: 7.5pt;
+  color: #667788;
+}
+.page-footer {
+  border-top: 1px solid #e8eaed;
+  padding: 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+.page-footer-left {
+  font-size: 7.5pt;
+  color: #999;
+}
+.page-footer-right {
+  font-size: 7.5pt;
+  color: #999;
+}
+
+/* ── Content pages ── */
+.page {
+  padding: 2mm 20mm 2mm;
+  page-break-after: always;
+}
+.page:last-child { page-break-after: auto; }
+
+/* ── Section label ── */
+.section-label {
+  font-size: 7.5pt;
+  color: #c8a96e;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* ── Headings ── */
+h1 {
+  font-size: 15pt;
+  font-weight: 700;
+  color: #0a1628;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #0a1628;
+  margin: 0 0 14px;
+  letter-spacing: -0.3px;
+}
+h2 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #0a1628;
+  margin: 22px 0 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #dde2e8;
+}
+h3 {
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: #334466;
+  margin: 12px 0 4px;
+}
+
+/* ── Body text ── */
+p { margin: 5px 0 8px; text-align: justify; }
+ul { margin: 4px 0 8px 18px; }
+li { margin: 3px 0; }
+
+/* ── Highlight box ── */
+.highlight {
+  background: #f0f4f8;
+  border-left: 3px solid #0a1628;
+  padding: 10px 14px;
+  margin: 10px 0;
+  font-size: 9pt;
+}
+.highlight.gold {
+  background: #fdf8ee;
+  border-left-color: #c8a96e;
+}
+.highlight.warning {
+  background: #fdf4f4;
+  border-left-color: #c0392b;
+}
+
+/* ── Code/mono ── */
+.mono {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 8.5pt;
+  color: #1a3a6e;
+  background: #f5f7fa;
+  padding: 3px 10px;
+  margin: 2px 0;
+  display: block;
+  border-left: 2px solid #c8a96e;
+}
+
+/* ── Tables ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 12px;
+  font-size: 8.5pt;
+  border-top: 2px solid #0a1628;
+  page-break-inside: avoid;
+}
+thead tr {
+  background: #0a1628;
+  color: #fff;
+}
+th {
+  padding: 8px 10px 7px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 7.5pt;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+th:first-child {
+  text-align: left;
+}
+th.c, td.c { text-align: center; }
+th.r, td.r { text-align: right; }
+th.l, td.l { text-align: left; }
+td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #eaecef;
+  vertical-align: middle;
+  color: #2a2a3e;
+}
+td:first-child {
+  color: #1a2a4a;
+  font-weight: 500;
+}
+tr:nth-child(even) td { background: #f8f9fb; }
+tr:last-child td { border-bottom: 2px solid #0a1628; }
+.tbl-sub { font-size: 7.5pt; color: #888; font-style: italic; margin-top: -8px; margin-bottom: 8px; }
+
+/* ── KPI cards ── */
+.kpi-row {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0;
+}
+.kpi-card {
+  flex: 1;
+  border: 1px solid #dde2e8;
+  border-top: 3px solid #0a1628;
+  padding: 12px 14px;
+}
+.kpi-card.gold { border-top-color: #c8a96e; }
+.kpi-label {
+  font-size: 7.5pt;
+  color: #778899;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+.kpi-value {
+  font-size: 16pt;
+  font-weight: 700;
+  color: #0a1628;
+  line-height: 1.1;
+}
+.kpi-value.gold { color: #c8a96e; }
+.kpi-sub {
+  font-size: 7.5pt;
+  color: #99aabb;
+  margin-top: 3px;
+}
+
+/* ── Flow diagram ── */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+.flow-box {
+  background: #0a1628;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 8.5pt;
+  font-weight: 600;
+  text-align: center;
+  min-width: 80px;
+}
+.flow-box.light {
+  background: #f0f4f8;
+  color: #0a1628;
+  border: 1px solid #dde2e8;
+}
+.flow-box.gold {
+  background: #c8a96e;
+  color: #fff;
+}
+.flow-arrow {
+  color: #c8a96e;
+  font-size: 14pt;
+  padding: 0 6px;
+  font-weight: 700;
+}
+
+/* ── Caption ── */
+.caption { font-size: 7.5pt; color: #99aabb; font-style: italic; margin: -8px 0 10px; }
+
+/* ── Disclaimer ── */
+.disclaimer { font-size: 7.5pt; color: #aaa; margin-top: 16px; line-height: 1.5; }
+
+/* ── Page break ── */
+.pb { page-break-after: always; }
+table { page-break-inside: avoid; }
+h1 { page-break-after: avoid; }
+h2 {
+  page-break-after: avoid;
+  page-break-inside: avoid;
+  margin-top: 22px;
+  padding-top: 6px;
+}
+h3 {
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+.highlight { page-break-inside: avoid; }
+.flow { page-break-inside: avoid; }
+.kpi-row { page-break-inside: avoid; }
+tr { page-break-inside: avoid; }
+thead { display: table-header-group; }
+p { orphans: 3; widows: 3; }
+.tbl-sub { page-break-before: avoid; margin-bottom: 14px; }
+/* h2 뒤에 최소 4줄 남지 않으면 다음 페이지로 */
+h2, h3 { break-after: avoid; }
+/* highlight 박스가 h2 바로 뒤에 올 때 같이 넘기기 */
+h2 + .highlight, h3 + .highlight { page-break-before: avoid; }
+h2 + p, h3 + p { page-break-before: avoid; }
+h2 + table, h3 + table { page-break-before: avoid; }
+
+/* ── TOC ── */
+.toc-item {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px dotted #dde2e8;
+}
+.toc-num {
+  font-size: 9pt;
+  font-weight: 700;
+  color: #c8a96e;
+  width: 28px;
+  flex-shrink: 0;
+}
+.toc-title { font-size: 9pt; color: #2a2a3e; }
+.toc-section {
+  font-size: 7.5pt;
+  color: #99aabb;
+  margin-left: 8px;
+}
+
+hr.section { border: none; border-top: 1px solid #eaecef; margin: 14px 0; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ COVER ══════════ -->
+<div class="cover">
+  <div class="cover-header">
+    <div class="cover-logo">BELTA LABS</div>
+  </div>
+  <div class="cover-body">
+    <div class="cover-label">Technical Whitepaper</div>
+    <div class="cover-title">IL Hedge<br><span>Protocol</span></div>
+    <div class="cover-subtitle">Automated LP Impermanent Loss Hedging Infrastructure Based on Uniswap V4 Hooks</div>
+    <div class="cover-divider"></div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Version</div>
+        <div class="cover-meta-value">v5.6.2</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Date</div>
+        <div class="cover-meta-value">2026.03</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Status</div>
+        <div class="cover-meta-value">Grant Proposal</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Target</div>
+        <div class="cover-meta-value">Uniswap Foundation</div>
+      </div>
+    </div>
+  </div>
+  <div class="cover-footer">
+    <div class="cover-footer-left">© 2025 BELTA Labs Pte. Ltd. · Singapore &nbsp;|&nbsp; Wall Street strategies for everyone</div>
+    <div class="cover-footer-right">Confidential — For Grant Review Only</div>
+  </div>
+</div>
+
+<!-- ══════════ TABLE OF CONTENTS ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Contents</div>
+<h1>Table of Contents</h1>
+
+<div class="toc-item"><div class="toc-num">01</div><div class="toc-title">Executive Summary</div></div>
+<div class="toc-item"><div class="toc-num">02</div><div class="toc-title">Problem Definition — LP Impermanent Loss</div></div>
+<div class="toc-item"><div class="toc-num">03</div><div class="toc-title">Protocol Design — V4 Hook Infrastructure + 3-Layer Hedging</div></div>
+<div class="toc-item"><div class="toc-num">04</div><div class="toc-title">Economic Model — LP Opt-in Hedge</div></div>
+<div class="toc-item"><div class="toc-num">05</div><div class="toc-title">Capital Structure — Underwriter Pool</div></div>
+<div class="toc-item"><div class="toc-num">06</div><div class="toc-title">Mathematical Framework — IL Calculation</div></div>
+<div class="toc-item"><div class="toc-num">07</div><div class="toc-title">Backtest Results — Actual ETH Prices + 3-Layer (v5.0.1)</div></div>
+<div class="toc-item"><div class="toc-num">08</div><div class="toc-title">Underwriting Criteria — Adverse Selection Defense</div></div>
+<div class="toc-item"><div class="toc-num">09</div><div class="toc-title">Risk Disclosure — Underwriter Loss Potential</div></div>
+<div class="toc-item"><div class="toc-num">10</div><div class="toc-title">Roadmap — Growth Strategy by Phase</div></div>
+<div class="toc-item"><div class="toc-num">11</div><div class="toc-title">Risk Assessment and Mitigation</div></div>
+<div class="toc-item"><div class="toc-num">12</div><div class="toc-title">DeFi Insurance Precedent Analysis — Why We Are Different</div></div>
+<div class="toc-item"><div class="toc-num">13</div><div class="toc-title">Team — Founder</div></div>
+<div class="toc-item"><div class="toc-num">14</div><div class="toc-title">Grant Request — Budget and Milestones</div></div>
+</div>
+
+<!-- ══════════ 01. EXECUTIVE SUMMARY ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 01</div>
+<h1>Executive Summary</h1>
+
+<div class="highlight gold">
+  <strong>One-sentence summary:</strong> BELTA IL Hedge Protocol is implemented entirely through Uniswap V4 Hooks and is an LP impermanent loss hedging infrastructure that requires absolutely no Uniswap governance changes.
+</div>
+
+<p style="margin-top:12px;">Impermanent Loss (IL) is the core pain point for Uniswap LPs. According to academic research, approximately 49.5% of V3 LPs record losses compared to simply holding (HODL), even after accounting for fee income. Solving this problem can reduce LP attrition, maintain liquidity depth, and directly improve Uniswap trading volume.</p>
+
+<div class="kpi-row" style="margin-top:16px;">
+  <div class="kpi-card">
+    <div class="kpi-label">Target Grant</div>
+    <div class="kpi-value">$70~140K</div>
+    <div class="kpi-sub">Minimum viable: $60K</div>
+  </div>
+  <div class="kpi-card gold">
+    <div class="kpi-label">Backtest Period</div>
+    <div class="kpi-value gold">5.1 Years</div>
+    <div class="kpi-sub">2020.01 — 2025.03 Actual ETH</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Senior APY (Phase 3+)</div>
+    <div class="kpi-value">7%</div>
+    <div class="kpi-sub">Aave 5% + Premium 2%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Hook Dependencies</div>
+    <div class="kpi-value">Zero</div>
+    <div class="kpi-sub">No governance change</div>
+  </div>
+</div>
+
+<div class="kpi-row" style="margin-top:8px;">
+  <div class="kpi-card gold">
+    <div class="kpi-label">LP Net Benefit</div>
+    <div class="kpi-value gold">+3.7%/yr</div>
+    <div class="kpi-sub">Additional return for hedged LPs vs. unhedged</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">LP Return (Hedged)</div>
+    <div class="kpi-value">+7.8%/yr</div>
+    <div class="kpi-sub">vs Unhedged +4.0%/yr (Actual 5.1 years)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Phase 4 T-CAGR</div>
+    <div class="kpi-value">+9.3%</div>
+    <div class="kpi-sub">Treasury growth after DEX 2% payment</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Actual Panic Epochs</div>
+    <div class="kpi-value">33</div>
+    <div class="kpi-sub">Weekly -10%+ drops over 5.1 years</div>
+  </div>
+</div>
+
+<div style="page-break-inside:avoid;">
+<h2>Why Now — What V4 Hooks Made Possible</h2>
+<p>In Uniswap V3, the complexity of LP position NFTs, range tracking, and swap event tracking made IL hedge automation practically impossible. Uniswap V4's Hook system provides the infrastructure to directly detect all these events on-chain. <strong>This protocol is only possible because of V4 Hooks.</strong></p>
+
+<h2>Uniswap Ecosystem Impact</h2>
+<div class="flow">
+  <div class="flow-box light">IL Hedge</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box light">LP Retention ↑</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box light">Liquidity Depth ↑</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box light">Slippage ↓</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box gold">Volume ↑</div>
+</div>
+<p class="caption">Direct causal chain: LP hedging → liquidity retention → volume increase</p>
+
+<h2>Three-Party Value Proposition — LP · DEX · Grant</h2>
+
+<div style="display:flex; gap:12px; margin:12px 0; flex-wrap:wrap;">
+  <div style="flex:1; min-width:160px; background:#e8f5e9; border:1px solid #4a9a4a; border-top:3px solid #1a7a3c; padding:12px 14px;">
+    <div style="font-size:7.5pt; color:#1a7a3c; font-weight:700; letter-spacing:0.5px; margin-bottom:6px;">FOR LP</div>
+    <div style="font-size:14pt; font-weight:700; color:#1a7a3c; margin-bottom:4px;">+3.7%/yr</div>
+    <div style="font-size:8.5pt; color:#333;">Simply provide liquidity to the V4 Hook pool for <strong>automatic hedging — no separate enrollment required</strong>. Net benefit +3.7%/yr (pay 12% of fees → receive 35% IL compensation). Without hedge +4.0%/yr → with hedge <strong>+7.8%/yr</strong>.</div>
+  </div>
+  <div style="flex:1; min-width:160px; background:#f0f8ff; border:1px solid #4a90d9; border-top:3px solid #1a3a5c; padding:12px 14px;">
+    <div style="font-size:7.5pt; color:#1a3a5c; font-weight:700; letter-spacing:0.5px; margin-bottom:6px;">FOR DEX (Uniswap)</div>
+    <div style="font-size:14pt; font-weight:700; color:#1a3a5c; margin-bottom:4px;">LP Attrition Prevention</div>
+    <div style="font-size:8.5pt; color:#333;">Directly improve LP retention with TVL 2% payment. In a reality where 49.5% of LPs are in a loss state, hedging infrastructure is a direct lever for liquidity depth → slippage ↓ → volume ↑.</div>
+  </div>
+  <div style="flex:1; min-width:160px; background:#fffbf0; border:1px solid #c8a96e; border-top:3px solid #c8a96e; padding:12px 14px;">
+    <div style="font-size:7.5pt; color:#8a7030; font-weight:700; letter-spacing:0.5px; margin-bottom:6px;">FOR UNISWAP FOUNDATION</div>
+    <div style="font-size:14pt; font-weight:700; color:#8a7030; margin-bottom:4px;">V4 Hook Ecosystem</div>
+    <div style="font-size:8.5pt; color:#333;">Implemented solely through V4 Hooks without governance changes. Directly solves LP retention, a core Uniswap challenge. The most practical DeFi insurance use case for V4.</div>
+  </div>
+</div>
+</div>
+
+</div>
+<!-- ══════════ 02. 문제 정의 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 02</div>
+<h1>Problem Definition — LP Impermanent Loss</h1>
+
+<div style="page-break-inside:avoid;">
+<h2>2.1 What Is Impermanent Loss</h2>
+<p>Impermanent Loss (IL) is the value loss compared to simply holding (HODL) assets when providing liquidity to an AMM. The term "impermanent" comes from the fact that the loss disappears if the price returns to its original level, but in reality, prices rarely return to their original level, making it effectively a permanent loss.</p>
+
+<div style="page-break-inside:avoid;">
+<h3>Intuitive Example — ETH/USDC Pool, ETH Price Doubles</h3>
+<table>
+  <thead><tr><th>Scenario</th><th class="r">Position Value</th><th class="r">IL</th></tr></thead>
+  <tbody>
+    <tr><td>Simple HODL (ETH $1K + USDC $1K)</td><td class="r">$3,000</td><td class="r">—</td></tr>
+    <tr><td>After Uniswap LP Provision</td><td class="r">$2,828</td><td class="r"><strong>-$172 (-5.7%)</strong></td></tr>
+  </tbody>
+</table>
+
+</div>
+<h2>2.2 Why IL Is Worse with V3 Concentrated Liquidity</h2>
+<p>Uniswap V3's concentrated liquidity improves fee efficiency, but when price exits the range, positions earn no fees at all, and IL is amplified inversely proportional to the range width.</p>
+
+<table>
+  <thead><tr><th>Range Setting</th><th class="c">V2 Baseline IL</th><th class="c">V3 Amplification Factor</th><th class="c">Effective Annual IL</th></tr></thead>
+  <tbody>
+    <tr><td>±10% Narrow</td><td class="c">1.69%</td><td class="c">×1.88</td><td class="c">3.17%</td></tr>
+    <tr><td>±25% Medium</td><td class="c">2.10%</td><td class="c">×1.88</td><td class="c">3.94%</td></tr>
+    <tr><td>±50% Wide</td><td class="c">2.62%</td><td class="c">×1.88</td><td class="c">4.92%</td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Based on effective IL including event spikes (COVID, LUNA, FTX)</p>
+
+<h2>2.3 LP Revenue Structure — The Actual Scale of the Problem</h2>
+<table>
+  <thead><tr><th>Item</th><th class="r">Value</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>ETH/USDC Fee APY (Current Actual)</td><td class="r">22.4%</td><td>Based on TVL $71.4M, daily volume $87.6M</td></tr>
+    <tr><td>ETH/USDC Fee APY (Bull Market)</td><td class="r">~28%</td><td>2024 bull market actual data</td></tr>
+    <tr><td>Annual IL Cost (Medium Range)</td><td class="r">-3.94%</td><td>Including events</td></tr>
+    <tr><td>LP Loss Rate</td><td class="r">49.5%</td><td>Based on academic research</td></tr>
+    <tr><td>Hedged LP Net Return (Current)</td><td class="r">~17.2%</td><td>22.4% - 2.69% premium + 1.38% compensation</td></tr>
+  </tbody>
+</table>
+
+<h2>2.4 Limitations of Existing Solutions</h2>
+<table>
+  <thead><tr><th>Solution</th><th>Approach</th><th>Limitations</th></tr></thead>
+  <tbody>
+    <tr><td>Gamma / Arrakis</td><td>Auto-rebalancing</td><td>Cannot eliminate IL, management fees apply</td></tr>
+    <tr><td>Range expansion</td><td>Wide range LP</td><td>Drastic fee efficiency decline</td></tr>
+    <tr><td>Manual Hedge (Perps)</td><td>dYdX/GMX short</td><td>Monitoring + rebalancing + funding management = trading desk level operations</td></tr>
+    <tr><td>Options Hedge (Opyn/Lyra)</td><td>Put option purchase</td><td>Low liquidity, expensive premiums, complex expiry management</td></tr>
+    <tr style="background:#e8f5e9;"><td><strong>IL Hedge Protocol</strong></td><td><strong>V4 Hook Auto Hedge</strong></td><td><strong>Just provide liquidity to the pool — no LP manipulation needed, automatic settlement</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="highlight gold" style="margin-top:10px;">
+  <strong>Manual Hedging vs BELTA — Why Not Do It Yourself:</strong> For institutional LPs to directly hedge IL with Perps, they need: ① real-time position monitoring ② hedge ratio calculation ③ Perp trade execution ④ funding rate management ⑤ periodic rebalancing. This is effectively running a trading desk, and for $10K~$1M LPs, infrastructure costs exceed returns. <strong>BELTA automates this entire process via V4 Hooks, transforming manual hedging into passive risk infrastructure.</strong>
+</div>
+</div>
+
+</div>
+<!-- ══════════ 03. 프로토콜 설계 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 03</div>
+<h1>Protocol Design — V4 Hook Infrastructure</h1>
+
+<div class="highlight gold">
+  <strong>"The protocol operates entirely through Uniswap V4 hooks and requires no governance changes to the Uniswap protocol."</strong>
+</div>
+
+<div style="page-break-inside:avoid;">
+<h2>3.1 V4 Hook Callback Design</h2>
+<p>Utilizing Uniswap V4's Hook system to directly detect LP position creation, liquidation, and swap events on-chain and automatically settle IL. LPs receive hedging benefits without separate transactions.</p>
+
+<table>
+  <thead><tr><th>Hook Callback</th><th>Trigger</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td><code>afterAddLiquidity</code></td><td>LP position creation</td><td>Position registration, underwriting verification, entry price snapshot</td></tr>
+    <tr><td><code>afterSwap</code></td><td>Swap occurs</td><td>Premium accumulation, IL epoch update</td></tr>
+    <tr><td><code>afterRemoveLiquidity</code></td><td>Position liquidation</td><td>IL calculation, coverage ratio application, automatic settlement payout</td></tr>
+    <tr><td><code>beforeSwap</code></td><td>Pre-swap</td><td>Circuit breaker check, anomalous trade detection</td></tr>
+  </tbody>
+</table>
+
+<h2>3.2 Smart Contract Architecture</h2>
+<table>
+  <thead><tr><th>Contract</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td><code>BELTAHook.sol</code></td><td>V4 Hook main contract — IL calculation, settlement logic, Dynamic Fee (beforeSwap)</td></tr>
+    <tr><td><code>UnderwriterPool.sol</code></td><td>ERC-4626 Vault — Underwriter Pool management, premium distribution, cooldown</td></tr>
+    <tr><td><code>EpochSettlement.sol</code></td><td>7-day epoch IL settlement — Keeper automation, daily payout cap</td></tr>
+    <tr><td><code>PremiumOracle.sol</code></td><td>Dynamic margin rate calculation — Aave utilization curve (80% kink, max 3x)</td></tr>
+    <tr><td><code>TreasuryModule.sol</code></td><td>Treasury buffer management + Aave Yield Stacking (Layer 2)</td></tr>
+    <tr><td><code>VolatilityOracle.sol</code></td><td>EWMA volatility tracking — Dynamic Fee curve calculation (Layer 1)</td></tr>
+    <tr><td><code>HedgeManager.sol</code></td><td>Perps Delta-Hedging — dYdX/GMX/Hyperliquid adapter (Layer 3, Phase 2+)</td></tr>
+  </tbody>
+</table>
+
+<h2>3.3 Security Design</h2>
+<ul>
+  <li><strong>Circuit Breaker</strong>: Automatic pause when 24-hour IL payouts exceed 30% of Pool</li>
+  <li><strong>Daily Payout Limit</strong>: No single payout exceeding 5% of Pool balance</li>
+  <li><strong>Multisig</strong>: 3/5 signatures required for protocol parameter changes</li>
+  <li><strong>Oracle Redundancy</strong>: Chainlink + Uniswap TWAP cross-validation</li>
+  <li><strong>Security Audits</strong>: Two audits by professional firms (budget $25K allocated)</li>
+</ul>
+</div>
+
+</div>
+<!-- ══════════ 03-4. 체인 배포 전략 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<h2>3.4 Deployment Chain Strategy — Phased Multi-chain Expansion</h2>
+
+<p>BELTA IL Hedge Protocol is designed based on Uniswap V4 Hooks, and <strong>hedge contracts must be deployed on the same chain as LP positions</strong> to enable real-time IL tracking and epoch settlement. Therefore, deployment chain selection directly determines the protocol's effective TAM (Total Addressable Market).</p>
+
+<div style="page-break-inside:avoid;">
+<h3>Target Pool TVL Status (As of March 2026, Uniswap V4)</h3>
+<table>
+  <thead><tr><th>Chain</th><th>V4 TVL</th><th>ETH/USDC Representative Pool</th><th>Notes</th></tr></thead>
+  <tbody>
+  <tr><td>Ethereum mainnet</td><td>~$4.0B</td><td>~$300~500M</td><td>Largest liquidity, high gas</td></tr>
+  <tr><td>Base</td><td>~$500M</td><td>~$150~200M</td><td>Rapid V4 market share growth</td></tr>
+  <tr><td>Arbitrum</td><td>~$336M</td><td>~$100~150M</td><td>Low gas, institutional preference</td></tr>
+  <tr><td>Unichain</td><td>~$530M+</td><td>Processes 50% of V4 transactions</td><td>Uniswap's own L2</td></tr>
+  </tbody>
+</table>
+<p style="margin-top:6px; font-size:9.5pt; color:#666;">* Target 3 pools (ETH/USDC + BTC/USDC + SOL/USDC) multi-chain combined TAM: <strong>~$1B+</strong></p>
+
+<h3>Deployment Chain by Phase</h3>
+<table>
+  <thead><tr><th>Phase</th><th>Deployment Chain</th><th>Rationale</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Phase 1~2</strong><br>Pilot/Growth</td>
+      <td>Ethereum mainnet</td>
+      <td>Maximum liquidity and credibility. Institutional LP concentration. Optimal for early track record building</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 3</strong><br>Open Market</td>
+      <td>Ethereum + Arbitrum</td>
+      <td>Adding Arbitrum for low gas environment. Accelerating retail LP inflow. TAM ~$700M</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 4</strong><br>DEX Payment</td>
+      <td>Ethereum + Arbitrum + Base</td>
+      <td>Covering 3 major V4 chains. Securing DEX partnership negotiation leverage. TAM ~$1B+</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 5</strong><br>Long-term Expansion</td>
+      <td>+ Unichain and new chains</td>
+      <td>TVL $1B target. Adding chains with growing V4 transaction share. Cross-chain hedge settlement research</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight" style="margin-top:14px;">
+  <strong>⚠ SOL/USDC 특이 사항:</strong> Uniswap V4 내 SOL은 Wrapped SOL(ERC-20)로 유동성이 제한적이다. Solana native 생태계(Raydium, Orca)의 SOL/USDC TVL이 압도적으로 크나, V4 Hook 기반 헤지 연동은 Current 기술적으로 불가하다. Phase 4+ 시점에 Solana VM 호환 Hook 또는 크로스체인 정산 메커니즘이 성숙한 경우에 한해 확장을 검토하며, Phase 1~3 기준 SOL/USDC는 보조 풀로만 운영한다.
+</div>
+
+<h3>배포 체인 선택 기준</h3>
+<ul>
+  <li><strong>V4 Hook Support</strong>: Only chains where PoolManager contract is deployed</li>
+  <li><strong>LP TVL Threshold</strong>: Priority for chains with target pool TVL above $100M (fee revenue sustainability)</li>
+  <li><strong>Oracle Reliability</strong>: Chainlink price feed + Uniswap TWAP simultaneous support required</li>
+  <li><strong>Audit Scope</strong>: Separate security audit required for each chain environment when adding chains</li>
+</ul>
+</div>
+
+</div>
+<!-- ══════════ 03-5. 3-Layer Hedging ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<h2>3.5 3-Layer Hedging System — Underwriter Pool Profitability Structure</h2>
+
+<p>BELTA IL Hedge Protocol combines <strong>3 layers</strong> to overcome the structural limitations of a simple insurance pool model (unstable UW returns), designing a structure where Underwriters can profit in all Phases.</p>
+
+<div class="highlight" style="margin-bottom:18px;">
+  <strong>Core Logic:</strong> Reduce IL payout burden (Layers 1, 3) while simultaneously increasing Pool revenue (Layer 2). Since the three layers operate independently, the overall structure is maintained even if one fails.
+</div>
+
+<div style="page-break-inside:avoid;">
+<h3>Layer 1 — Dynamic Fee Hook (V4 Native)</h3>
+<p>Measures real-time volatility in <code>beforeSwap</code> and automatically adjusts fees. During high-volatility periods when IL occurs most, LP fee income increases accordingly, creating a <strong>natural offset between IL and fee revenue</strong>.</p>
+
+<table>
+  <thead><tr><th>Volatility Level</th><th class="c">Fee Rate</th><th>Effect</th></tr></thead>
+  <tbody>
+    <tr><td>Low (&lt; 30% annualized)</td><td class="c">5 bps (0.05%)</td><td>Maximize volume attraction</td></tr>
+    <tr><td>Medium (30~60%)</td><td class="c">30 bps (0.3%)</td><td>Baseline level</td></tr>
+    <tr><td>High (&gt; 60%)</td><td class="c">100 bps (1.0%)</td><td>Fees 3~8x during IL occurrence periods</td></tr>
+  </tbody>
+</table>
+<p style="margin-top:6px; font-size:9.5pt; color:#666;">* 50~80% of LVR (Loss-Versus-Rebalancing) recoverable. Additional APY effect: +3~8%. V4 native — no external dependencies.</p>
+
+<h3 style="margin-top:16px;">Layer 2 — Aave Yield Stacking (저위험)</h3>
+<p>Automatically deposits idle funds in the Underwriter Pool (approximately 70% of total TVL) into Aave to <strong>consistently generate baseline returns</strong>. Reserves 30% liquidity for immediate withdrawal in case of emergency IL claims.</p>
+
+<table>
+  <thead><tr><th>Item</th><th class="c">Phase 3 ($10M Pool 기준)</th></tr></thead>
+  <tbody>
+    <tr><td>Aave Deposited Funds (70%)</td><td class="c">$7M</td></tr>
+    <tr><td>Aave USDC APR (4~8%)</td><td class="c">$280K ~ $560K/년</td></tr>
+    <tr><td>Liquidity Reserve (30%)</td><td class="c">$3M (Available for immediate withdrawal)</td></tr>
+    <tr><td>Additional Pool APY Effect</td><td class="c"><strong>+2.8 ~ 5.6%</strong></td></tr>
+  </tbody>
+</table>
+
+<h3 style="margin-top:16px;">Layer 3 — Perps Delta-Hedging (Phase 2+, 선택)</h3>
+<p>When the UW Pool needs to pay IL, it <strong>partially offsets the IL with Perps short positions</strong>. Maintains ETH shorts worth 50% of hedged TVL through dYdX / GMX / Hyperliquid adapters, with Keepers periodically auto-adjusting delta.</p>
+
+<table>
+  <thead><tr><th>Scenario</th><th>Without Hedge</th><th>With Layer 3</th></tr></thead>
+  <tbody>
+    <tr><td>IL Claim at ETH -20% ($10M Pool)</td><td class="r" style="color:#c00;">-$570K</td><td class="r" style="color:#1a7a3c;">-$170K (Short profit $400K offset)</td></tr>
+    <tr><td>Funding Cost (Annual)</td><td class="c">—</td><td class="c">-1~3% APY</td></tr>
+    <tr><td>IL Payout Burden Reduction</td><td class="c">—</td><td class="c"><strong>50~70%</strong></td></tr>
+  </tbody>
+</table>
+<p style="margin-top:6px; font-size:9.5pt; color:#666;">* Phase 1: Design preparation. Phase 2~3: Small-scale introduction. Phase 4+: Full-scale operation.</p>
+
+<h3 style="margin-top:16px; page-break-before:always;">3-Layer Combined Effect (Phase 3 Basis, $10M Pool)</h3>
+<table>
+  <thead><tr><th>Item</th><th class="r">Without Layers</th><th class="r">With 3-Layer</th></tr></thead>
+  <tbody>
+    <tr><td>LP Premium Income</td><td class="r">$600K/년</td><td class="r">$600K/년</td></tr>
+    <tr><td>Dynamic Fee Additional Income (Layer 1)</td><td class="r">—</td><td class="r" style="color:#1a7a3c;">+$400K/년</td></tr>
+    <tr><td>Aave Interest Income (Layer 2)</td><td class="r">—</td><td class="r" style="color:#1a7a3c;">+$280K/년</td></tr>
+    <tr><td>IL Claim Payouts</td><td class="r" style="color:#c00;">-$1,200K/년</td><td class="r" style="color:#c00;">-$1,200K/년</td></tr>
+    <tr><td>Perps Hedge Savings (Layer 3)</td><td class="r">—</td><td class="r" style="color:#1a7a3c;">+$600K/년</td></tr>
+    <tr style="background:#e8f5e9; font-weight:bold;"><td>Pool Net Profit</td><td class="r" style="color:#c00;">-$600K</td><td class="r" style="color:#1a7a3c;">+$680K</td></tr>
+    <tr style="background:#e8f5e9; font-weight:bold;"><td>Underwriter APY</td><td class="r" style="color:#c00;">-6.0%</td><td class="r" style="color:#1a7a3c;">+6.8%</td></tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+<!-- ══════════ 04. 경제 모델 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 04</div>
+<h1>Economic Model — LP Opt-in Hedge</h1>
+
+<h2>4.1 Premium Structure — Voluntary LP Payment</h2>
+<p>LPs pay a percentage of their fee income as premium and receive partial IL compensation in return. The premium structure of deducting a small portion from LP earnings has higher psychological acceptance than TVL-based payments.</p>
+
+<div class="highlight">
+  <strong>Premium = 12% of LP fee income</strong> (approximately 2.7% / year in TVL terms)<br>
+  <strong>Coverage = 35% of IL</strong> (partial hedge — ensuring insurance pool stability)
+</div>
+
+<div class="highlight gold" style="margin-top:10px;">
+  <strong>LP Net Benefit Actual (2020~2025 Backtest):</strong> Even paying 12% of fees, IL compensation (35%) is greater. Without hedge +4.0%/yr → with hedge <strong>+7.8%/yr</strong>. LPs earn an additional +3.7%p per year even after costs. IL concentrates in black swan epochs, and the 35% Coverage compensation exceeds the cumulative cost of the 12% premium.<br><br>
+  <strong>LP Entry Barrier = 0:</strong> Simply provide liquidity to a V4 Hook-enabled pool for automatic hedging. No separate enrollment, monitoring, or rebalancing required. Completely eliminates operational complexity compared to direct Perps hedging — <strong>passive risk infrastructure</strong>.
+</div>
+
+<h3>LP Net Benefit — Verified Results from 269 Actual Epochs</h3>
+<p>Based on backtest results using actual 2020~2025 ETH prices (269 weeks, including 33 panic episodes), <strong>LPs earn an additional +3.7% annual return compared to unhedged, even after paying the 12% premium</strong>.</p>
+
+<svg viewBox="0 0 500 210" xmlns="http://www.w3.org/2000/svg" style="width:100%; font-family:sans-serif; margin:10px 0;">
+  <!-- 배경 -->
+  <rect width="500" height="210" fill="#fafbfd" rx="6"/>
+  
+  <!-- 타이틀 -->
+  <text x="250" y="22" font-size="10" font-weight="700" fill="#0a1628" text-anchor="middle">LP Annual Return Comparison (Actual ETH, 5.1 Years, $10K LP)</text>
+  
+  <!-- Y축 기준선 -->
+  <line x1="60" y1="48" x2="60" y2="160" stroke="#dde" stroke-width="1"/>
+  <line x1="60" y1="160" x2="440" y2="160" stroke="#dde" stroke-width="1"/>
+  
+  <!-- Y축 라벨 -->
+  <text x="55" y="68" font-size="7" fill="#888" text-anchor="end">8%</text>
+  <text x="55" y="91" font-size="7" fill="#888" text-anchor="end">6%</text>
+  <text x="55" y="114" font-size="7" fill="#888" text-anchor="end">4%</text>
+  <text x="55" y="137" font-size="7" fill="#888" text-anchor="end">2%</text>
+  <text x="55" y="160" font-size="7" fill="#888" text-anchor="end">0%</text>
+  <!-- 그리드 -->
+  <line x1="60" y1="68" x2="440" y2="68" stroke="#eee" stroke-width="0.5"/>
+  <line x1="60" y1="91" x2="440" y2="91" stroke="#eee" stroke-width="0.5"/>
+  <line x1="60" y1="114" x2="440" y2="114" stroke="#eee" stroke-width="0.5"/>
+  <line x1="60" y1="137" x2="440" y2="137" stroke="#eee" stroke-width="0.5"/>
+
+  <!-- 바 1: 헤지 없음 +4.0%/yr (높이: 4.0/8 × 92 = 46px, y=160-46=114) -->
+  <rect x="100" y="114" width="80" height="46" rx="3" fill="#95a5a6"/>
+  <text x="140" y="108" font-size="11" font-weight="700" fill="#555" text-anchor="middle">+4.0%</text>
+  <text x="140" y="175" font-size="8" fill="#555" text-anchor="middle">Without Hedge</text>
+  
+  <!-- 바 2: 헤지 가입 +7.8%/yr (높이: 7.8/8 × 92 = 89.7px, y=160-89.7=70.3) -->
+  <rect x="220" y="70" width="80" height="90" rx="3" fill="#1a7a3c"/>
+  <text x="260" y="64" font-size="11" font-weight="700" fill="#1a7a3c" text-anchor="middle">+7.8%</text>
+  <text x="260" y="175" font-size="8" fill="#1a7a3c" text-anchor="middle">Hedged</text>
+  
+  <!-- 차이 표시 화살표 -->
+  <line x1="340" y1="114" x2="340" y2="70" stroke="#c8a96e" stroke-width="2"/>
+  <polygon points="337,75 340,68 343,75" fill="#c8a96e"/>
+  <polygon points="337,109 340,116 343,109" fill="#c8a96e"/>
+  <rect x="350" y="83" width="86" height="22" rx="4" fill="#c8a96e"/>
+  <text x="393" y="97" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">+3.7%/yr</text>
+  
+  <!-- 하단 통계 -->
+  <rect x="60" y="186" width="380" height="18" rx="3" fill="#f0f4f8"/>
+  <text x="250" y="198" font-size="7.5" fill="#556" text-anchor="middle">Actual ETH 269 weeks | Including panic (≤-10%) 33 episodes | V3 IL ×2.50 | Coverage 35% | Premium 12%</text>
+</svg>
+
+<table style="margin-top:4px;">
+  <thead><tr><th>Item</th><th class="r">Without Hedge</th><th class="r">Hedged</th><th class="r">Difference</th></tr></thead>
+  <tbody>
+    <tr><td>Fee Income</td><td class="r">$11,536</td><td class="r">$11,536</td><td class="r">—</td></tr>
+    <tr><td>Premium Expense (12%)</td><td class="r">—</td><td class="r">-$1,384</td><td class="r">-$1,384</td></tr>
+    <tr><td>IL Incurred (V3 ×2.5)</td><td class="r" style="color:#c00;">-$9,464</td><td class="r" style="color:#c00;">-$9,464</td><td class="r">—</td></tr>
+    <tr><td>IL Compensation Received (35%)</td><td class="r">—</td><td class="r" style="color:#1a7a3c;">+$3,312</td><td class="r" style="color:#1a7a3c;">+$3,312</td></tr>
+    <tr style="font-weight:700; border-top:2px solid #ccc;"><td>5.1-Year Net Profit</td><td class="r">$2,072</td><td class="r" style="color:#1a7a3c;">$4,000</td><td class="r" style="color:#1a7a3c;">+$1,928</td></tr>
+    <tr style="font-weight:700; background:#e8f5e9;"><td>Annual Return</td><td class="r">+4.0%/yr</td><td class="r" style="color:#1a7a3c;">+7.8%/yr</td><td class="r" style="color:#c8a96e; font-size:10pt;">+3.7%/yr</td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Based on a single LP with $10,000 TVL, actual ETH 269 epochs (2020.01~2025.03). LP pays $5.17/week → receives up to $216 per black swan epoch (COVID -38.5%) in an insurance structure. Net benefit of +$1,928 received vs. paid.</p>
+
+<div style="page-break-inside:avoid;">
+<h3>Actual Fee APY Basis (GeckoTerminal, as of March 2026)</h3>
+<table>
+  <thead><tr><th>Pool</th><th class="c">Fee Tier</th><th class="r">TVL</th><th class="r">Daily Volume</th><th class="r">Fee APY</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>ETH/USDC</td><td class="c">0.05%</td><td class="r">$71.4M</td><td class="r">$87.6M</td><td class="r"><strong>22.4%</strong></td><td>~28% in 2024 bull, ~18% in correction</td></tr>
+    <tr><td>WBTC/USDC</td><td class="c">0.30%</td><td class="r">$70.4M</td><td class="r">$6.9M</td><td class="r"><strong>10.7%</strong></td><td>~14% in 2024 bull, ~8% in correction</td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Fee APY = daily volume × fee tier × 365 / TVL. May fluctuate ±30~40% depending on market conditions.</p>
+
+<h3 style="page-break-before:always;">LP Revenue Simulation (ETH/USDC, Annual Basis)</h3>
+<table>
+  <thead><tr><th>Scenario</th><th class="r">Fee APY</th><th class="r">IL Cost</th><th class="r">Premium (12%)</th><th class="r">IL Compensation (35%)</th><th class="r">Net Return</th></tr></thead>
+  <tbody>
+    <tr><td>No Hedge (Bull)</td><td class="r">28%</td><td class="r">-3.94%</td><td class="r">—</td><td class="r">—</td><td class="r">24.1%</td></tr>
+    <tr><td>Hedged (Bull)</td><td class="r">28%</td><td class="r">-3.94%</td><td class="r">-3.36%</td><td class="r">+1.38%</td><td class="r"><strong>22.1%</strong></td></tr>
+    <tr><td>No Hedge (Current)</td><td class="r">22.4%</td><td class="r">-3.94%</td><td class="r">—</td><td class="r">—</td><td class="r">18.5%</td></tr>
+    <tr><td>Hedged (Current)</td><td class="r">22.4%</td><td class="r">-3.94%</td><td class="r">-2.69%</td><td class="r">+1.38%</td><td class="r"><strong>17.2%</strong></td></tr>
+    <tr><td>No Hedge (Bear)</td><td class="r">18%</td><td class="r">-3.94%</td><td class="r">—</td><td class="r">—</td><td class="r">14.1%</td></tr>
+    <tr style="background:#eaf4ea;"><td><strong>Hedged (Bear)</strong></td><td class="r">18%</td><td class="r">-3.94%</td><td class="r">-2.16%</td><td class="r">+1.38%</td><td class="r"><strong style="color:#1a7a3c;">13.3% ▲</strong></td></tr>
+    <tr style="background:#fff3cd;"><td><strong>블랙스완 (ETH -50%)</strong><br><small>Without Hedge</small></td><td class="r">~8%</td><td class="r"><strong>-13.4%</strong></td><td class="r">—</td><td class="r">—</td><td class="r"><strong style="color:#c00;">-5.4%</strong></td></tr>
+    <tr style="background:#e8f5e9;"><td><strong>Black Swan (ETH -50%)</strong><br><small>Hedged</small></td><td class="r">~8%</td><td class="r">-13.4%</td><td class="r">-0.96%</td><td class="r"><strong>+4.69%</strong></td><td class="r"><strong style="color:#1a7a3c;">-1.67% (69% loss protection)</strong></td></tr>
+  </tbody>
+</table>
+<div class="highlight" style="margin-top:12px; border-left: 4px solid #1a7a3c; background:#f0faf0;">
+  <strong>Key Insight:</strong> In bull markets, hedging cost is only 1.6%, while in bear markets, hedged participants actually earn more. In black swan events, losses are reduced from -5.4% to -1.67%, defending 69% of losses.
+</div>
+
+<h2>4.2 Premium Flow — Pool Inflow and Distribution Structure</h2>
+
+<p>LP premiums and DEX cash payments are <strong>combined and flow into the Pool</strong>. BELTA Labs <strong>deducts 15% as a priority</strong> from the total inflow, and operates IL payouts, Senior APY, and Treasury accumulation in order with the remaining 85%.</p>
+
+<div class="flow" style="margin: 14px 0; flex-wrap: wrap; gap: 6px;">
+  <div class="flow-box light" style="text-align:center; font-size:8pt;">LP Premium<br><small>12% of fees</small></div>
+  <div class="flow-arrow">+</div>
+  <div class="flow-box light" style="text-align:center; font-size:8pt; border-color:#c8a96e;">DEX Cash Payment<br><small>TVL 2%</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="text-align:center; font-size:8pt; border-color:#1a3a5c;">BELTA Labs<br><small>15% Priority Deduction</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="text-align:center; font-size:8pt; border-color:#c00;">IL Payout<br><small>Coverage 35%<br>① Treasury first-loss</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="text-align:center; font-size:8pt; border-color:#4a90d9;">Senior 7% APY<br><small>Aave 5% + Premium 2%<br>② 우선 보장</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box gold" style="text-align:center; font-size:8pt;">Treasury<br><small>Full surplus accumulation<br>③ Excess → BELTA Labs</small></div>
+</div>
+
+<table>
+  <thead><tr><th>Step</th><th>Item</th><th class="r">Ratio/Amount (Mid fee)</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Inflow</strong></td><td>LP Premium + DEX Cash (gross)</td><td class="r">~$5,625,600/yr</td><td>LP TVL $120M × 22.4% × 12% + TVL × 2%</td></tr>
+    <tr><td><strong>Deduction</strong></td><td>BELTA Labs 15%</td><td class="r">-$601,920/yr</td><td>15% priority deduction from gross</td></tr>
+    <tr><td></td><td>net (85% → Pool operations)</td><td class="r">$3,410,880/yr</td><td>Pool internal allocation below</td></tr>
+    <tr><td><strong>① IL Payout</strong></td><td>Coverage 35% (Epoch settlement)</td><td class="r">-$2,002,391/yr</td><td>Treasury first-loss → then Senior</td></tr>
+    <tr><td><strong>② Senior</strong></td><td>Aave 5% + topup 2%</td><td class="r">$800K + $320K</td><td>Based on Senior $16M, compound accrual</td></tr>
+    <tr><td><strong>③ Treasury</strong></td><td>Surplus accumulation → excess returned</td><td class="r">~$983,966/yr 환원</td><td>Excess above max(initial, Senior×20%) → BELTA Labs</td></tr>
+  </tbody>
+</table>
+
+<div class="highlight" style="margin-top:10px; font-size:8.5pt;">
+  <strong>Senior 7% APY Guarantee Logic:</strong> Aave returns (5%) are paid first, with the shortfall (2%) prioritized from net. Senior operates as compound accrual — interest is accumulated daily in sb, serving as an IL buffer alongside principal. Flexibly adjusted to 5~6% in Phases 1~2 during bear market TVL declines.
+</div>
+
+<h2>4.3 Protocol Revenue Simulation (Phase 4 Steady State Assumption, Annual)</h2>
+<p style="font-size:8.5pt; color:#555; margin-bottom:6px;">Pool $20M · LP TVL $120M (Pool × CAP_MULT 6) · Including DEX cash TVL 2% · Annual comparison by fee scenario</p>
+<div class="highlight" style="margin-bottom:10px; font-size:8.5pt; border-left-color:#c8a96e; background:#fffbf0;">
+  <strong>⚠ Note:</strong> The figures below are theoretical simulations for Phase 4 steady state (100% TVL achievement) and are separate from the Section 7 backtest (v4.4.0, 15.7% TVL achievement rate). Refer to backtest results for actual early-stage returns.
+</div>
+
+<div style="display:flex; gap:16px; margin-bottom:8px; font-size:7.5pt; flex-wrap:wrap;">
+  <span style="display:flex; align-items:center; gap:4px;"><span style="display:inline-block; width:12px; height:12px; background:#e8f4e8; border:1px solid #4a9a4a; border-radius:2px;"></span> BELTA Labs Revenue</span>
+  <span style="display:flex; align-items:center; gap:4px;"><span style="display:inline-block; width:12px; height:12px; background:#fde8e8; border:1px solid #c04040; border-radius:2px;"></span> BELTA Labs Expenses</span>
+  <span style="display:flex; align-items:center; gap:4px;"><span style="display:inline-block; width:12px; height:12px; background:#e8eef8; border:1px solid #4a70b0; border-radius:2px;"></span> Protocol Internal Circulation</span>
+</div>
+
+<table>
+  <thead><tr><th>Item</th><th class="r">Bear (18%)</th><th class="r">Current (22.4%)</th><th class="r">Bull (28%)</th><th>Category</th></tr></thead>
+  <tbody>
+    <tr style="background:#e8eef8;"><td>LP Premium (fee × 12%)</td><td class="r">$2.59M</td><td class="r">$3.23M</td><td class="r">$4.03M</td><td style="font-size:7.5pt; color:#4a70b0;">↻ Pool inflow</td></tr>
+    <tr style="background:#e8eef8;"><td>DEX Cash Payment (TVL 2%)</td><td class="r">$2.40M</td><td class="r">$2.40M</td><td class="r">$2.40M</td><td style="font-size:7.5pt; color:#4a70b0;">↻ Pool inflow</td></tr>
+    <tr style="font-weight:700;"><td>Gross Total</td><td class="r">$3.70M</td><td class="r">$4.01M</td><td class="r">$4.42M</td><td></td></tr>
+    <tr style="background:#e8f4e8;"><td>BELTA Labs 15% Deduction <em style="font-size:7.5pt;">(priority)</em></td><td class="r">+$555K</td><td class="r">+$601K</td><td class="r">+$663K</td><td style="font-size:7.5pt; color:#4a9a4a; font-weight:700;">✚ Revenue</td></tr>
+    <tr style="background:#e8eef8;"><td>net 85% → Pool operations</td><td class="r">$3.15M</td><td class="r">$3.41M</td><td class="r">$3.76M</td><td style="font-size:7.5pt; color:#4a70b0;">↻ Internal circulation</td></tr>
+    <tr style="background:#e8eef8;"><td>Aave Returns (Senior $16M × 5%)</td><td class="r">$800K</td><td class="r">$800K</td><td class="r">$800K</td><td style="font-size:7.5pt; color:#4a70b0;">↻ Internal circulation</td></tr>
+    <tr style="background:#fde8e8;"><td>IL Payout (Coverage 35%)</td><td class="r">-$1.61M</td><td class="r">-$2.00M</td><td class="r">-$2.50M</td><td style="font-size:7.5pt; color:#c04040; font-weight:700;">▼ Expenses</td></tr>
+    <tr style="background:#e8eef8;"><td>Senior topup (7%−5% × $16M)</td><td class="r">$320K</td><td class="r">$320K</td><td class="r">$320K</td><td style="font-size:7.5pt; color:#4a70b0;">↻ Senior attributed</td></tr>
+    <tr style="background:#e8eef8; font-weight:700; border-top:2px solid #ccc;"><td>Pool Net Surplus (→ Treasury accumulation)</td><td class="r">+$1.07M</td><td class="r">+$0.95M</td><td class="r">+$0.81M</td><td style="font-size:7.5pt; color:#4a70b0;">↻ Treasury accumulation</td></tr>
+    <tr style="background:#e8f4e8;"><td>Treasury Excess Return (annual avg)</td><td class="r">+$984K</td><td class="r">+$984K</td><td class="r">+$984K</td><td style="font-size:7.5pt; color:#4a9a4a; font-weight:700;">✚ Revenue</td></tr>
+    <tr style="background:#d4edda; font-weight:700; border-top:3px solid #4a9a4a;">
+      <td>🏦 BELTA Labs Total Revenue</td>
+      <td class="r" style="color:#1a7a3c;">+$1,539K</td>
+      <td class="r" style="color:#1a7a3c;">+$1,585K</td>
+      <td class="r" style="color:#1a7a3c;">+$1,647K</td>
+      <td style="font-size:7.5pt; color:#1a7a3c;">① 15% deduction + ② Treasury excess</td>
+    </tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* 연간 기준. DEX Payment: 현금 TVL 2% → Pool 유입. ✚ Revenue = BELTA Labs 현금 유입 / ▼ Expenses = 프로토콜 운영 비용 / ↻ Internal circulation = Pool 내 회전. Treasury 초과분은 백테스트 5.1년 평균값.<br>① Based on 15% deduction.</p>
+
+<h2 style="page-break-before:always;">4.4 장기 모델 — DEX Payment 전환 (Phase 4+)</h2>
+<p>Once LP retention data accumulates after the pilot and a $20M Pool base is formed, the goal is to transition to a structure where the DEX pays a portion of fee revenue as premium, in collaboration with Uniswap Foundation.</p>
+
+<div class="highlight gold" style="margin-bottom:12px;">
+  <strong>Why DEX Should Pay TVL 2%:</strong><br>
+  ① <strong>LP attrition cost far exceeds 2%.</strong> 49.5% of V3 LPs lose vs. HODL. Breaking the vicious cycle of IL → LP attrition → TVL↓ → slippage↑ → volume↓ with TVL 2% payment.<br>
+  ② <strong>Direct LP retention leverage.</strong> Without hedge +4.0%/yr → with hedge +7.8%/yr. Eliminating reasons for LPs to leave.<br>
+  ③ <strong>ROI:</strong> $2.4M/yr 납부로 LP retention 10% 개선 시 TVL $12M 유지 → DEX Fee Income 대비 합리적 보험료.<br>
+  ④ <strong>규모 비교:</strong> TVL $120M에서 2% = $2.4M/yr. 동일 TVL에서 LP Fee Income(22.4%) = $26.9M/yr. 즉 DEX Payment 2%는 LP 수수료의 <strong>~9%</strong>에 해당하며, Uniswap 자체 Protocol Fee(fee switch 10~25%)보다 낮은 수준이다. LP retention 인프라 비용으로는 합리적 범위.<br>
+  <strong>DEX Payment:</strong> LP TVL 2% 현금 → Pool 유입 &nbsp;|&nbsp; <strong>LP Premium:</strong> 수수료의 12% 전 Phase 통일 (도덕적 해이 방지)
+</div>
+
+<div style="page-break-inside:avoid;">
+<h3 style="page-break-before:always;">Phase 4 BELTA Labs Revenue Structure (Pool $20M · LP TVL $120M · Mid fee 22.4%)</h3>
+<table>
+  <thead><tr><th>Revenue Source</th><th class="r">Annual</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>15% Priority Deduction (LP Premium+DEX Cash)</td><td class="r">~$602,000</td><td>gross $4.01M × 15%</td></tr>
+    <tr><td>Treasury Excess Return (annual avg)</td><td class="r">~$984,000</td><td>Backtest actual average (5.1 years)</td></tr>
+    <tr style="font-weight:700; border-top:2px solid #ccc;"><td>BELTA Labs Total Revenue</td><td class="r">~$1,586,000</td><td>Cash basis</td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* BELTA Labs 수익 = ① 15% priority deduction from gross + ② Treasury 목표 초과분 환원. DEX 현금 납부는 Pool 유입 후 15% 공제 과정에서 일부 귀속.</p>
+
+<table>
+  <thead><tr><th>Entity</th><th>Benefits</th></tr></thead>
+  <tbody>
+    <tr><td><strong>DEX (Uniswap, etc.)</strong></td><td>LP attrition prevention + volume retention + long-term partnership with hedge protocol</td></tr>
+    <tr><td><strong>BELTA Labs</strong></td><td>Stable cash revenue (~$1.5M/yr) + revenue expansion with protocol growth</td></tr>
+    <tr><td><strong>LP</strong></td><td>Premium 12% unified across all Phases, LP net benefit +3.7%/yr</td></tr>
+  </tbody>
+</table>
+
+<h3 style="page-break-before:always;">Phase 4 Transition Conditions</h3>
+<table>
+  <thead><tr><th>Condition</th><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td>Minimum Pool Size</td><td>$20M (upon Phase 3 completion)</td></tr>
+    <tr><td>LP Retention Data</td><td>12+ months of empirical data</td></tr>
+    <tr><td>Partner DEX Negotiation Start</td><td>End of Phase 3 (24-month mark)</td></tr>
+    <tr><td>Target Pools</td><td>ETH/USDC + BTC/USDC + SOL/USDC (sharing Pool $20M)</td></tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+</div>
+<!-- ══════════ 05. 자본 구조 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 05</div>
+<h1>Capital Structure — Underwriter Pool</h1>
+
+<div style="page-break-inside:avoid;">
+<h2>5.1 Pool Structure Overview by Phase</h2>
+<p>BELTA IL Hedge Protocol's capital structure operates in two formats depending on the growth stage. <strong>Phases 1~2 use a single Underwriter Pool</strong> for structural simplicity, and <strong>Phases 3~4 transition to a Treasury / Senior dual pool</strong> to separate risk.</p>
+
+<table>
+  <thead><tr><th>Category</th><th class="c">Phase 1~2</th><th class="c">Phase 3~4</th></tr></thead>
+  <tbody>
+    <tr><td>Pool Structure</td><td class="c">Single Underwriter Pool</td><td class="c">Treasury / Senior Dual Pool</td></tr>
+    <tr><td>Treasury Concept</td><td class="c">None (entire Pool)</td><td class="c">20% of Senior (first-loss)</td></tr>
+    <tr><td>Senior APY Target</td><td class="c">5% (Phase 1) / 6% (Phase 2)</td><td class="c">7% (Phase 3~4)</td></tr>
+    <tr><td>LP Premium</td><td class="c">fee의 12%</td><td class="c">12% (전 Phase 통일)</td></tr>
+    <tr><td>Pool Size</td><td class="c">— (P1 Testnet) / $100K (P2)</td><td class="c">$10M (P3) / $20M (P4)</td></tr>
+  </tbody>
+</table>
+
+<h2>5.2 단일 Pool Structure (Phase 1~2)</h2>
+<p>파일럿 단계에서는 Treasury / Senior 구분 없이 Single Underwriter Pool을 운영한다. Pool 전체가 Aave/Morpho 자체 운용 수익과 LP Premium을 수취하며, IL 지급 발생 시 Pool 전체에서 충당한다.</p>
+
+<div class="flow" style="margin: 14px 0;">
+  <div class="flow-box light" style="text-align:center;">LP Fees<br><small>22.4%/yr</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box light" style="text-align:center; border-color:#c8a96e;">Gross Premium<br><small>12% of fees</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="text-align:center;">BELTA Labs<br><small>15% deduction</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box gold" style="text-align:center;">Single Pool<br><small>Aave 5% + Net Premium</small></div>
+</div>
+
+<table>
+  <thead><tr><th>Item</th><th class="c">Phase 1</th><th class="c">Phase 2</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Pool Size</td><td class="c">—(Testnet)</td><td class="c">$100K</td><td>Single pool (Treasury/Senior not separated)</td></tr>
+    <tr><td>Aave/Morpho 운용</td><td class="c">5% APY</td><td class="c">5% APY</td><td>Stable management based on USDC</td></tr>
+    <tr><td>Target Pool CAGR</td><td class="c">5%</td><td class="c">6%</td><td>Aave + premium combined</td></tr>
+    <tr><td>LP Premium율</td><td class="c">fee의 12%</td><td class="c">fee의 12%</td><td>IL moral hazard prevention</td></tr>
+    <tr><td>Coverage</td><td class="c">IL의 35%</td><td class="c">IL의 35%</td><td>Partial hedge for Pool stability</td></tr>
+  </tbody>
+</table>
+
+<h2>5.2.1 Liquidity Risk Response — Liquid Reserve + Epoch Settlement</h2>
+<p>When the entire Pool is deposited in Aave/Morpho, IL payout requests and Aave liquidity shortages may occur simultaneously during black swan events. Two mechanisms are employed in parallel to defend against this.</p>
+<div class="highlight">
+  <strong>① Liquid Reserve</strong> — Maintain 10% of Pool as USDC cash at all times. Small IL payouts are immediately paid in cash; only large events trigger Aave withdrawals.<br>
+  <strong>② Epoch Settlement Method</strong> — Batch-settle IL in periodic (Epoch) intervals rather than real-time. Manage Aave withdrawal timing strategically to minimize liquidity shocks.<br>
+  <strong>Result:</strong> Structurally blocks the risk of IL payout default even in black swan scenarios.
+</div>
+
+<h2>5.3 이중 Pool Structure (Phase 3~4) — 프리미엄 흐름 및 IL 지급</h2>
+<p>LP Premium과 DEX 현금 납부 합산에서 15%를 BELTA Labs가 우선 공제한다. 나머지 85%(net)와 Aave 수익으로 IL 지급 · Senior APY · Treasury 적립을 순서대로 운영한다. Senior는 <strong>복리 거치형</strong>으로 운영 — 이자가 sb에 매일 적립되며 원금+이자가 함께 IL 버퍼 역할을 한다.</p>
+<div class="highlight" style="margin-bottom:10px; font-size:8.5pt; border-left-color:#c8a96e; background:#fffbf0;">
+  <strong>⚠ 주의:</strong> 아래 수치는 Phase 4 정상상태(Pool $20M, LP TVL $120M, DEX Payment 포함) 이론값이다. 백테스트 v4.4.0 실측 결과는 Section 7 참조. 백테스트에서 Phase 3~4 Treasury CAGR +10.2%, BELTA Labs Revenue $31,565/yr (TVL 달성률 15.7% 반영).
+</div>
+
+<div class="flow" style="margin: 14px 0; flex-wrap: wrap; gap: 6px;">
+  <div class="flow-box light" style="text-align:center; font-size:8pt;">LP Premium + DEX 현금<br><small>gross ~$4.01M/yr</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="text-align:center; font-size:8pt; border-color:#1a3a5c;">BELTA Labs 15%<br><small>$602K/yr priority deduction</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="text-align:center; font-size:8pt; border-color:#c00;">IL Payout<br><small>from net + Aave<br>① Treasury first-loss</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="text-align:center; font-size:8pt; border-color:#4a90d9;">Senior 7% APY<br><small>Aave 5% + topup 2%<br>② Compound accrual</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box gold" style="text-align:center; font-size:8pt;">Treasury<br><small>Surplus accumulation<br>③ Excess → BELTA Labs</small></div>
+</div>
+
+<table>
+  <thead><tr><th>Order</th><th>Item</th><th class="r">연간 (Mid fee)</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Inflow</strong></td><td>gross (LP Premium + DEX Cash)</td><td class="r">$4,012,800</td><td>Based on LP TVL $120M</td></tr>
+    <tr><td></td><td>Aave 수익 (Senior × 5%)</td><td class="r">$800,000</td><td>Daily accumulation based on Senior compound balance</td></tr>
+    <tr style="color:#1a3a5c;"><td><strong>Deduction</strong></td><td>BELTA Labs 15%</td><td class="r">-$601,920</td><td>Gross priority deduction → BELTA Labs</td></tr>
+    <tr style="color:#c00;"><td><strong>① IL Payout</strong></td><td>Coverage 35% (Epoch settlement)</td><td class="r">-$2,002,391</td><td>Treasury first-loss → then Senior</td></tr>
+    <tr><td><strong>② Senior</strong></td><td>topup (7%−Aave 5% = 2%)</td><td class="r">-$320,000</td><td>Prioritized from net, compound accumulation in sb</td></tr>
+    <tr style="font-weight:700; border-top:2px solid #ccc;"><td><strong>③ Treasury</strong></td><td>Net surplus accumulation</td><td class="r">+$2,008,873</td><td>Target excess ~$984K → BELTA Labs, remainder stays</td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Senior compound accrual: Interest accumulates daily in sb, with principal+interest total contributing to IL buffer together. Treasury is depleted first before Senior balance is used for IL payouts. BELTA Labs total cash revenue = $602K (deduction) + $984K (return) = ~$1,586K/yr.</p>
+
+<table>
+  <thead><tr><th>Pool</th><th class="c">Weight</th><th class="c">Target Return</th><th>Characteristics</th></tr></thead>
+  <tbody>
+    <tr><td>Treasury (BELTA Holders)</td><td class="c">20%</td><td class="c">T-CAGR +10.2%<br><small style="color:#888;">(All periods including LUNA/FTX)</small></td><td>Recovery after black swan first-loss absorption. Excess returned to BELTA Labs</td></tr>
+    <tr><td>Senior (General investors)</td><td class="c">80%</td><td class="c">APY 7.0%</td><td>복리 거치형 — Aave 5% + Premium 2% 매일 sb 적립</td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Treasury=CAGR (compound growth, recovery after first-loss absorption), Senior=APY (compound accrual, principal+interest grow together).</p>
+
+<h2>5.4 Phase 2→3 Transition — Forced Split and BELTA Token Distribution</h2>
+<p>Phase 2 말 단일 풀이 $2M 이상 축적되면, 강제분할을 통해 이중 Pool Structure로 전환한다. 기존 투자자는 Treasury 전환분에 대해 BELTA 토큰으로 보상받는다.</p>
+<div class="highlight gold">
+  <strong>Forced Split Method:</strong><br>
+  End of Phase 2: 20% of Pool balance → Treasury Pool conversion<br>
+  End of Phase 2: 80% of Pool balance → Senior Pool conversion<br>
+  → <strong>BELTA tokens issued for 20% conversion portion</strong> (protocol revenue participation rights, sellable later)
+</div>
+
+<div class="highlight" style="border-left:4px solid #c8a96e; background:#fffbf0; margin-top:12px;">
+  <strong>⭐ Phase 1~2 Early Investor Incentive</strong><br><br>
+  Phase 1~2는 Single Underwriter Pool로 운영된다. 이 시기 참여자는 <strong>자신의 전체 지분 중 20%를 BELTA 토큰으로 추가 지급받는다</strong> — 기존 지분(Senior 80%)은 그대로 유지된 채로.<br><br>
+  Example: $10,000 deposited in Phase 2 → At Phase 3 transition, hold Senior Pool $10,000 + BELTA tokens ($2,000 equivalent) simultaneously<br><br>
+  These BELTA tokens can be staked as xBELTA to continue participating in protocol revenue, or capital gains can be realized at Phase 4 governance activation and DEX listing. <strong>As the protocol grows, Phase 1~2 BELTA token value increases</strong>, providing the highest potential returns to early participants.
+</div>
+
+<h2>5.5 Treasury Surplus Distribution Mechanism</h2>
+<p>Residual returns after Senior 7% APY payout are automatically distributed based on Treasury buffer status.</p>
+<span class="mono">treasury_target = max(initial_treasury, senior_pool_balance × 20%)</span>
+<span class="mono">if treasury &gt; target  →  Excess: 80% returned to BELTA Labs + 20% reflected in xBELTA exchange rate</span>
+<span class="mono">if treasury ≤ target  →  20% of net profit reflected in xBELTA exchange rate + remainder fully accumulated in Treasury</span>
+<p class="tbl-sub">* Treasury target buffer = max(initial Treasury, Senior Pool × 20%). Initially based on initial_treasury (fixed), auto-scales upward during rapid TVL growth. xBELTA exchange rate reflection (20% of net profit) is deducted from Treasury and accumulated in xBELTA pool → BELTA holder exchange rate rises ~12%/yr.</p>
+
+<h2>5.6 Self-Healing Mechanism</h2>
+<p>When Pool balance decreases relative to initial levels, protocol fees are automatically adjusted to accelerate recovery.</p>
+<table>
+  <thead><tr><th>Pool Health</th><th class="c">Protocol Fee</th><th class="c">Status</th></tr></thead>
+  <tbody>
+    <tr><td>≥ 60% (Normal)</td><td class="c">15%</td><td class="c">Normal operations</td></tr>
+    <tr><td>30~60% (Caution)</td><td class="c">5%</td><td class="c">Accelerated recovery</td></tr>
+    <tr><td>10~30% (Warning)</td><td class="c">2%</td><td class="c">Emergency recovery</td></tr>
+    <tr><td>&lt; 10% (Emergency)</td><td class="c">0%</td><td class="c">Maximum recovery</td></tr>
+  </tbody>
+</table>
+
+<h2>5.7 LP TVL Measurement Method — Price-linked Model</h2>
+<p>In backtests and within the protocol, LP TVL is calculated as <strong>token quantity × current price rather than a fixed dollar value</strong>. This method accurately reflects the true cause of TVL changes during market declines.</p>
+<div class="highlight">
+  <strong>LP TVL = token_qty × current_price</strong><br>
+  When ETH price drops -40% → LP's token quantity remains the same, only dollar TVL decreases -40%<br>
+  → This is a price decline effect, not LP attrition
+</div>
+<p>Empirical data: During the 2022 FTX collapse, Uniswap V3 dollar TVL decreased by approximately -12%, but most was automatic contraction due to ETH price decline, with actual LP attrition being minimal. Without adopting this method, TVL would be underestimated in bear markets, leading to errors of calculating premium income lower than actual.</p>
+</div>
+
+</div>
+<!-- ══════════ 05b. BELTA 토큰 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 05 — continued</div>
+<h1>BELTA Governance Token</h1>
+
+<div style="page-break-inside:avoid;">
+<h2>5.8 BELTA Token Role (by Phase)</h2>
+<p>BELTA is the protocol's governance token and Treasury revenue participation token. Its role expands by Phase.</p>
+<table>
+  <thead><tr><th>Phase</th><th>Method</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>Phase 1~3</td><td>Method A — Treasury Revenue Participation Token</td><td>BELTA staking = acquiring Treasury revenue distribution rights. Returns reflected via xBELTA exchange rate increase, exchange rate decreases upon losses.</td></tr>
+    <tr><td>Phase 4+</td><td>Method C — Revenue Participation + Governance</td><td>Protocol revenue participation rights + parameter voting rights (coverage rate, premium rate, etc.)</td></tr>
+  </tbody>
+</table>
+
+<h2>5.9 Issuance Structure</h2>
+<div class="kpi-row">
+  <div class="kpi-card gold">
+    <div class="kpi-label">Total Supply</div>
+    <div class="kpi-value gold">100M</div>
+    <div class="kpi-sub">BELTA Token</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Treasury Incentive</div>
+    <div class="kpi-value">40%</div>
+    <div class="kpi-sub">Staking rewards / long-term liquidity</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Team / Founder</div>
+    <div class="kpi-value">20%</div>
+    <div class="kpi-sub">4-year lockup / 1-year cliff</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Ecosystem / Community</div>
+    <div class="kpi-value">40%</div>
+    <div class="kpi-sub">Partnerships 20% + Community 10% + Reserve 10%</div>
+  </div>
+</div>
+
+<table style="margin-top:12px;">
+  <thead><tr><th>Category</th><th class="c">Weight</th><th class="c">Amount</th><th>Details</th></tr></thead>
+  <tbody>
+    <tr><td>Treasury Participation Incentive</td><td class="c">40%</td><td class="c">40M</td><td>Staking rewards, long-term liquidity provider incentives</td></tr>
+    <tr><td>Team / Founder</td><td class="c">20%</td><td class="c">20M</td><td>4-year lockup, 1-year cliff (DeFi standard)</td></tr>
+    <tr><td>Ecosystem / Partnerships</td><td class="c">20%</td><td class="c">20M</td><td>DEX negotiations, security audit firms, strategic partners</td></tr>
+    <tr><td>Community / Airdrop</td><td class="c">10%</td><td class="c">10M</td><td>Early LP acquisition, protocol promotion</td></tr>
+    <tr><td>Reserve</td><td class="c">10%</td><td class="c">10M</td><td>Emergency Treasury replenishment, strategic holdings</td></tr>
+  </tbody>
+</table>
+
+<h2>5.10 Treasury Capital Raising — 3-Stage Layers</h2>
+<p>Treasury serves as a first-loss buffer for Senior protection, and stable capital raising is key to protocol sustainability. The following 3-stage layers put the Treasury on a self-sustaining growth trajectory.</p>
+<div class="highlight gold">
+  <strong>Stage 1 (Early Phase 3) — VC + BELTA Labs Anchor Capital</strong><br>
+  VC investment split 2:8 injection → Initial Treasury capital secured. BELTA Labs contributes additional own capital as anchor.<br><br>
+  <strong>Stage 2 (Mid Phase 3) — Treasury Incentive 40M BELTA Distribution</strong><br>
+  Additional BELTA rewards for xBELTA staking → Incentivizing general participants to supply Treasury capital. Treasury trajectory must be established before BELTA incentives are exhausted.<br><br>
+  <strong>3단계 (Phase 4) — DEX Payment + Protocol Fee 복합 수익</strong><br>
+  DEX 현금 납부(LP TVL 2%) + LP Premium → gross proto_fee 15% → Treasury 초과분 환원. DEX Payment 확보 이후 프로토콜 수익이 안정적으로 Treasury에 재투자되어 자기증식 궤도에 진입한다. <em>단, Phase 4는 Uniswap 등 DEX와의 TVL 납부 협약이 전제조건이며, 협상 미성사 시 Phase 3 LP Premium 12% 구조를 유지한다.</em>
+</div>
+<p class="tbl-sub">* If BELTA incentive (40M) depletion rate exceeds Treasury growth rate, a protocol growth bottleneck occurs — emission schedule design is a key risk management variable.</p>
+
+<h2>5.11 xBELTA Staking Mechanism — Exchange Rate-based Revenue Structure</h2>
+<p>xBELTA is a <strong>risk participation + revenue distribution</strong> token issued when BELTA is staked. Revenue is distributed through an <strong>exchange rate appreciation model</strong> where the amount of BELTA exchangeable per xBELTA increases as revenue accumulates.</p>
+
+<div class="highlight" style="margin:10px 0;">
+  <strong>Dual Role of xBELTA — Revenue Right + Risk Backstop:</strong><br>
+  ① <strong>Revenue Participation Right:</strong> 20% of Treasury net profit accumulated in xBELTA Pool → returns reflected via exchange rate increase.<br>
+  ② <strong>Risk Backstop:</strong> xBELTA exchange rate decreases when Treasury incurs losses (first-loss sharing). xBELTA stakers receive returns in exchange for sharing the protocol's risk, identical to the mechanism where MakerDAO's MKR is diluted when system debt occurs.<br>
+  <strong>In other words, the BELTA token is not mere governance but the protocol's risk capital layer.</strong>
+</div>
+
+<div class="flow" style="margin:14px 0; flex-wrap:wrap; gap:6px;">
+  <div class="flow-box light" style="text-align:center; font-size:8pt;">Stake BELTA<br><small>e.g.: 100 BELTA</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box gold" style="text-align:center; font-size:8pt;">xBELTA Issued<br><small>Calculated at current rate<br>e.g.: 100 xBELTA</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="text-align:center; font-size:8pt; border-color:#4a90d9;">Revenue Accumulated<br><small>20% of Treasury net profit<br>accumulated in xBELTA Pool</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="text-align:center; font-size:8pt; border-color:#1a7a3c;">Rate Appreciation<br><small>1 xBELTA =<br>1.12 BELTA (after 1 year)</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box light" style="text-align:center; font-size:8pt;">Unstaking<br><small>xBELTA burned<br>BELTA principal+returns refunded</small></div>
+</div>
+
+<div class="highlight gold" style="margin:12px 0;">
+  <strong>Exchange Rate Calculation Example (at ~12% annual return)</strong><br><br>
+  <span class="mono">T=0: xBELTA Pool = 10,000 BELTA, 발행 xBELTA = 10,000개 → 환율 1.000</span><br>
+  <span class="mono">T=1년: Treasury 수익 1,200 BELTA → xBELTA Pool = 11,200 BELTA</span><br>
+  <span class="mono">T=1년: 환율 = 11,200 / 10,000 = 1.120 (xBELTA 1개 = BELTA 1.120개)</span><br>
+  <span class="mono">언스테이킹: 100 xBELTA × 1.120 = 112 BELTA 수령 (원금 100 + 수익 12)</span>
+</div>
+
+<table>
+  <thead><tr><th>Item</th><th>Details</th></tr></thead>
+  <tbody>
+    <tr><td>Staking</td><td>BELTA → xBELTA issued at current exchange rate <span style="color:#888; font-size:7.5pt;">(xBELTA quantity = BELTA quantity ÷ current rate)</span></td></tr>
+    <tr><td>Revenue Reflection Method</td><td>20% of Treasury net profit added to xBELTA Pool (total BELTA) → automatic rate increase</td></tr>
+    <tr><td>Loss Reflection Method</td><td>When Treasury losses occur, xBELTA Pool decreases → rate decreases (first-loss sharing)</td></tr>
+    <tr><td>언스테이킹</td><td>xBELTA burned → current rate × xBELTA quantity = BELTA refund (including principal+returns)</td></tr>
+    <tr><td>Additional Incentives</td><td>Phase 3 중 Treasury 40M BELTA 인센티브로 xBELTA Staking자에게 추가 BELTA 지급</td></tr>
+    <tr><td>Phase 2→3 Transition</td><td>Forced split 20% → BELTA token distribution (Early Investor reward)</td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Exchange rate updated daily. xBELTA issuance/burning automatically processed by smart contract. Unstaking cooldown: 30 days (panic run defense).</p>
+
+<h2>5.12 Withdrawal Mechanism — Panic Run Defense</h2>
+<p>During black swan events, mass withdrawals may simultaneously deplete Treasury/Senior Pool. The following mechanisms structurally defend against panic runs.</p>
+<table>
+  <thead><tr><th>Category</th><th>Mechanism</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Treasury (xBELTA)</strong></td><td>30-day unstaking cooldown<br>Early withdrawal fee 2~5%<br>Minimum 90-day lockup</td><td>First-loss capital stability assurance</td></tr>
+    <tr><td><strong>Senior Pool</strong></td><td>7-day unstaking cooldown<br>Daily TVL 10% withdrawal cap<br>Withdrawal after epoch settlement completion</td><td>Mass exodus prevention + liquidity protection</td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Cooldown periods are enforced by smart contract. Early withdrawal fees are attributed to Treasury for buffer reinforcement.</p>
+</div>
+
+</div>
+<!-- ══════════ 06. 수학적 프레임워크 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 06</div>
+<h1>Mathematical Framework — IL Calculation</h1>
+
+<div style="page-break-inside:avoid;">
+<h2>6.1 V3 IL Correction Formula</h2>
+<p>In Uniswap V3 concentrated liquidity range [Pa, Pb], IL is amplified compared to V2.</p>
+<span class="mono">IL_V2(r) = 2·√r / (1 + r) − 1      where r = P_exit / P_entry</span>
+<span class="mono">IL_V3    = IL_V2 × 1 / (1 − √(Pa/Pb))</span>
+
+<h2>6.2 On-chain IL Calculation — Epoch-based Cumulative Method</h2>
+<p>Simple entry/exit price comparison underestimates IL when price exits and re-enters the range. BELTA uses an epoch-based cumulative method to accurately reflect intermediate path IL.</p>
+
+<span class="mono">// afterAddLiquidity: Position snapshot</span>
+<span class="mono">position.entryPrice  = currentSqrtPriceX96</span>
+<span class="mono">position.sqrtPa      = TickMath.getSqrtRatioAtTick(tickLower)</span>
+<span class="mono">position.sqrtPb      = TickMath.getSqrtRatioAtTick(tickUpper)</span>
+<span class="mono">position.liquidity   = liquidityDelta</span>
+<span class="mono">position.epochStart  = block.timestamp</span>
+<span class="mono"></span>
+<span class="mono">// afterRemoveLiquidity: IL calculation and settlement</span>
+<span class="mono">hodl_value   = token0_entry × exitPrice + token1_entry</span>
+<span class="mono">actual_value = token0_exit  × exitPrice + token1_exit</span>
+<span class="mono">il_amount    = max(hodl_value − actual_value, 0)</span>
+<span class="mono">payout       = il_amount × COVERAGE_RATIO  // 0.35</span>
+
+<h2>6.3 Range Exit Case Handling</h2>
+<p>When price exits the position range, the LP position converts to a single token. This case is handled by updating position status on every swap in V4 Hook's afterSwap.</p>
+<table>
+  <thead><tr><th>Case</th><th>Handling Method</th></tr></thead>
+  <tbody>
+    <tr><td>Price stays within range</td><td>Point comparison at liquidation (entry → exit)</td></tr>
+    <tr><td>Range exit then re-entry</td><td>Epoch cumulative: intermediate settlement at exit then re-entry</td></tr>
+    <tr><td>Range exit without return</td><td>IL calculated at single token value upon liquidation</td></tr>
+    <tr><td>Partial liquidation</td><td>Proportional IL calculation by liquidity ratio</td></tr>
+  </tbody>
+</table>
+
+<h2>6.4 Event Spike Model (Backtest Only)</h2>
+<span class="mono">IL_effective(t) = IL_baseline(t) + Σ_k [ spike_k(t) ]</span>
+<span class="mono">spike_k(t)      = extra_k / duration_k × (1 − t/duration_k) × 2</span>
+
+<h2>6.5 Volatility-adjusted Premium</h2>
+<span class="mono">vol_ratio    = current_vol30 / avg_vol30</span>
+<span class="mono">margin_rate  = base_margin × (1 + vol_ratio × 0.5)</span>
+<span class="mono">utilization  = total_hedged_tvl / underwriter_pool</span>
+<span class="mono">multiplier   = utilization &lt; 0.8 ? 1.0 + util×0.5 : 1.4 + (util−0.8)×2.0</span>
+</div>
+
+</div>
+<!-- ══════════ 07. 백테스트 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 07</div>
+<h1>Backtest Results — Actual ETH Prices + 3-Layer (v5.0.1)</h1>
+
+<div class="highlight gold">
+  <strong>v5.0.1 Key Points:</strong> ① 270 actual ETH/USD weekly closing prices (2020.01~2025.03, Etherscan/CoinGecko based) ② BIS-based LP cohort model ③ Layer 1 Dynamic Fee + Layer 3 Perps Hedging modeling ④ Senior topup properly reflected ⑤ Sliding window stress test (entire range at 4-week intervals)
+</div>
+
+<div style="page-break-inside:avoid;">
+<h2>7.1 Test Overview</h2>
+<table>
+  <thead><tr><th>Item</th><th>Setting</th></tr></thead>
+  <tbody>
+    <tr><td>Period</td><td>2020-01-06 ~ 2025-03-03 (270주, 269 에포크)</td></tr>
+    <tr><td>Price Data</td><td>Actual ETH/USD weekly closing prices (Etherscan/CoinGecko cross-validated)</td></tr>
+    <tr><td>Weekly Return Range</td><td>-38.5% ~ +41.5% | Panic epochs (≤-10%): 33</td></tr>
+    <tr><td>Premium Rate</td><td>12% of fees (unified across all Phases)</td></tr>
+    <tr><td>Coverage</td><td>IL의 35%</td></tr>
+    <tr><td>Protocol Fee</td><td>15% of gross</td></tr>
+    <tr><td>Aave APY</td><td>5%</td></tr>
+    <tr><td>IL Multiplier (BIS Weighted Avg)</td><td>×2.50 (Institutional 80%×2.8 + Active 15%×1.5 + Passive 5%×0.7)</td></tr>
+    <tr><td>Layer 1 (Dynamic Fee)</td><td>Volatility ≥5%: ×1.5 / ≥10%: ×2.5 / ≥20%: ×4.0</td></tr>
+    <tr><td>Layer 3 (Perps Hedging)</td><td>Effectiveness 60% / Hedge ratio 50% / Funding 2%/yr</td></tr>
+    <tr><td>TVL Model</td><td>100% (For protocol structure verification)</td></tr>
+    <tr><td>Stress Test</td><td>Sliding window (4-week intervals, full range scan)</td></tr>
+  </tbody>
+</table>
+
+<h2>7.2 Key Performance by Phase</h2>
+<table>
+  <thead>
+    <tr><th>Phase</th><th class="c">T-CAGR<br><small>(median)</small></th><th class="c">T-CAGR<br><small>(worst)</small></th><th class="c">T-CAGR<br><small>(best)</small></th><th class="c">T-MDD<br><small>(median)</small></th><th class="c">T-MDD<br><small>(worst)</small></th><th class="c">IL/Income</th><th class="c">Win Rate</th><th class="c">Senior</th></tr>
+  </thead>
+  <tbody>
+    <tr style="background:#f0f8ff;">
+      <td><strong>Phase 2</strong><br><small>$100K · 6개월</small></td>
+      <td class="c"><strong>+0.3%</strong></td><td class="c">-25.6%</td><td class="c" style="color:#1a7a3c;">+10.7%</td>
+      <td class="c">-2.0%</td><td class="c">-13.1%</td>
+      <td class="c">0.98x</td><td class="c">75.0%</td><td class="c">—</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 3</strong><br><small>$10M · 2년 · DEX 없음</small></td>
+      <td class="c" style="color:#c00;"><strong>-31.0%</strong></td><td class="c" style="color:#c00;">-79.7%</td><td class="c">-2.4%</td>
+      <td class="c">-61.7%</td><td class="c" style="color:#c00;">-100%</td>
+      <td class="c">1.16x</td><td class="c">71.2%</td><td class="c" style="color:#1a7a3c;">+7.2%/yr</td>
+    </tr>
+    <tr style="background:#e8f5e9;">
+      <td><strong>Phase 4</strong><br><small>$20M · DEX 2%</small></td>
+      <td class="c" style="color:#1a7a3c;"><strong>+9.3%</strong></td><td class="c">-51.7%</td><td class="c" style="color:#1a7a3c;">+35.8%</td>
+      <td class="c">-44.2%</td><td class="c">-100%</td>
+      <td class="c"><strong>0.89x</strong></td><td class="c"><strong>76.9%</strong></td><td class="c" style="color:#1a7a3c;">+7.2%/yr</td>
+    </tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Sliding window: Results from scanning all 269 epochs at 4-week intervals — median/worst/best. Win rate = proportion of epochs where income > IL. Senior principal+interest protected across all Phases.</p>
+</div>
+
+</div>
+<!-- ══════════ 07-3. Phase별 상세 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<h2>7.3 Financial Details by Phase (Median Window)</h2>
+
+<div style="page-break-inside:avoid;">
+<h3>Phase 2 — Pilot $100K · 6 Months</h3>
+<table>
+  <thead><tr><th>Item</th><th class="r">Amount</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Pool</td><td class="r">$100,000 → $100,158</td><td>T-CAGR +0.3%</td></tr>
+    <tr><td>Premium (net)</td><td class="r">$7,887</td><td rowspan="2">Income $10,207</td></tr>
+    <tr><td>Aave yield</td><td class="r">$2,320</td></tr>
+    <tr style="color:#c00;"><td>IL Payout (after L3)</td><td class="r">-$10,050</td><td>IL/Income 0.98x</td></tr>
+    <tr><td>BELTA Labs</td><td class="r">$1,392</td><td>$3,024/yr</td></tr>
+  </tbody>
+</table>
+
+<h3>Phase 3 — Open Market $10M · 2년 · DEX 없음</h3>
+<table>
+  <thead><tr><th>Item</th><th class="r">Amount</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Treasury</td><td class="r">$2,000,000 → $954,365</td><td style="color:#c00;">T-CAGR -31.0%</td></tr>
+    <tr><td>Senior</td><td class="r">$8,000,000 → $9,197,800</td><td style="color:#1a7a3c;">+7.2%/yr ✓</td></tr>
+    <tr><td>Pool 전체</td><td class="r">$10,000,000 → $10,152,165</td><td style="color:#1a7a3c;">Pool-MDD -6.8%</td></tr>
+    <tr><td>Premium (net)</td><td class="r">$4,180,245</td><td rowspan="2">Total income $4,310,811</td></tr>
+    <tr><td>Aave yield</td><td class="r">$130,566</td></tr>
+    <tr style="color:#c00;"><td>IL Payout (after L3)</td><td class="r">-$5,014,217</td><td>Raw IL $6.15M → L3 savings $2.33M (38%)</td></tr>
+    <tr><td>L3 Funding Cost</td><td class="r">-$1,196,712</td><td>Perps short maintenance cost</td></tr>
+    <tr><td>Senior topup</td><td class="r">-$342,229</td><td>7%-5%=2% gap Treasury burden</td></tr>
+    <tr><td>BELTA Labs</td><td class="r">$737,690</td><td>$369,858/yr</td></tr>
+  </tbody>
+</table>
+
+<div class="highlight warning" style="margin-top:10px;">
+  <strong>Phase 3 Treasury 적자의 의미:</strong> DEX 수입 없이 LP Premium만으로 2년간 운영하면 Treasury는 -31%/yr 적자이다. 이는 <strong>설계된 소모 구간</strong>이며, VC 자본(Section 10.3)으로 Treasury를 충분히 확보한 후 Phase 4 DEX 협약으로 전환하는 것이 전제 조건이다. Pool 전체(Treasury+Senior)는 +$152K 흑자이며 Senior는 +7.2%/yr 완전 보호.
+</div>
+
+<h3>Phase 4 — DEX Payment $20M · LP TVL $120M · DEX 2%</h3>
+<table>
+  <thead><tr><th>Item</th><th class="r">Amount</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr style="background:#e8f5e9;"><td>Treasury</td><td class="r">$4,000,000 → $4,988,993</td><td style="color:#1a7a3c;"><strong>T-CAGR +9.3%</strong></td></tr>
+    <tr style="background:#e8f5e9;"><td>Senior</td><td class="r">$16,000,000 → $19,048,574</td><td style="color:#1a7a3c;">+7.2%/yr ✓</td></tr>
+    <tr style="background:#e8f5e9;"><td>Pool 전체</td><td class="r">$20,000,000 → $24,037,567</td><td style="color:#1a7a3c;">Pool-MDD -6.5%</td></tr>
+    <tr><td>Premium (net)</td><td class="r">$16,312,220</td><td>LP 12% + DEX 2% combined (after Proto Fee 15% deduction)</td></tr>
+    <tr><td>Aave yield</td><td class="r">$398,821</td><td>Total income $16,711,041</td></tr>
+    <tr style="color:#c00;"><td>IL Payout (after L3)</td><td class="r">-$14,851,027</td><td>Raw IL $18.46M → L3 savings $6.60M (36%)</td></tr>
+    <tr><td>L3 Funding Cost</td><td class="r">-$2,991,781</td><td>Perps short maintenance cost</td></tr>
+    <tr><td>Senior topup</td><td class="r">-$871,021</td><td>7%-5%=2% gap Treasury burden</td></tr>
+    <tr style="background:#d4edda; font-weight:700;"><td>BELTA Labs</td><td class="r">$2,878,627</td><td>$1,154,614/yr</td></tr>
+  </tbody>
+</table>
+
+<div class="highlight gold" style="margin-top:12px;">
+  <strong>Key Insights:</strong><br>
+  ① Phase 4에서 DEX 2% 유입이 흑자 전환의 결정적 요인. LP Premium 12% + DEX 2% = 수입률 ~4.7%/yr(TVL 대비) → IL/수입 0.89x.<br>
+  ② Layer 3 offsets 36% of Raw IL. Effect maximized in COVID-level (-38.5%) black swans.<br>
+  ③ Senior +7.2%/yr — Treasury bears first-loss, so Senior is protected across all periods. Senior principal maintained even in worst window.<br>
+  ④ Phase 3 deficit is a structural limitation without DEX revenue. A designed investment period sustained by VC capital.
+</div>
+</div>
+
+</div>
+<!-- ══════════ 07-4. LP 관점 + 모델 한계 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div style="page-break-inside:avoid;">
+<h2 style="page-break-before:always;">7.4 LP Perspective — Actual Effect of Hedge Enrollment</h2>
+<p>Actual-based profit/loss for a single LP with $10,000 TVL enrolled in hedging for 5.1 years.</p>
+
+<table>
+  <thead><tr><th>Item</th><th class="r">Without Hedge</th><th class="r">Hedged</th></tr></thead>
+  <tbody>
+    <tr><td>Fee Income (gross)</td><td class="r">$11,536</td><td class="r">$11,536</td></tr>
+    <tr><td>Premium Expense (12% of fees)</td><td class="r">—</td><td class="r">-$1,384</td></tr>
+    <tr><td>실제 IL Incurred (V3 ×2.5)</td><td class="r" style="color:#c00;">-$9,464</td><td class="r" style="color:#c00;">-$9,464</td></tr>
+    <tr><td>IL Compensation Received (35%)</td><td class="r">—</td><td class="r" style="color:#1a7a3c;">+$3,312</td></tr>
+    <tr style="font-weight:700; border-top:2px solid #ccc;"><td>5.1-Year Net Profit</td><td class="r">+$2,072</td><td class="r" style="color:#1a7a3c;"><strong>+$4,000</strong></td></tr>
+    <tr style="font-weight:700;"><td>연간 수익률 (TVL 대비)</td><td class="r">+4.0%/yr</td><td class="r" style="color:#1a7a3c;"><strong>+7.8%/yr</strong></td></tr>
+    <tr style="background:#e8f5e9;"><td><strong>Hedge Effect</strong></td><td class="r" colspan="2" style="text-align:center;"><strong>+$1,928 / 5.1년 (+3.7%/yr)</strong></td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Based on actual ETH prices (2020~2025). Fee APY 22.4%, V3 IL multiplier ×2.50 (BIS weighted avg). LP pays $5.17/week (12% of fees) and receives up to $216 per black swan epoch (COVID -38.5% week).</p>
+
+<h2>7.5 Model Limitations and Conservative Assumptions</h2>
+<div class="highlight warning">
+  <strong>Model limitations disclosed for transparency:</strong><br>
+  ① <strong>Price Data:</strong> 실측 주간 종가 270개를 수동 복원. 일중(intraday) 변동 미반영. 프로덕션 시 API 일별 데이터로 교체 권장.<br>
+  ② <strong>IL Multiplier:</strong> Single BIS weighted average of ×2.50 used. In practice, varies ×0.7~×4.5 depending on LP range settings.<br>
+  ③ <strong>Layer 3 effectiveness 60%:</strong> Conservative assumption. Actual range is 40~80% depending on Perps market liquidity, slippage, and funding rate fluctuations.<br>
+  ④ <strong>TVL 100% assumption:</strong> For protocol structure verification purposes. Actual initial adoption rate expected to start at 15~30% and gradually increase.<br>
+  ⑤ <strong>Treasury 100% depletion possible in worst window:</strong> Occurs during the 2022 LUNA+FTX consecutive shock period. Senior takes over IL so the entire Pool is preserved, but Treasury investors may face total loss.
+</div>
+</div>
+</div>
+<!-- ══════════ 08. 언더라이팅 ══════════ -->
+<div style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 08</div>
+<h1>Underwriting Criteria — Adverse Selection Defense</h1>
+
+<div style="page-break-inside:avoid;">
+<h2>8.1 Underwriting Rules</h2>
+<table>
+  <thead><tr><th>Criteria</th><th>Condition</th><th>Rejection Reason</th></tr></thead>
+  <tbody>
+    <tr><td>Range Width</td><td>Narrow ±10% or less rejected</td><td>Excessive IL amplification — actuarial loss</td></tr>
+    <tr><td>Minimum Position Size</td><td>$10,000 or more</td><td>Small positions inefficient relative to gas costs</td></tr>
+    <tr><td>최소 보유 Period</td><td>72-hour minimum hold condition</td><td>Prevention of short-term speculative hedging</td></tr>
+    <tr><td>Position Age</td><td>1 hour after creation</td><td>Prevention of immediate hedge then immediate liquidation</td></tr>
+  </tbody>
+</table>
+
+<h2>8.2 Adverse Selection Defense Effect</h2>
+<p>Narrow range LPs account for approximately 20% of total TVL but have disproportionately high IL costs. Rejecting them structurally improves underwriter profitability.</p>
+<table>
+  <thead><tr><th>Applied Condition</th><th class="c">Covered TVL</th><th class="c">연간 IL Cost</th><th class="c">IL vs Premium</th></tr></thead>
+  <tbody>
+    <tr><td>No filter (full coverage)</td><td class="c">100%</td><td class="c">3.94%</td><td class="c">90%</td></tr>
+    <tr><td>Narrow rejection applied</td><td class="c">80%</td><td class="c">3.50%</td><td class="c">80%</td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* Based on premium TVL equivalent 2.69% (fee 22.4% × 12%), Coverage 35% applied</p>
+</div>
+
+</div>
+<!-- ══════════ 09. 리스크 공시 ══════════ -->
+<div style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 09</div>
+<h1>Risk Disclosure — Underwriter Loss Potential</h1>
+
+<p>The data below are results from <strong>actual ETH price-based backtest v5.0.1</strong> (2020~2025, 269 epochs, Sliding window). Including L1 Dynamic Fee + L3 Perps Hedging.</p>
+
+<div style="page-break-inside:avoid;">
+<h2>9.1 Treasury MDD by Phase</h2>
+<table>
+  <thead><tr><th>Phase</th><th class="c">T-MDD (median)</th><th class="c">T-MDD (worst)</th><th class="c">Pool-MDD (median)</th><th class="c">Senior Impact</th></tr></thead>
+  <tbody>
+    <tr><td>Phase 2 (Single Pool, $100K)</td><td class="c">-2.0%</td><td class="c" style="color:#c00;">-13.1%</td><td class="c">-2.0%</td><td class="c">—</td></tr>
+    <tr><td>Phase 3 (Dual Pool, $10M, No DEX)</td><td class="c" style="color:#c00;">-61.7%</td><td class="c" style="color:#c00;">-100.0%</td><td class="c">-6.8%</td><td class="c" style="color:#1a7a3c;">None (+7.2%/yr)</td></tr>
+    <tr><td>Phase 4 (Dual Pool, $20M, DEX 2%)</td><td class="c">-44.2%</td><td class="c" style="color:#c00;">-100.0%</td><td class="c">-6.5%</td><td class="c" style="color:#1a7a3c;">None (+7.2%/yr)</td></tr>
+  </tbody>
+</table>
+
+<h2>9.2 Revenue Structure Soundness by Phase</h2>
+<table>
+  <thead><tr><th>Phase</th><th class="c">IL/Income</th><th class="c">Win Rate</th><th class="c">Panic Epochs</th><th class="c">T-CAGR (median)</th></tr></thead>
+  <tbody>
+    <tr><td>Phase 2</td><td class="c">0.98x</td><td class="c">75.0%</td><td class="c">1</td><td class="c">+0.3%</td></tr>
+    <tr><td>Phase 3</td><td class="c" style="color:#c00;">1.16x</td><td class="c">71.2%</td><td class="c">15</td><td class="c" style="color:#c00;">-31.0%</td></tr>
+    <tr style="background:#e8f5e9;"><td>Phase 4</td><td class="c" style="color:#1a7a3c;"><strong>0.89x</strong></td><td class="c"><strong>76.9%</strong></td><td class="c">20</td><td class="c" style="color:#1a7a3c;"><strong>+9.3%</strong></td></tr>
+  </tbody>
+</table>
+<p class="tbl-sub">* IL/Income > 1.0x = IL exceeds income (deficit). Phase 3 at 1.16x reflects structural limitation without DEX revenue.</p>
+
+<div class="highlight warning" style="margin-top:12px;">
+  <strong>Required Reading for Underwriter Investors</strong><br>
+  • <strong>Phase 3 Treasury는 적자 구간이다.</strong> DEX 수입 없이 LP Premium만으로는 IL을 감당할 수 없음. VC 자본으로 버티는 설계된 투자 구간이며, Phase 4 DEX 협약이 전제 조건.<br>
+  • <strong>Treasury 100% depletion possible in worst window.</strong> During events at the level of 2022 LUNA+FTX consecutive shocks. Senior takes over IL so the entire Pool is preserved, but Treasury investors may face total loss.<br>
+  • <strong>Profitability achieved in Phase 4.</strong> After DEX 2% inflow, T-CAGR +9.3%, IL/Income 0.89x. Protocol self-sustaining.<br>
+  • <strong>Senior 전 Period 보호.</strong> worst window 포함 전 구간에서 Senior +7.2%/yr 유지. Pool-MDD -6.5~-6.8%.<br>
+  • <strong>No future guarantee.</strong> Backtests are historical simulations, and results may worsen under consecutive shocks exceeding 2022 levels.
+</div>
+</div>
+
+</div>
+<!-- ══════════ 10. 로드맵 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 10</div>
+<h1>Roadmap — Growth Strategy by Phase</h1>
+
+<table>
+  <thead><tr><th>Phase</th><th>Period</th><th>목표 Pool Size</th><th>Key Milestones</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Phase 0</strong><br>Development</td><td>Current</td><td>—</td><td>Smart contract design and implementation (Foundry + Solidity)</td></tr>
+    <tr><td><strong>Phase 1</strong><br>Testnet</td><td>1~3 months<br>(3 months)</td><td>—</td><td>Sepolia/Unichain Testnet 배포. 에포크 12회+ 실행. 블랙스완 fork 테스트 2~3개. 4개월차 1차 보안감사. 4~5개월차 그랜트 신청.</td></tr>
+    <tr><td><strong>Phase 2</strong><br>Mainnet Pilot</td><td>Months 5~10<br>(6 months)</td><td>Pool $100K<br><small style="color:#888;">(Hedged TVL ~$500K)</small></td><td>Self-anchor $15~20K + community ~$80K. 24 epoch actual settlement data. VC pitching after 2nd audit. Additional $100K deployed after Phase 3 VC closing.</td></tr>
+    <tr><td><strong>Phase 3</strong><br>Open Market</td><td>Month 11+<br>(~24 months)</td><td>Pool $10M<br><small style="color:#888;">(Hedged TVL ~$60M)</small></td><td>Seed VC $1~3M fundraising. Treasury/Senior dual pool transition. BELTA token issuance + xBELTA launch. BTC/USDC expansion.</td></tr>
+    <tr><td><strong>Phase 4</strong><br>DEX Payment 전환</td><td>36개월+</td><td>Pool $20M+<br><small style="color:#888;">(Hedged TVL ~$120M)</small></td><td>Negotiations with Uniswap Foundation after reaching Pool $10M+ → DEX TVL 2% cash payment, ETH/BTC/SOL 3-pool system completion</td></tr>
+    <tr style="background:#1a1a2e; color:#c8a96e;"><td><strong>Phase 5 🏆</strong><br>Global Standard</td><td>60개월+</td><td>Pool ~$170M<br><small style="color:#aaa;">(Hedged TVL $1B)</small></td><td>Full multi-chain expansion. TVL $1B achievement. DeFi LP hedge global infrastructure standardization. Full governance decentralization</td></tr>
+  </tbody>
+</table>
+
+<h2>10.0 Pool Size 성장 로드맵</h2>
+<div style="margin: 16px 0; background: #f8f9fc; border-radius: 6px; padding: 16px 20px; border: 1px solid #dde;">
+  <div style="display: flex; align-items: flex-end; gap: 0; height: 90px; margin-bottom: 8px;">
+    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+      <div style="background:#8899aa; width:100%; height:6px; border-radius:3px 3px 0 0;"></div>
+      <div style="font-size:7pt; color:#555; margin-top:4px; text-align:center;">Phase 0~1<br>—</div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; flex:1; margin-left:4px;">
+      <div style="background:#4a90d9; width:100%; height:18px; border-radius:3px 3px 0 0;"></div>
+      <div style="font-size:7pt; color:#555; margin-top:4px; text-align:center;">Phase 2<br>Pool $100K</div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; flex:1; margin-left:4px;">
+      <div style="background:#2e6db4; width:100%; height:45px; border-radius:3px 3px 0 0;"></div>
+      <div style="font-size:7pt; color:#555; margin-top:4px; text-align:center;">Phase 3<br>Pool $10M</div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; flex:1; margin-left:4px;">
+      <div style="background:#c8a96e; width:100%; height:80px; border-radius:3px 3px 0 0;"></div>
+      <div style="font-size:7pt; color:#555; margin-top:4px; text-align:center;">Phase 4<br>Pool $20M+</div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; flex:1; margin-left:4px;">
+      <div style="background:#1a3a5c; width:100%; height:90px; border-radius:3px 3px 0 0; position:relative;">
+        <div style="position:absolute; top:2px; left:0; right:0; text-align:center; font-size:7pt; color:#c8a96e; font-weight:700;">🏆</div>
+      </div>
+      <div style="font-size:7pt; color:#1a3a5c; margin-top:4px; text-align:center; font-weight:700;">Phase 5<br>TVL $1B</div>
+    </div>
+  </div>
+  <div style="border-top: 1px solid #ccc; padding-top: 8px; font-size: 7.5pt; color: #555;">
+    <strong>Timeline:</strong> &nbsp; 0개월 (Development) → 3개월 (Testnet 3개월) → 4개월 (1차 감사) → 5개월 (그랜트 신청) → 10개월 (Mainnet Pilot $100K · 6개월) → 24개월 (오픈, Pool $10M) → 36개월+ (DEX, Pool $20M+) → 60개월+ 🏆 TVL $1B
+  </div>
+</div>
+
+<!-- Phase 5 수익구조 요약 -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div style="background:#0a1628; border-radius:8px; padding:20px 24px; margin-bottom:16px;">
+  <div style="font-size:8pt; color:#c8a96e; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">PHASE 5 ENDGAME</div>
+  <div style="font-size:16pt; font-weight:700; color:#fff; margin-bottom:4px;">🏆 Final Revenue Structure at TVL $1B Achievement</div>
+  <div style="font-size:9pt; color:#aabbcc;">Pool ~$170M (CAP_MULT 6x 기준) · LP Premium fee 12% · DEX 현금 2%</div>
+</div>
+
+<table>
+  <thead><tr><th>Revenue Source</th><th class="r">연간 추정</th><th>Calculation Basis</th></tr></thead>
+  <tbody>
+    <tr style="background:#e8eef8;"><td>LP Premium (TVL $1B × fee 22.4% × 12%)</td><td class="r">$26.88M</td><td>Mid fee scenario basis</td></tr>
+    <tr style="background:#e8eef8;"><td>DEX Cash Payment (TVL $1B × 2%)</td><td class="r">$20.00M</td><td>Based on total Hedged TVL</td></tr>
+    <tr style="font-weight:700;"><td>Gross Total (Pool 유입)</td><td class="r">$33.44M</td><td></td></tr>
+    <tr style="background:#e8f4e8;"><td>BELTA Labs 15% Priority Deduction</td><td class="r">+$4.01M</td><td>Gross × 15%</td></tr>
+    <tr style="background:#e8f4e8;"><td>Treasury Excess Return (annual avg)</td><td class="r">+$8.20M</td><td>Phase 4 ratio applied (~24.5%)</td></tr>
+    <tr style="background:#d4edda; font-weight:700; font-size:10pt; border-top:3px solid #4a9a4a;">
+      <td>🏦 BELTA Labs Total Revenue</td><td class="r" style="color:#1a7a3c;">+$12.21M/yr</td><td>15% deduction + Treasury excess</td></tr>
+  </tbody>
+</table>
+
+<div style="margin-top:14px; display:flex; gap:12px; flex-wrap:wrap;">
+  <div style="flex:1; min-width:140px; background:#f0f8ff; border:1px solid #b8d4f0; border-radius:6px; padding:12px 14px;">
+    <div style="font-size:7.5pt; color:#4a70b0; font-weight:700; margin-bottom:4px;">Senior Pool</div>
+    <div style="font-size:11pt; font-weight:700; color:#1a3a5c;">~$136M</div>
+    <div style="font-size:7.5pt; color:#555;">Pool $170M × 80%<br>Annual 7% APY = ~$9.5M payout</div>
+  </div>
+  <div style="flex:1; min-width:140px; background:#fff8f0; border:1px solid #e8c87a; border-radius:6px; padding:12px 14px;">
+    <div style="font-size:7.5pt; color:#a07820; font-weight:700; margin-bottom:4px;">Treasury Pool</div>
+    <div style="font-size:11pt; font-weight:700; color:#1a3a5c;">~$34M</div>
+    <div style="font-size:7.5pt; color:#555;">Pool $170M × 20%<br>IL first-loss absorption</div>
+  </div>
+  <div style="flex:1; min-width:140px; background:#f0faf0; border:1px solid #4a9a4a; border-radius:6px; padding:12px 14px;">
+    <div style="font-size:7.5pt; color:#1a7a3c; font-weight:700; margin-bottom:4px;">BELTA Labs Total Revenue</div>
+    <div style="font-size:11pt; font-weight:700; color:#1a7a3c;">$12.2M/yr</div>
+    <div style="font-size:7.5pt; color:#555;">15% deduction + Treasury excess<br>→ 지속적 BELTA 토큰 가치 뒷받침</div>
+  </div>
+</div>
+<p class="tbl-sub" style="margin-top:10px;">* Phase 5 figures are simulation estimates. Actual achievement timing and returns may vary depending on market conditions. CAP_MULT 6x maintenance assumed (Pool = Hedged TVL ÷ 6).</p>
+</div>
+
+<!-- ══════════ 10c. 자본조달 ══════════ -->
+  <tbody>
+    <tr><td>IL vs Premium Ratio</td><td>Payout / Premium &lt; 85%</td><td>Actual IL payout / collected premium</td></tr>
+    <tr><td>LP Opt-in Rate</td><td>&gt; 15%</td><td>Hedged LP count / total LP count</td></tr>
+    <tr><td>Underwriting Rejection Rate</td><td>15~25%</td><td>Rejected positions / total applications</td></tr>
+  </tbody>
+</table>
+
+<div style="page-break-inside:avoid;">
+<h2>10.2 Phase 2 Capital Structure ($100K Composition)</h2>
+<p>The Phase 2 pilot pool of $100K aims at logic verification, with statistical significance of 24 epochs being more important than absolute scale. The remaining $100K is deployed immediately upon Phase 3 VC closing confirmation.</p>
+
+<h2>10.3 Capital Raising Strategy — Phase 3 VC + Senior Pool</h2>
+<p>At Phase 3 entry점에 <strong>VC 투자 유치</strong>와 <strong>General investors Senior Pool 모집</strong>을 동시에 진행한다. VC 자본은 Treasury와 Senior에 <strong>2:8 비율로 분할 주입</strong>하여 이중 Pool Structure의 초기 비율을 유지한다.</p>
+
+<div class="highlight gold">
+  <strong>Phase 3 Capital Raising Sequence (Required):</strong><br>
+  ① VC 클로징 → ② Treasury:Senior = 2:8 분할 주입 확인 → ③ General investors Senior Pool 모집 오픈<br>
+  <small>Injecting VC only into Treasury would collapse the T:S ratio, so the 2:8 split must be followed</small>
+</div>
+
+<table>
+  <thead><tr><th>Round</th><th class="r">Target Amount</th><th>Purpose</th><th>Structure</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Grant</strong><br><small>Testnet 3개월 후 신청</small></td><td class="r">$70~140K<br><small style="color:#888;">UFSF + Arbitrum + Audit support</small></td><td>Development비 + 1차 감사 커버 목적<br>Testnet 3개월 데이터 필수 첨부</td><td>Uniswap Foundation + Arbitrum (grant)</td></tr>
+    <tr><td><strong>Own Capital (Founder)</strong><br><small>Phase 2 anchor</small></td><td class="r">$15~20K</td><td>Pool $100K anchor role (15~20%)<br>Ratio/risk verification purpose</td><td>JJ own capital</td></tr>
+    <tr><td><strong>Seed VC</strong><br><small>At Phase 3 entry</small></td><td class="r">$1~3M</td><td>Pool $2M→$10M growth funding<br>Treasury:Senior = 2:8 split injection</td><td>SAFE + BELTA token warrant<br>Including partial equity</td></tr>
+    <tr><td><strong>General investors (Senior Pool)</strong><br><small>After Phase 3 Seed</small></td><td class="r">$8~16M</td><td>Senior Pool $8M (Pool $10M × 80%)<br>Fixed 7% APY offered</td><td>Senior Pool participation (recruitment after VC closing confirmation)</td></tr>
+    <tr><td><strong>Series A</strong><br><small>At Phase 4 entry</small></td><td class="r">$5~10M</td><td>Pool $20M achievement + DEX negotiation leverage<br>Treasury strengthening ($4M) + Senior expansion ($16M)</td><td>Equity + additional BELTA token distribution</td></tr>
+  </tbody>
+</table>
+
+<div style="page-break-inside:avoid;">
+<h3>BELTA Token Activation Roadmap</h3>
+<table>
+  <thead><tr><th>Step</th><th>Condition</th><th>Activation Content</th></tr></thead>
+  <tbody>
+    <tr><td>Phase 1~2</td><td>No token issuance</td><td>Track record building. Trust established through backtest figures only</td></tr>
+    <tr><td>Phase 3</td><td>VC closing completed</td><td>BELTA 발행 + VC 배분 + xBELTA Staking 오픈 (거래소 상장 없음)</td></tr>
+    <tr><td>Phase 3+</td><td>TVL $20M+ achieved</td><td>Uniswap ETH/BELTA DEX liquidity pool launch</td></tr>
+    <tr><td>Phase 4</td><td>TVL $100M+</td><td>Governance voting rights activated. DEX negotiations begin</td></tr>
+    <tr style="background:#1a1a2e; color:#c8a96e;"><td><strong>Phase 5 🏆</strong></td><td>TVL $1B</td><td>Multi-chain governance full decentralization. BELTA token = foundational governance of DeFi LP hedging ecosystem</td></tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+</div>
+<!-- ══════════ 11. 리스크 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 11</div>
+<h1>Risk Assessment and Mitigation</h1>
+
+<table>
+  <thead><tr><th>리스크</th><th class="c">가능성</th><th class="c">영향도</th><th>완화 방안</th></tr></thead>
+  <tbody>
+    <tr><td>스마트 컨트랙트 취약점</td><td class="c">낮음</td><td class="c">높음</td><td>전문 감사 2회, 버그바운티, 단계적 TVL 증가</td></tr>
+    <tr><td>Pool 완전 소진</td><td class="c">매우 낮음</td><td class="c">높음</td><td>서킷 브레이커, 일일 지급 한도, 자기 치유 메커니즘</td></tr>
+    <tr><td>LP Adoption 저조</td><td class="c">중간</td><td class="c">높음</td><td>Phase 2 자체 운용으로 트랙 레코드 확보 후 모집</td></tr>
+    <tr><td>Adverse Selection</td><td class="c">중간</td><td class="c">높음</td><td>온체인 언더라이팅 규칙, Narrow 범위 자동 반려</td></tr>
+    <tr><td>Aave/Morpho 리스크</td><td class="c">매우 낮음</td><td class="c">중간</td><td>USDC/USDT 분산, 최대 Staking 한도, 5년+ 검증 프로토콜</td></tr>
+    <tr><td>IL 계산 오류</td><td class="c">낮음</td><td class="c">높음</td><td>Epoch 기반 누적 계산, Testnet 충분한 검증</td></tr>
+    <tr><td>규제 리스크</td><td class="c">중간</td><td class="c">중간</td><td>싱가포르 Pte. Ltd. 법인, 법률 자문 유지</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ══════════ 12. DeFi 보험 선례 분석 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 12</div>
+<h1>DeFi Insurance Precedent Analysis — Why We Are Different</h1>
+
+<p>DeFi 보험은 역사적으로 실패율이 높은 영역이다. 그랜트 리뷰어와 투자자가 가장 먼저 묻는 질문이 바로 이것이다: <em>"Nexus Mutual, InsurAce, Cover Protocol이 다 실패했는데 왜 당신은 다른가?"</em></p>
+
+<div style="page-break-inside:avoid;">
+<h2>12.1 기존 DeFi 보험 프로토콜 실패 원인 분석</h2>
+<table>
+  <thead><tr><th>프로토콜</th><th>실패 원인</th><th>구조적 문제</th></tr></thead>
+  <tbody>
+    <tr><td>Cover Protocol</td><td>2020년 무한 민팅 익스플로잇</td><td>보험 대상이 스마트 컨트랙트 해킹 — 수요 불규칙, 가격 산정 불가</td></tr>
+    <tr><td>InsurAce</td><td>LUNA 붕괴 시 대규모 클레임 → 토큰 가치 폭락</td><td>보험 풀과 거버넌스 토큰 가치가 동일 리스크에 노출 (상관관계 문제)</td></tr>
+    <tr><td>Nexus Mutual</td><td>클레임 처리 중앙화, KYC 요구로 DeFi 철학과 충돌</td><td>보험 대상이 너무 광범위 — 스마트 컨트랙트, 프로토콜, 거래소 등</td></tr>
+  </tbody>
+</table>
+
+<h2>12.2 공통 실패 패턴 3가지</h2>
+<table>
+  <thead><tr><th>실패 패턴</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>① 보험 대상 불명확</td><td>해킹, 디페깅, 러그풀 등 정의하기 어려운 이벤트를 커버 → 클레임 기준 분쟁 반복</td></tr>
+    <tr><td>② Adverse Selection 방어 부재</td><td>누구나 가입 가능 → 손실 가능성 높은 포지션만 집중 가입 → 풀 파산</td></tr>
+    <tr><td>③ 보험 풀 = 토큰 가치 연동</td><td>대규모 이벤트 시 토큰도 폭락 → 보험 지급 능력 동시 소멸</td></tr>
+  </tbody>
+</table>
+
+<h2>12.3 IL Hedge Protocol의 구조적 차별점</h2>
+<table>
+  <thead><tr><th>Category</th><th>기존 DeFi 보험</th><th>IL Hedge Protocol</th></tr></thead>
+  <tbody>
+    <tr><td>보험 대상</td><td>정의 불명확 (해킹, 디페깅 등)</td><td><strong>IL — 수학적으로 정확히 계산 가능</strong></td></tr>
+    <tr><td>클레임 기준</td><td>거버넌스 투표, 분쟁 발생</td><td><strong>온체인 자동 계산 — 분쟁 없음</strong></td></tr>
+    <tr><td>Adverse Selection</td><td>방어 없음</td><td><strong>온체인 언더라이팅 규칙 (Narrow 반려, 72h 등)</strong></td></tr>
+    <tr><td>보험 풀 리스크</td><td>토큰 가치와 연동</td><td><strong>Stablecoin 기반 Aave/Morpho 운용 — 독립적</strong></td></tr>
+    <tr><td>수요 예측</td><td>불규칙, 예측 불가</td><td><strong>IL = 백테스트 가능한 확률적 사건</strong></td></tr>
+    <tr><td>Coverage</td><td>Full coverage 시도 → 파산</td><td><strong>Partial coverage 35% — 보험 수리적 안정성 확보</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="highlight gold" style="margin-top:14px;">
+  <strong>핵심 차별점 한 문장:</strong> IL은 AMM 수학으로 정확히 계산 가능한 사건이다. 클레임 기준이 온체인에서 자동으로 결정되므로, 기존 DeFi 보험이 겪은 "클레임 정의 분쟁" 문제가 구조적으로 존재하지 않는다.
+</div>
+</div>
+
+</div>
+<!-- ══════════ 13. 팀 ══════════ -->
+<div class="pb" style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 13</div>
+<h1>Team — Founder</h1>
+
+<!-- IB-style profile card -->
+<div style="display:flex; gap:32px; margin: 16px 0 22px; align-items:flex-start; width:100%;">
+  <!-- Photo -->
+  <div style="flex-shrink:0; width:120px;">
+    <div style="width:120px; height:145px; overflow:hidden; border:1px solid #dde2e8; border-top:3px solid #0a1628;">
+      <img src="data:image/jpeg;base64,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b3JEYXRhYm9vbAEAAAAAUGdQc2VudW0AAAAAUGdQcwAAAABQZ1BDAAAAAExlZnRVbnRGI1JsdAAAAAAAAAAAAAAAAFRvcCBVbnRGI1JsdAAAAAAAAAAAAAAAAFNjbCBVbnRGI1ByY0BZAAAAAAAAAAAAEGNyb3BXaGVuUHJpbnRpbmdib29sAAAAAA5jcm9wUmVjdEJvdHRvbWxvbmcAAAAAAAAADGNyb3BSZWN0TGVmdGxvbmcAAAAAAAAADWNyb3BSZWN0UmlnaHRsb25nAAAAAAAAAAtjcm9wUmVjdFRvcGxvbmcAAAAAADhCSU0D7QAAAAAAEAEsAAAAAQACASwAAAABAAI4QklNBCYAAAAAAA4AAAAAAAAAAAAAP4AAADhCSU0D8gAAAAAACgAA////////AAA4QklNBA0AAAAAAAQAAAAeOEJJTQQZAAAAAAAEAAAAHjhCSU0D8wAAAAAACQAAAAAAAAAAAQA4QklNJxAAAAAAAAoAAQAAAAAAAAACOEJJTQP1AAAAAABIAC9mZgABAGxmZgAGAAAAAAABAC9mZgABAKGZmgAGAAAAAAABADIAAAABAFoAAAAGAAAAAAABADUAAAABAC0AAAAGAAAAAAABOEJJTQP4AAAAAABwAAD/////////////////////////////A+gAAAAA/////////////////////////////wPoAAAAAP////////////////////////////8D6AAAAAD/////////////////////////////A+gAADhCSU0ECAAAAAAAHwAAAAEAAAJAAAACQAAAAAP//+RwAQAALx4BAAAZ0AAAOEJJTQREAAAAAAArAAAAAgAAAkAAAAJAAAAAA///5HABAEr//wAALx4BAEr//wAAGdAAAEr//wA4QklNBEkAAAAAAQAAAAADAAAAJDk1MDk4NjdiLTdkZDMtNmM0My1iNWVhLWEzMzliZGZlNTVhMgAAAAAAAAAkMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwAAAAJGZiZjk5YTgzLWU1OTMtNzc0Ni05YmNjLTkwNGJlMTZiYTE1YgAAAAAAAAAkMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwAAAAJDY2NWVlYjc3LWQ1ZmEtN2U0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AG8AdABvAHMAaABvAHAAIAAyADAAMgA2AAAAAQA4QklNBAYAAAAAAAcABAAAAAEBAP/hD+ZodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDkuMS1jMDAzIDc5Ljk2OTBhODdmYywgMjAyNS8wMy8wNi0yMDo1MDoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1sbnM6YXV4PSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wL2F1eC8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIiB4bWxuczpleGlmRVg9Imh0dHA6Ly9jaXBhLmpwL2V4aWYvMS4wLyIgeG1sbnM6eG1wRE09Imh0dHA6Ly9ucy5hZG9iZS5jb20veG1wLzEuMC9EeW5hbWljTWVkaWEvIiB4bXA6Q3JlYXRvclRvb2w9IkV2b3RvIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyNS0xMS0yMVQxODoxNjoxNiswOTowMCIgeG1wOkNyZWF0ZURhdGU9IjIwMjUtMTEtMjFUMTM6NTU6NTQiIHhtcDpNZXRhZGF0YURhdGU9IjIwMjUtMTEtMjFUMTg6MTY6MTYrMDk6MDAiIHhtcDpMYWJlbD0iIiB4bXA6UmF0aW5nPSIwIiB4bXBNTTpEb2N1bWVudElEPSJhZG9iZTpkb2NpZDpwaG90b3Nob3A6MDdlODkyNWEtNjllOS01ZDQ3LWIzZTEtNjM0N2UxMmI2N2UxIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjEwM2I5YzdhLTY2YzEtNDFjYS05ODIzLTE4ZTU5MGVkODE3YyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ1cm46dXVpZDpkOGVkNDc3My0yZWI2LTQ2NjgtYmFhMS1lY2VmY2M5NGQ2NTYiIGF1eDpMZW5zSW5mbz0iODUwLzEwIDg1MC8xMCAxOC8xMCAxOC8xMCIgYXV4OkxlbnM9IkZFIDg1bW0gRjEuOCIgcGhvdG9zaG9wOkRhdGVDcmVhdGVkPSIyMDI1LTExLTIxVDEzOjU1OjU0LjM3MiswOTowMCIgcGhvdG9zaG9wOkxlZ2FjeUlQVENEaWdlc3Q9IkE3QTA3MUJFRUFBOUQzRUZGNTMzQTZBMkM5MUVFRkRCIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIiBwaG90b3Nob3A6SUNDUHJvZmlsZT0ic1JHQiBJRUM2MTk2Ni0yLjEiIGRjOmZvcm1hdD0iaW1hZ2UvanBlZyIgZXhpZkVYOkxlbnNNb2RlbD0iRkUgODVtbSBGMS44IiB4bXBETTpwaWNrPSIwIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6NjA3YzY5MDctODIxYS00MWU3LWJlMWQtODE0MzQxZmI3MzBmIiBzdEV2dDp3aGVuPSIyMDI1LTExLTIxVDE0OjAwOjU5KzA5OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgMjcuMCAoTWFjaW50b3NoKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6MTAzYjljN2EtNjZjMS00MWNhLTk4MjMtMThlNTkwZWQ4MTdjIiBzdEV2dDp3aGVuPSIyMDI1LTExLTIxVDE4OjE2OjE2KzA5OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgMjcuMCAoTWFjaW50b3NoKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPGRjOmRlc2NyaXB0aW9uPiA8cmRmOkFsdD4gPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ij5Fdm90bzwvcmRmOmxpPiA8L3JkZjpBbHQ+IDwvZGM6ZGVzY3JpcHRpb24+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9InciPz7/4gxYSUNDX1BST0ZJTEUAAQEAAAxITGlubwIQAABtbnRyUkdCIFhZWiAHzgACAAkABgAxAABhY3NwTVNGVAAAAABJRUMgc1JHQgAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLUhQICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABFjcHJ0AAABUAAAADNkZXNjAAABhAAAAGx3dHB0AAAB8AAAABRia3B0AAACBAAAABRyWFlaAAACGAAAABRnWFlaAAACLAAAABRiWFlaAAACQAAAABRkbW5kAAACVAAAAHBkbWRkAAACxAAAAIh2dWVkAAADTAAAAIZ2aWV3AAAD1AAAACRsdW1pAAAD+AAAABRtZWFzAAAEDAAAACR0ZWNoAAAEMAAAAAxyVFJDAAAEPAAACAxnVFJDAAAEPAAACAxiVFJDAAAEPAAACAx0ZXh0AAAAAENvcHlyaWdodCAoYykgMTk5OCBIZXdsZXR0LVBhY2thcmQgQ29tcGFueQAAZGVzYwAAAAAAAAASc1JHQiBJRUM2MTk2Ni0yLjEAAAAAAAAAAAAAABJzUkdCIElFQzYxOTY2LTIuMQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWFlaIAAAAAAAAPNRAAEAAAABFsxYWVogAAAAAAAAAAAAAAAAAAAAAFhZWiAAAAAAAABvogAAOPUAAAOQWFlaIAAAAAAAAGKZAAC3hQAAGNpYWVogAAAAAAAAJKAAAA+EAAC2z2Rlc2MAAAAAAAAAFklFQyBodHRwOi8vd3d3LmllYy5jaAAAAAAAAAAAAAAAFklFQyBodHRwOi8vd3d3LmllYy5jaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkZXNjAAAAAAAAAC5JRUMgNjE5NjYtMi4xIERlZmF1bHQgUkdCIGNvbG91ciBzcGFjZSAtIHNSR0IAAAAAAAAAAAAAAC5JRUMgNjE5NjYtMi4xIERlZmF1bHQgUkdCIGNvbG91ciBzcGFjZSAtIHNSR0IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZGVzYwAAAAAAAAAsUmVmZXJlbmNlIFZpZXdpbmcgQ29uZGl0aW9uIGluIElFQzYxOTY2LTIuMQAAAAAAAAAAAAAALFJlZmVyZW5jZSBWaWV3aW5nIENvbmRpdGlvbiBpbiBJRUM2MTk2Ni0yLjEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHZpZXcAAAAAABOk/gAUXy4AEM8UAAPtzAAEEwsAA1yeAAAAAVhZWiAAAAAAAEwJVgBQAAAAVx/nbWVhcwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAo8AAAACc2lnIAAAAABDUlQgY3VydgAAAAAAAAQAAAAABQAKAA8AFAAZAB4AIwAoAC0AMgA3ADsAQABFAEoATwBUAFkAXgBjAGgAbQByAHcAfACBAIYAiwCQAJUAmgCfAKQAqQCuALIAtwC8AMEAxgDLANAA1QDbAOAA5QDrAPAA9gD7AQEBBwENARMBGQEfASUBKwEyATgBPgFFAUwBUgFZAWABZwFuAXUBfAGDAYsBkgGaAaEBqQGxAbkBwQHJAdEB2QHhAekB8gH6AgMCDAIUAh0CJgIvAjgCQQJLAlQCXQJnAnECegKEAo4CmAKiAqwCtgLBAssC1QLgAusC9QMAAwsDFgMhAy0DOANDA08DWgNmA3IDfgOKA5YDogOuA7oDxwPTA+AD7AP5BAYEEwQgBC0EOwRIBFUEYwRxBH4EjASaBKgEtgTEBNME4QTwBP4FDQUcBSsFOgVJBVgFZwV3BYYFlgWmBbUFxQXVBeUF9gYGBhYGJwY3BkgGWQZqBnsGjAadBq8GwAbRBuMG9QcHBxkHKwc9B08HYQd0B4YHmQesB78H0gflB/gICwgfCDIIRghaCG4IggiWCKoIvgjSCOcI+wkQCSUJOglPCWQJeQmPCaQJugnPCeUJ+woRCicKPQpUCmoKgQqYCq4KxQrcCvMLCwsiCzkLUQtpC4ALmAuwC8gL4Qv5DBIMKgxDDFwMdQyODKcMwAzZDPMNDQ0mDUANWg10DY4NqQ3DDd4N+A4TDi4OSQ5kDn8Omw62DtIO7g8JDyUPQQ9eD3oPlg+zD88P7BAJECYQQxBhEH4QmxC5ENcQ9RETETERTxFtEYwRqhHJEegSBxImEkUSZBKEEqMSwxLjEwMTIxNDE2MTgxOkE8UT5RQGFCcUSRRqFIsUrRTOFPAVEhU0FVYVeBWbFb0V4BYDFiYWSRZsFo8WshbWFvoXHRdBF2UXiReuF9IX9xgbGEAYZRiKGK8Y1Rj6GSAZRRlrGZEZtxndGgQaKhpRGncanhrFGuwbFBs7G2MbihuyG9ocAhwqHFIcexyjHMwc9R0eHUcdcB2ZHcMd7B4WHkAeah6UHr4e6R8THz4faR+UH78f6iAVIEEgbCCYIMQg8CEcIUghdSGhIc4h+yInIlUigiKvIt0jCiM4I2YjlCPCI/AkHyRNJHwkqyTaJQklOCVoJZclxyX3JicmVyaHJrcm6CcYJ0kneierJ9woDSg/KHEooijUKQYpOClrKZ0p0CoCKjUqaCqbKs8rAis2K2krnSvRLAUsOSxuLKIs1y0MLUEtdi2rLeEuFi5MLoIuty7uLyQvWi+RL8cv/jA1MGwwpDDbMRIxSjGCMbox8jIqMmMymzLUMw0zRjN/M7gz8TQrNGU0njTYNRM1TTWHNcI1/TY3NnI2rjbpNyQ3YDecN9c4FDhQOIw4yDkFOUI5fzm8Ofk6Njp0OrI67zstO2s7qjvoPCc8ZTykPOM9Ij1hPaE94D4gPmA+oD7gPyE/YT+iP+JAI0BkQKZA50EpQWpBrEHuQjBCckK1QvdDOkN9Q8BEA0RHRIpEzkUSRVVFmkXeRiJGZ0arRvBHNUd7R8BIBUhLSJFI10kdSWNJqUnwSjdKfUrESwxLU0uaS+JMKkxyTLpNAk1KTZNN3E4lTm5Ot08AT0lPk0/dUCdQcVC7UQZRUFGbUeZSMVJ8UsdTE1NfU6pT9lRCVI9U21UoVXVVwlYPVlxWqVb3V0RXklfgWC9YfVjLWRpZaVm4WgdaVlqmWvVbRVuVW+VcNVyGXNZdJ114XcleGl5sXr1fD19hX7NgBWBXYKpg/GFPYaJh9WJJYpxi8GNDY5dj62RAZJRk6WU9ZZJl52Y9ZpJm6Gc9Z5Nn6Wg/aJZo7GlDaZpp8WpIap9q92tPa6dr/2xXbK9tCG1gbbluEm5rbsRvHm94b9FwK3CGcOBxOnGVcfByS3KmcwFzXXO4dBR0cHTMdSh1hXXhdj52m3b4d1Z3s3gReG54zHkqeYl553pGeqV7BHtje8J8IXyBfOF9QX2hfgF+Yn7CfyN/hH/lgEeAqIEKgWuBzYIwgpKC9INXg7qEHYSAhOOFR4Wrhg6GcobXhzuHn4gEiGmIzokziZmJ/opkisqLMIuWi/yMY4zKjTGNmI3/jmaOzo82j56QBpBukNaRP5GokhGSepLjk02TtpQglIqU9JVflcmWNJaflwqXdZfgmEyYuJkkmZCZ/JpomtWbQpuvnByciZz3nWSd0p5Anq6fHZ+Ln/qgaaDYoUehtqImopajBqN2o+akVqTHpTilqaYapoum/adup+CoUqjEqTepqaocqo+rAqt1q+msXKzQrUStuK4trqGvFq+LsACwdbDqsWCx1rJLssKzOLOutCW0nLUTtYq2AbZ5tvC3aLfguFm40blKucK6O7q1uy67p7whvJu9Fb2Pvgq+hL7/v3q/9cBwwOzBZ8Hjwl/C28NYw9TEUcTOxUvFyMZGxsPHQce/yD3IvMk6ybnKOMq3yzbLtsw1zLXNNc21zjbOts83z7jQOdC60TzRvtI/0sHTRNPG1EnUy9VO1dHWVdbY11zX4Nhk2OjZbNnx2nba+9uA3AXcit0Q3ZbeHN6i3ynfr+A24L3hROHM4lPi2+Nj4+vkc+T85YTmDeaW5x/nqegy6LzpRunQ6lvq5etw6/vshu0R7ZzuKO6070DvzPBY8OXxcvH/8ozzGfOn9DT0wvVQ9d72bfb794r4Gfio+Tj5x/pX+uf7d/wH/Jj9Kf26/kv+3P9t////7gAOQWRvYmUAZAAAAAAB/9sAhAAGBAQEBQQGBQUGCQYFBgkLCAYGCAsMCgoLCgoMEAwMDAwMDBAMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAQcHBw0MDRgQEBgUDg4OFBQODg4OFBEMDAwMDBERDAwMDAwMEQwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAIUAZ0DAREAAhEBAxEB/90ABAA0/8QBogAAAAcBAQEBAQAAAAAAAAAABAUDAgYBAAcICQoLAQACAgMBAQEBAQAAAAAAAAABAAIDBAUGBwgJCgsQAAIBAwMCBAIGBwMEAgYCcwECAxEEAAUhEjFBUQYTYSJxgRQykaEHFbFCI8FS0eEzFmLwJHKC8SVDNFOSorJjc8I1RCeTo7M2F1RkdMPS4ggmgwkKGBmElEVGpLRW01UoGvLj88TU5PRldYWVpbXF1eX1ZnaGlqa2xtbm9jdHV2d3h5ent8fX5/c4SFhoeIiYqLjI2Oj4KTlJWWl5iZmpucnZ6fkqOkpaanqKmqq6ytrq+hEAAgIBAgMFBQQFBgQIAwNtAQACEQMEIRIxQQVRE2EiBnGBkTKhsfAUwdHhI0IVUmJy8TMkNEOCFpJTJaJjssIHc9I14kSDF1STCAkKGBkmNkUaJ2R0VTfyo7PDKCnT4/OElKS0xNTk9GV1hZWltcXV5fVGVmZ2hpamtsbW5vZHV2d3h5ent8fX5/c4SFhoeIiYqLjI2Oj4OUlZaXmJmam5ydnp+So6SlpqeoqaqrrK2ur6/9oADAMBAAIRAxEAPwD1TirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVf/0PVOKuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV//R9U4q7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FX/9L1TirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVdiqDv9Y03T0L3lykIA5EMd6D2G+KsQu/zy/K6zd0udcjidDQqySV+j4caVJNd/5yW/K/TvhtdSF+xQvWBSVB7Ak0wqxxP+cvfIQb05YJg/KnNByjoR13o3/C4FdL/zmD+XfrKkVvdmOgLytHsN6MKA1/1cVTG1/wCcs/yruZRFH+kAWNAzW9B+DE4qyDSv+chfyo1Gf6uusi2nBAMdzG8RFe/xDpiqdH82vy4Bj5eYLMer9j94D3pQ0rx+nFWRabrGlanAJ9OvIbuIioeF1cfgcVRmKuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV//0/VOKuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KqVxcwW6c5pFjXfdjStPDFXkXnj/nIzybo7z6bBNOb8AqGWI8Q3zqCv04aV83+d/wA2vMGsuVTVrg1rR4G4nf8AYLkDkKeGGleb3V1eTy8rieaVq1/euXYn78iqgRsUpQg16U/DFWmYkcRGiDard9hiqkOANWfj7UrXFXeuwFVY77E8aV+nFVd9QuZYVikk5oooofcgezHcYqiI9a1KG2NujhENKuFX1eI7FgKsuKoyDzn5psblbvTtWnhnFP3sTlCKey0xV9Lfkx/zkkZdHNr5yvllntTxNzIAsjJ/PyqA3/EsVepD/nIL8oejeYoEbYcCHrv8lOKpnbfm/wDlpcuscfmK0DtSis/E7/MDFWVWV9Z31utzZzpcW7j4JYmDKfpGKq+KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV//9T1TirsVdirsVdirsVdirsVdirsVdirsVdirsVdirsVQepaxpWmQGfUbuK0iH7crhPur1xV5b53/wCcj/KWg+pDpxj1O8Q/Y9X0126moVjhpXiHmv8A5yg8960slvYLHp8RNEa2ZgRvseTb4Ved6l5181ahIZdR1i5nmFaAzy0WvagbDapA7STSF5WZ5W6lmZ23774LtVB+v7KnuW3PhuTgVSKp4rtuGrStPfFVIyqAfsknv1P0Yqply+w2PctgVYxFKct674qt5n7JalfbFVn2up+WKrgX40G1Oh/txVx57nsdq9MVaLUp3xVERXYUMXRndiDy5lRsNunhiqu2uXhovpoq/t0Aq5HdmOKsn8o/m7508qTB9FuPSjrVoiW4t81rx/DFX07+V/8AzlH5V1fS1i8130dhrHIIIvTYB69wQClMKvbtN1XTtTt1ubC4S4hYAh0NevTAqLxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2Kv8A/9X1TirsVdirsVdirsVdirsVdirsVdirsVdirsVdiqQecvO3l7ynpZvdZuxbK9VgQfFJI1K0Re5xV8l+fvzi1PzZqHHT7VYdOYsUkuHCzOoFCPUJFKDf4Mkryi7WMux9UsHNVQUJ+mlMVWLGIlPqvSpACnqfoxVyXEfI0jpFXYE0JI+WKqbUYsIgqlj9nv198aVYbMn7bBRToBUde+KrJYFVamViR2CBR9+AqhmDUI8T1pUnAqgYyW4+mx+eKtGIU3AA8MCrWoOpr4YVWhwNu2Kt8g3Sv6sVdWnUEjFK2u3TY9MUO6DrTFWt6e3virZI+nxxVepJAoSD1qD0xV6j+WX55eZvJsqRTXM89gGHwUWRQpPxVDUPT/KxV9g/lx+bXlbzxac9OuFF0v24K/TtXv8A5OKs4qDirsVdirsVdirsVdirsVdirsVdirsVdirsVdir/9b1TirsVdirsVdirsVdirsVdirsVdirsVdirq4qwz8yfzQ8v+R9Ka5vZBLeuKWtkhq8jfLwxV8XeffzN1rzn5il1C8QyipW3tiSUjXpSmwySsWmqx5XdyGY/wC6ofjI9vBRgVxu4Y2VEjEfuvxSsfdjsMKqct2q1T015nr+25+nG1UJJrl91jPLu56/RgV0Lzq2ympr8VBT6WOG1RP1jfgvKQ0+Nj0Jpv08MbVa6SSgFgWNfahoPAYFQ0nrRuSykCg+0ADTAqn64J48SB2Hb8cVUpQgYgEyfgP64aVSWKtAxI/1umBWmho1Aaj2OKrCAOlQfA4q0eVdxvirVfpHfFW+O38MVd2xVo+/3Yq75bYqrQzlX36dPY/PFU20TzFrGg6nDqmi3T2F9AQyyxHrQ/tKfhceIOG1fXP5J/8AOSMfmkrpPmoQ2eqgARXcZ4xzHp8Sn7DH2OKveAwIBG4PQjAreKuxV2KuxV2KuxV2KuxV2KuxV2KuxV2Kv//X9U4q7FXYq7FXYq7FXYq7FXYq7FXYq7FXHFWGfmf+YuneStCe7mZWvZRxtYm8TtzIHZfD9rFXw150833vmTWbjULmWST1GqZWfk7n9kD9mNP8hMKsaa5YfukHAftgVNT7nG1UjI1eu/jtt92BV0QYmrDcnY/2nFUWLq3hXvIO4T4RXw5N/DCrv0pLIvpJGN/tUBI+84qqBJJT8Z4Ko/u+pP8AAYVXcuIonBE7cvfrQDrgVTldR1lPFT8KgEH6MKqDKC28TNU/CXJrgVTe3u2/ZUe1Dt9+Ku9BgvKoFe4p/WuBVJolBoC1QdulTiq11Lfa+yNq0p+rFVpUA7Cq9j1P04qsIIJqB7dsVWU260P4Yq4A1Ap1xV1BirRGKtUHfFVwIriqqHFaH7PbxGKqsMzpIjK5R0PwyCoINeu2Kvoz8iPz9fS3h0bzFfTS2pb0w1xJzSNP5kLfHSv7PLFX1hZ3tre20d1aTJcW8oDRzRkMrA+BGKq+KuxV2KuxV2KuxV2KuxV2KuxV2KuxV//Q9U4q7FXYq7FXYq7FXYq7FXYq7FXYq7FUNqWoWenWM99eyrBaWyGSaVzRVVcVfCv56fmjc+cfNF0bYmHSIm9K2jNQzqnd/Cp7YVeWyyBGAQ8mYdQOnywK2o2+M7dkH9cVar2AFfAb4qqqjn4XbZtyB1xVeUVTSvIjwBH44qqK8iioWgFDT8Bt1wqqi5LbGnH+UChrTwOFXGeWQ8FVenQgUAxVYUYBW9QewrSnttgVU5S0q1XA/bC1+VadcVUndgg/eVA3DKOP31xVDSzvuQ4NTWtOv0jFVD16GhPw13qMCqhJpVWA8OIrX78VWF2pRmBHyOKqZcHbqMVaO2Kur2xVoHegxVqh3xVroafjirakdcVdyFcVXgnbFUTDIg2aoI6OOop0xV9Qf841/m/DCreXtcvY44qD6vLKeBZiaV/l9v8AKw0r6hVgwDKaqdwRuCDgVvFXYq7FXYq7FXYq7FXYq7FXYq7FX//R9U4q7FXYq7FXYq7FXYq7FXYq7FXYq40pUmg8cVfKP/ORn54W+oG48r6NNztLeUx3xXpI6HoSP2FP/BYq+aLi5aV692NajqTiraKB8XT+Z+4HtirTurbID4VPhirayBBUCrdt6AYquDytv9hT3/sxVXt49yzN8uVenj4YVVC8S1IBkc7l+XwgD2GKteuvGhXgB05Hf7vDFV4LlKA8QeyimKqUko5cmcjwApuPbFVJrk9CXFe4xtVBpCzbuSPBupwKpkjoFr9NMUrST88UOVh9IxVUWjA8qg9iMUhaQenT6N8ULKE9MVcRiq09cVXCn9cVaG+x6jFWgT08MVbAPh13xVwoWAB3xVURiDQ7EffiqOsbx7eYOpoQe+4whX1z/wA49fm5baiINAvZmil4cIo5WLgOB2avwhv2Q2JCvoPArsVdirsVdirsVdirsVdirsVdir//0vVOKuxV2KuxV2KuxV2KuxV2KuxVx6Yq8c/5yR/NG48neWItO06Qx6rq3JRMOsUA2dh/ltXiuKviC9uJZppGkYmSQlpGY1O++/viqgi1Gwp7+2KudjSgO1KYq3GtQamgO57YquolQVAHt3xVesZqGK8iDsD/ABJxVVeGV/tyKig14qOn34VXrBb9l2/nc/w2GKqyJCamPYDunUkeJOKqbNIp5DYHrUfF+GBVGWY05FncHr8IGKoRpVbahA8a1wKtKgrVWr7YUtfGO1RihcOvxDrild6Y6jenbG1Wmta+GNqu5AjpXxGKtUpQ9PDArRH0YVWtihaDirjuf44q6lDirYO3yxVaNzXFVQEnatCOhxVFQNuNqnpv39sVT/y7rd5o2p22oWEvptE6yGLs3E1KnCr72/LXzzpfm7y1a6haXMc0vEJOiGjI4G6sp+JTgVluKuxV2KuxV2KuxV2KuxV2KuxV/9P1TirsVdirsVdirsVdirsVdirsVS/X9d07QtIudU1GURWtshZ27k9lUd2OKvgj83vzLvPPHm6XVbkcbOCsOn2w6KinYt7k/FhV55u7VrUk1PzwKqM1KbdegxVTFNj1PbFV/wAIG/xHwxVtCxNab+39BiquZitBWpA2B+LFXKzliz1b2PTDarwx6iPk3UL2H0nG1VCNQZakgEfsp2+dMFppRe0u68mBavT4WP8ADFaUisimvpkEdaEj8N8UUpOtTUpT3xTSwA12Jp2xVsBh13GC1VKe5bFXBSfl2xTTmQdT8tsC0saNx2qfHDaGhUj+GKuIJ+WKtFKdNxja0t40OFXFRXFDTAnpirVa+wxVoVrtiq8EcqHocVRkSsUDftL+rxxVEx8gAVqe5Hv0PXCr0z8lPPk3lnzdaPz52dwwjnSuxDbdP8k4lX3RbzJNBHNGeSSKGU9agiowKqYq7FXYq7FXYq7FXYq7FXYq/wD/1PVOKuxV2KuxV2KuxV2KuxV2KuxV8+/85W+dJNP0eHRIFB9dS9wxO6g/ZoPH3wq+PXk9SpPU9ugAwKsptypQdj416DFWmod2Ow6Yq0QCSemKtddtj49sVVFFKcTU+2Kr6tXwHamKXEsdhQDucVpcNhXqfH3xKq6tIpqWYHqEXqT8hjatPNeFaMzIp3AZqV+gb4LVTAnpQMd/mf142ml628rmvAkjuBTBaeFd9UkY0ZePvSv6sbXhc1m4PWvt8sbTS9bB3FUrQfbr1xteFsacTQglQevhgteFzWUhPE1FOmNrSi1pMhow9q4ooqLxNQmnzphWlEqe/T2xtFLaEYquA5AYQUNOoFPbqThVTOKtAdQMUNnbx+nFW6Fum58cVRMDemBUkV6riqIjeMUB6dj4YqiYpZIbiN1dqBg3wmjbHt74VfcX5AeaP0v5NS0luDcT2VFWVq1eI/ZajeH2WH82KvUMCuxV2KuxV2KuxV2KuxV2Kv8A/9X1TirsVdirsVdirsVdirsVdirsVfEP/OU/msar5/uNPhj4R2AEMjHcu69/YL4Yq8VLMRQ4q6poA3XofYYq0w+L2HbsMVdtXc7d8VXKFJO1T1p/XFVUBiPhG33VxV3AjvUDqMUuCgmo+nBa0qpE9RQb+J7YLTSOtbSZ2AClmJ8P4dziSyEE5tfK9zL8fpOWpvy/tyBmGwYimcPlC5Zf7n+ByHiNgwoqPyZeslBGQD2ByPiNgwpjZ/l7cEbgqD2picjLwEZH+XzRnv8A6pA/hg8RfBDZ/L+AMGEZHivb8MfEXwG28iIu4ipXsNsTkXwQhpfJiD4Su3gTj4inCEvvPKCUqo4kdad6ZLjYnCEg1DQjAxNO1aUqfwGSE2qWNJ7jSJAGohq1CFP9mT4moxS1rNkZlcFT0O1RX5jJMKWPasFqPskVGK0oulPtda742hSZQOmFSpkYWLdSR+vFW12PQH36HFVddxRgd/8AOtcVXoJY5ATvXoe2Kq4kUxlCNidq9jir6c/5xL8yAm40hyzSj4lrQgLtsD9rCVfT4wK7FXYq7FXYq7FXYq7FXYq//9b1TirsVdirsVdirsVdirsVdiqH1C8js7G4u5KBLeNpGrtsoJ6/Rir84PP/AJik8xebdR1VhRJpWESjoEDGg/jirHQCzgeGKqkagsS2/XFVMk1qOpxVwXFKqiAipBp+v54qqkioqTTuuAqqx2ruKnZT0HXBbIRRlvpxeg7eFMgZNggyDS/KpuHA47e4NcrORujhZto/kyGMAlKnatSa/hlRmW+OIMqsvLkagUXYfOuRtsEE2g0GMANxFcFsqRiaTGCBx+4YppGR2MKgfDv3xSv/AEeCK8D+vG0UsfTlpuo29v6YpQr6cO33YrSDuNLqDVa42iksuNJQ9Rja0k99oiCpVanx2Jph4mJgx++0GMmgShyYm1SxpFqGhKKtw6VPEeJ2P0ZaJuPLGx6bSyqFVFSN6fh1yYk1mCUT2tGb4SvHb5ZJhwoNloDXcfqwsSh3Qjb6cLFa1VIP+dMKtlQOmw/hihUjqG4nriqI5MeILcadKd8UtAksafZ+1/XFD3f/AJxR+pTebpbeRX+txqJYJEfgV47Gq/tqw+Fhir7JGKuxV2KuxV2KuxV2KuxV2Kv/1/VOKuxV2KuxV2KuxV2KuxV2KvMf+cjb6ez/ACq1SSOZ4YnKRzmI0dkY04cuwZqcsVfBsiBWCGvIbt4YqoAdQOrd8VdWg2+/FWlHVj1PQYqvjTkd+njilWBNSqjbI2lGWdhJMw4jkB9+QlJsjC2Tab5bnloeIoex65VLI5EcbMdG8pceLOKAdQMqM2+MKZfYaIkYFFFO/jkDJtEWQWumqFBKinvtkbZUmkNsoA2HthVErAtCelO2SpDhDU+OFVaOEHtUe+NItEJb1FaVA8K1wiKCWntq9Og7HEheJCPb/fXvkaZAoeW15V7fRTBSbS+a1HYVr3xVAz2AYHb5VwJS640lT+zSuNoISTUdFHBlA65MSYGDFb/SPSjK02LUA/1uuWCbSYMV1XSkjmk7ou5P+V4ZYJNE4McurR1k+KtCKjalKdssBaCEJ6ezV2IphYrJV/diorx6+wyVoajTkvA9R+rCha5+JWHXofoxQrNTgtOlSK4qqsrU5DrWtPGo6Yq97/5xG+qv5yveQR5YoQVU/wB6AxpyX+ZAftYq+wh0xV2KuxV2KuxV2KuxV2KuxV//0PVOKuxV2KuxV2KuxV2KuxV2Kvm7/nMjXbqLS9D0SJ2SGeVrqYCoD+mKLWm3w1rvir5TkkjcFlrRhsadq7n78VQxDdfHpirXH+zFW0UtUntgSEQgFKD54CUgI/TtOkuJAqgkV2p1OVylTdCFvQNB8pBkUyCn8x8Mx5zcyEGeaZoFtEq0jqQNtsqtvEU/t9PjAAp/TBaaTKK2WooKAfhiUo1Ih3FemwO2BUUkYJ+fQdcmGKsIwQAwp3+7J0glcsXInj4eHbDTG1dIhsR4dP1YotGRQL8RI6bHLAGBLU1pTsaDcGmAxUSQk1uSAQN2Gxr19sjTIFCyWx/lrTenTqPfBTK0HLbgGg6D/OuQLMFCywca7bfryJDJCS243HttkUpbdWtSKjphUhIL7TFklX4fhBq3zw2wMWMa7o6/V3UJUkivb3ycZNcoMM13R5I3tmA5BgR8zTMiMnGyQYzdQ8ZnXsBUfPLQXGkN0PIrD6eo98IYkLYlqVHVvsj55JitdNt+m334qsR2PINupqCPD3xQiIizLv26fTir1z/nFvT5rr81LWeJnU2aM8hQ0BjYEFWA6iuKvuPFXYq7FXYq7FXYq7FXYq7FX//R9U4q7FXYq7FXYq7FXYq7FXYq+Xf+czrhfV0K2C0Zo3LSctiC1OPH574VfMRVQvGpHHsPboKf5WBVOSh4qDvSrnsCewxVa3ttilfApZPlXAkJlY2Lzvv9kdflkJFsgLejeVtBjWNZHUVOw2zEnJz8cGe2dmsUarsO9PHKi3hPLeOgX5eFMbSjoYyu/TwxVFqvTagPhgVEIoFMIColAaCgqfbJgMVdAO43A6np88kGBRMcZYlvH4vDbJsFSMUYkUr0JPTboMUI+BhxoKUBoT75YCwK5iCBV6AbHvXwrhQEHKFoVqKmvKu4p1B+eRLMIRwjUHcUP9p8MrZBCSr8JNevga0AyJbAgZlNSD86ZWWYQzRg1A2IwJtCXERoRSpxSl01tWtRtQ1xVKdQ09WbcDp+OEMSxnW9EWaJXUUeKpU/wycZU1yFvONY0to7liwpXcZkRk4c4bpFcxH1CfHcjLAWmQQ1eL7bbUP+t45Y1LZD/d/6u56dRTFCyAEg+Pevtiqm0zfZGw6/SMVe9f8AOH90IfP90eNVmtzDI9CSpJ5J07Mw44q+z8VdirsVdirsVdirsVdirsVf/9L1TirsVdirsVdirsVdirsVdir5c/5zQRkm8vzmQcaSBUPUEHqB71wq+ZWVjR2ACj798VWuoCg9e9OwHbAqlxLGnc98Uo62tuSDw227++RJZAM18t6SshWq1Qbn/azHyScvFB6NpFoY1G32R0HQe3zzGJcyIT2BKdR8sDNNLZAdx1FPlgVHRJU1JphColFFQa0+jCqJiA36jwBGEMSUTEu/ia0Br3yYYkqyClGagqdydwfnkmJRiLWoY7VoDtUECuSYFyjcn7RFKDx+VOuKohUIpuadR9GTpguckqS3EsB70+jFQoTc9uimlVBNBQDqcBZBCyjY1NRsQCN+lSNsgWSFnAKe3felDTwyEmYKDmTb6fpyBDMFCuhUnY7dcFJtQZQak740lCyRruOhwKl9zECf1YqlV1CGBB7774UMM8waItCSK8T8R9jlkZNM4MA1nTmjb4RQqafRmTEuJOLH7hSGrTY779csDjlQkbkOZNDU1X22pkmKxy1TTYkb4oUgDWh+nFXtX/OJ1zcQ/mpDFHvFc28sc68qAqByBoftFWFRir7jGKuxV2KuxV2KuxV2KuxV2Kv/0/VOKuxV2KuxV2KuxV2KuxV2Kvnv/nL/AEaCfy3p2pyShHhdoUUmpZj8ShV7nFXyeIlCAyKCF2Kk7sffCqncRgNSnKToQew7CmKtQxKzUOy/tN/AZEsgE80u2+IErxA7ftew+nKpFtgHoWg2rcAuysftKvRR75jTLm4wy6zhogCk0+78MqLeE0hUmuBkmUApQVrt0xVHRjpUb9sKomMeIrhVExqB/A+GSDElExqu47kV9vlkgwKvEBQGtfDlt+GSDEolOIULSn2eIO3wjxr2ybC16rQEUApsQOtAemK2rqhHUGlKfT9GSYltlI8TUfOlcUAoeQftH5Enfv4ZEsgoEV+FvtAEDpgPJkOaEeuwfoN/Ag0pXKy2DZCzADZdwK8tsiWYQjqabDIslCQU9vAYqhJB36nFUHOvXscVS+ePap+nFCUX0Ebg8h8JBBxCCGC+YtLHplqVK7V8QemXwLj5IsCu4Fq4I3GxX5ZkhwZCkA8SlePUk/iB0+nJhrUJUo1CailQR74oUgh7/aH44q9x/wCcSdMluPzIF0qkrbQOTJxqq1HSv7LH9nFX2wMVdirsVdirsVdirsVdirsVf//U9U4q7FXYq7FXYq7FXYq7FXYq8W/5yqWAfl4sjW4mmWYLE5/3XyoCR74hXxs6Ey0rUKAABt+PthVRagLEg7/qxVWtg3JVqB2UdhXuTkSzDLdCtFaUSA8lXYSEbHb9nKJlycYegaZEojCxrxQCtcxi5cQyC3Q8Ae5/z65AtqPgAB6YpTCAbgdBgVHR0P8AZiqKiFf4ZJCKir1GzdMkGJRKxqIzX7PTbJMUQn2D1HIb79vpyYYFXCjiCGLbdu9MkGJVhyBJpStOnhihcGCnko4rSlT1oMNsVzN1AbYEVHX4qV3PcYU0oSEcgVLdyBv3HeuRKQENIKqRSldyAAR+PTBbKkFISNgCB89jXuMrJbAENKpqxNRvQg+GQLMKEigLt06D+GBkh32YClcVQ0oNMVQc47V3xVBTp12r4jFCV3a7N4H8MKGNaxbq0RDbjdfoOWRap7vNtdtHikL8SHXqe5AO5HyzIiXCnFJJRsWH2SBy+XiMtaCh5FKkN1Su/wDX+uFCwIK8ugJr4jfFD37/AJxAgP8Aji8YtQx27qVVuoPQ074q+wxirsVdirsVdirsVdirsVdir//V9U4q7FXYq7FXYq7FXYq7FXYq8H/5y5v3t/JVhGGUCW6pSo5k06BfDCFfIA5nntycg0Ue+5OKrSo4jqzvsB3+7wwJTGxgj3Dr6kvYfsr7nx+n4chItkWcaFA8iRIvcAhR0p9PbMeZcrGGbafbx7U326nevyyguUAncI2Apt7ZFsRkYof6YqjoVqR4e2BUdCtdhscaY2jUHEiux7e+SVEJ0ou/iTkggoiMAniN6dv4nJMSiVC0AFT1O1flljC0QGo4qaA7CvX5AE4QxKr8BHyPwmpP+3kqYqwiNOvKv0dq7DDSLaaNiQSKbb7bAY0tqEiLTYtUmoJ7+GRIZBCycakUPI9fpyLIIaUE9RQrWtP6ZAtgQcibnlsfHtXIFsQz1ruK0GRVQeu22+KoeUbFvvGKUHKN6HbvihAzEf7LvhVAXChtv2e+KEg1OBSHRqqrDiT1oexyQYEMG8wW5eHkR9lj8Q6hl2OXwLjZIsLmjKuxpQ9SvaniMvBcSSkArAA7dqnpv0ybBTMZQspHEivwt4Y0h75/zh/bWj+d9RkkQi6htawEkghWNG26MMCvr8dMVdirsVdirsVdirsVdirsVf/W9U4q7FXYq7FXYq7FXYq7FXYq8C/5y28vfX/Lmn6gCE+pmRS4pyNaELv227YQr5IQH+5XZF2dvoqcVW8mVmKnc/CCtOg+eApTbTrdpKKDSpBc70/5ubKpN0Q9J0K0EcQMajlLReR32zFkXOhFlVqgQBF6DatMg2hMYBT4RWnX78DJFp222wKjrZgCBsD498lTG0bETsa8vbDShFK1HpvXwGGlRMbL3+iuHhVFRRsVJqSdqjoDXpkhFjKSNRDxoBTetT2p+vJ01kqsakEmlD4kcq4WJVEBqD22A2B9/vxQVf02Cj4fhNSFAB+jkNvvyTFpw/FVanFt69ye4FPlilSYCtaVDbAHr9HbEpU2j5K3w0qBRRsAe1PnkSGQKFkgJWpNEPQkUI7dMjwsuJL7hCpNd+1fH3yBDYChJKGpP9uRplaEkpWladxg4VtCzOOhqDjS2g5pCtSPi9x4d8BCUHKfhBG4/ZOFCDkC/EDv4e2KEuuow67/AG6dfbFWH+YbRgsrgVDKGI+Wxp9G+WxaZx2YBqFuEPw79eVPfwzIiXBmEAgUkqT7EHuMttqKGmLhChHJB0DdRv2xQ+kf+cNoLe41XWLgiQXFnCFBoPTKStsGP8y0+HAr6rHTFXYq7FXYq7FXYq7FXYq7FX//1/VOKuxV2KuxV2KuxV2KuxV2KvI/+cn7J7n8rbqSIEywTxsqqKk8qg1P7K03ZsVfEkZorct6kig2rhVelZJQgIAHVug37DIlkGW+XdN9aQ0WiA706n6ffMfIXKxxekadBRQCAABQAdB92Y5c0JzbrRRTp44skXG/EAn6B/t4Eoa/1Zbf9riOhFadcnGLXKbrPzDGy8YVDSblpGoFUV71ywQafETmLVY2RfUkUt1PYAdepwmDITRsOo27EBXHbYVr9O5/HBwpGRMoJ1YfCnxAVrua/LGmXEm1jcRsaVNCPiHsPbJxYSTEzLIBxHvt1IHv4ZI7tavGsdFIPJa0ovWp8RjSLVIFiI+E/ECfEEH5YhSSrCECtRud2ArSnX5YaY2psFTeoJ2anQb7fjgZBTlZN6Dk3Q9agDw8MVQ7XUCI3LehHFeuLKkHLexlqGlSDuaVrXwwJpLLm7gDbtyanxdKH3r45AhmCldzdpuysDXYHkOx9zjSeNK7jWLcfBICrA0pTYn2PfDwsfEQNxqsZiDRuCnamx3NBSvfBwLxpW3mCIzGOo5ggstSK9gRXtgMFGRHrNHKnqofhbc96Gm42yoim4S2Q8pU7dCKVHz6E4FQsy1JNOv68VSe/tleNgRuKkV6HwGSBYyDzfzLZCCVjShNCtO4HUZkYy4WWNMbkHJajZk6kftL8vHLw4pQk3JSVFaHdfl4YUPr7/nEDS4YvKV9fmEC4kkEX1in24x8QHLvxOBX0CMVdirsVdirsVdirsVdirsVf//Q9U4q7FXYq7FXYq7FXYq7FXYq8/8Az4jik/KvXVaIzuIl9GMGlZOQC19hir4ERZCzfFUL1p74VRdgivOoQ0oN69vl7nISLOIt6n5V0pIrSMcdyOTMepJ/VmHMuwxx2ZbDEFQAd+uQbgjIvhotR8IJqTQDbFJY/qnnS2XlFpqm7ZDxeVAPSVh29Q/DXLo4u9oll7mPXF/NIzT3Ujs5XdE+IgnoFHTp+02XV3OOZd6Am823Fm6wKoto1PwRJSdlI7kg8eZ8WyQDEzKm3nB0Ri0cryVIpI/E1Pfr0+WEBgZo20/MW8tXVZapUAIg4kGppWvbExCjKWTaT+aMZkVJlVDsAQxBUnpU9Bv0yBg2wzM107zPFOTxqGp8YLb/AEL3+jIEU5AlbIrXVn9MUaq16OOIp9+Q4mfCmVvfvyq1KdAG771pTDxKYoxdQf8AZYHqOv4mmHiRwLhqRruenQ1NPE1GPEvhtSX7EcieuxCGn31GDiXhQcmpFD8RqafEfs+/3nHiTwIK61UFeQagI2odtvfxwWtJHd+Y4Y1dmYemNmc8U/E9fowhBIYN5g/MqC1PKPi9Dxr6hBNdxTY5ZHG0zzAMUufzbvmVuNvEse4c9SSOgH0dsnwhxzmKVHz3e3VKRmnXmQU27DY0p9GGgjxJFWXzxekenPEArjZiabe5/axpIyFFWWtQ3sYYvzaMjiBQ/Mxt2/1G+B/8nIkM4zZFYa1NEGeNhMgHIxpv6i9OQ6fvPY5WYtwmmNrrVtcNwVgC/wAcBHQp3G/8vh+zlRjTaJotnJBI6E/Z+fhlbagLpQa+HjixLFPM+nJLAzkVYKQKdvHLIFpyRt5vcxmOcipqp3PTb2zLDgTCEYFnCFuSMfgbuK7GvyyTB95fkF5afQfIVtC6lHn4yMtKKSR9pd/suPixV6VirsVdirsVdirsVdirsVdir//R9U4q7FXYq7FXYq7FXYq7FXYqxX80rKK9/L3X4JQWU2cjUXY1Uchv9GKvzveYLyVRRyx5eFPAYVTPy7EjXKEitTsD45VNtx83s2kxBbdB4AdMw5c3ZQ5JsNkBpSlehpXAzYn5n1mVkks4ZUSIikihqO48BT8cuhEc2jLJi8DXsjnp6aCggUFDQdOIP8MusOPRVLrT5XV2eABaUWFZXAUdavSnNvn8OGwgwKTPbSRAgho1IoN/7Rh4gxMCl0tncc+SiTkehcVH6zjxMOFpbGZWAkQ7+PSvsa7Y2nhcqPb3PqIzwsPsmlR8mHRgcbURTrS/M2p2c7RRMI4TuqtV4lP+T0aNW78WwEMhMvRfLPnaectDPEY50AYAMGUj/JruV8MrlFyYSZ9pWsJdqODsxAoQW3Hf7PUZWW4FPobj4R2228DkWSuJvClcNKsklK71piqXXU58aAnbfYHGlJYxrmrrAVJNQgZ/TrTkTtWvgMmGEi8y8z+YZ5mZZHMzE/uoWJVAR1fbse37WWRDjzJYNeyTXMvKSRpJCOLPQgf6ieCgftZO3Hq1KPTLpuicadK9j4DBxJ4CiV0y7B5IDv8APtjxBeAqqJeo4M0Rdieje3h2xsLwFNraKQkM1u6kf7ujHEj3+HaoxtlEEdE6g9YBZirrMDUSKqgOe4b/AFqfFjbOig768v4nLqpgZPj+Cj8X68tuqt+2MBAUkst8va5HqVisg/vKAOgO1e4Hf5VzHnGnJxysI+WhZqHbK2aU6nFzjZSOoO598lFEg8r1+29K5cAbA1HsO4zMg63IKKUxRkypTbm61Phv39sm1P0V/LKOWPyHoyS8SRbJxZCWBWmxqcVZPirsVdirsVdirsVdirsVdir/AP/S9U4q7FXYq7FXYq7FXYq7FXYqgdctTd6Nf2oCkz28sYEgqlWQj4hir829UszZ6zdWj8X9KZwxT7JIJpioTbyhEW1ONXWo3Ib+zK8nJuxc3sVjUID3IzCdmOSKlNYuPLiWr074QpYvc6e00xRkGxohIFSv0DrlkS1mKYWWgKkIPHqejCo/HDxKIotvKyz0Dnftx/jjxJ4UZB5FtGQK61r1qNjkeJPAio/y406hAi+I7kGhGCyghD3f5bQPGVCDjTt0PhvhssaDFNT8gPbMVEdVpUDtth4yvAEhm8tBDQgg16Gv8MImxONXsbKa3ljpVeBoGJNBvXt2PZsIkgQLMtFuyktWWjIaVr8JFfvGRLbEM+0m8aZQDXlQbEb/ADORDZSb16Ht0FMki1KZmC12IGKsa1bUDFy9q0P098FpphGtXhnZ6nYkcqdaCmw8Bkra5Bis+myXc5dwTXZQOw9vDDxNfhlMLHyU0o2j4se/UgZDjZDGyfSvyzRgC6cvBafrwWWXCAn6fl3aotXirQbVFMNp2Q135GsqELB16MoNfxw2gRtKZ/JyROTGj0HYg9e++PGngUD5cmYFFXgh69RT6Th4mJil19orwLxVnMlKErVv7MlbGkp0+1ubK79VD6ZB4sOnIHc8qbYCUCO+zLFcSCoP2u4yum0FDXq/CeW+BJea+bIuN1zRQeXUeOZOIuvzhJNIhEmt2kJIEckyK3IVDKT8S08aZc479G/LFra2nl3Tra1UrbxW8axKRxIXiKAjtiqZ4q7FXYq7FXYq7FXYq7FXYq//0/VOKuxV2KuxV2KuxV2KuxV2Kqc6O8MiKQrMpVWO4BI2NMVfnt+Z2hvo35g6xp3qGf6vOytcsBV2O+3HYUrSmIVS8nQv+mU6cT1+jK8nJuw83rdinIClSQKU7nMOnZhB6x5i0fTGMNxKGn6m3jo7j50+z9OSjjJa8mWMeaQJ57sVf91atMvXcmo39hl8cB6uOdUFs/5swW1BBYoZAd1Mmw+eSGDvLH833BRH5zaq4Ag02EkdKFyfwrj4Ee9fzUu5FR/mv53eht9IBr3WGZq/8Lg8GA6r+YydyIj/ADR/MpSP9wxNOgNvN+vhh8OHejxch6Kp/NH8zlHKXRGIHc20wH/EMPBBfEydyBuPzV83H/erRwAOtY5k/WmA44d6jPMdEvk/MqGQ0vdNKH/IZR/xLjg/LDoWX5sjmFSDzr5fl3YSQ+JZCRTwJXlg/LnvZjVxPRkehanpl5Ii2d1G8jbJFyHI/QeuVSgRzcmGWJ5M90gugAptlQLYQyKFGcbjr/ntlgayhr1JF5KKVwEpDB/MtxHbwvPdSrDboaF3PFan5/qyIBPJkSALLzu983aGjnjI05U9Y1NPvNBmQMEi4stVEckPF5/iU0stPMr12J+L8E5HJeAOpaTqj0CaWvmr8x7wAafo8iqejiFgB9LhBhMcY5p48p5BHrB+ed6vwB4FPYywxj7uTnBx4xyR4eYubyl+dcqsJtQSNWFG5XS/8axnHxYDoyGHL3oZvJn5rQkt+l4akbj6wxr98eP5iHcv5bJ3pfL5Q/NBakXqSH/Juh/FRiM8O5B0+XvQx0T804ZFLGaUA1PGeNh+JGESgejE48wXX7ecoY+F3JPAATX1EmAp2+OIOv8Aw2PpQfEHVAC91qJTccjPCn2pVb1kB78uJbj/ALLjh4YlHHMead6V51tDGI72FoSKgPGQ6Gg22PxDIHAejbHUjqEfN5o0SVCEmPTsjn9QyHgln+Yj5sL8ySw3SxSx1CSAMnMFWIPTY5bjFOPmNsq/IX8tx5t87I1zEWsdNZZbwH7JoahWB3pJT7S/tZa477ijRUQIgoqgKo8ANgMVXYq7FXYq7FXYq7FXYq7FXYq//9T1TirsVdirsVdirsVdirsVWu6opZmCqoqWJoAPfFUsi80eXJrkW0WqWr3BNBGsyEk+A3yPEGRhLqHzJ/zk/wCWraTzgZ7EC0Ito57+XhVWkldlDbb1IXJMXjejz6Rpt3W61VraePYenavLtT3I74eC2QlSa6n5jupuKadqlzc2sqkmRohb1PgACzZAY4joyllkRzRPljyqdSBkYDi1SDJy4LGCB6snHi8jO/wxRK3x/bkbhkZzpsx4rZtB5K0CKhuLc3zr0NweMQ+UMXBKf63PMc5iXLjgHVNBZ6dDCIUtLaOEGoiSGMLUd6ccrMy2jGO5Bah5h03TFqzKj0+GGJVDH6ABg3LPhAYpdfmpr09ybXRYgHDU9R+Tn6B0y2OG+bjzz9A7zB5o/MzRdIj1G/1JrcyuEiiRUXk7CvHp+yN2y6OCLjyzyQ/ln8wvzMutMn1FfMelyrbn95p+oyJFOwrT4BRa/wDB5L8uCLALD8zIdU+8s/nRpmtSC01mA6feHYXMbl4GNaVr1X6fhzHnhMeTlYdQJc2YXUEUyDnHFOjCoZkWQEH5g5VuHKoFIL/yZ5auiTLpkAJ6vEpif6DHxyUckg1SwwPMMS8zflgLWzl1TRZ5H+qD1Xgc/v0Cb84pBQtw68WzJhm4ti4uXS8O8U98i/nDE1k1prcAfU4I6wXIYIl0QaANUfu3puzfZxnp1jqzW4e3WOs+XPq0Lubx5nRTIsVqxRWI+JQzMvLif2v2sIwV1X8yTyDF/PnnzQdCktW9OZ7SdJHmeZPQkVlFVCAlg/Lp/kYDgHekaojmHhN5quufmP5kSAhbPT7dWljgNWjgiGzSyd5Zm+yuECOMW1GRzSroyzTPInl20C1thdypv61z8f3J9hfuzHlmJc2GmhFlFlFFboFgjjiUdFRVUf8ACgZUS2iNcmtW80WGkW4kvZC0rj9xax7yPTwHhkoxJ5IkQHnw/ObVdR1E2lvcw+XrI7LdSQvdylq0oFSgzJjg73Cyas3sGO6n+aHnO21JktPMlxe2ygcpWhSGp/aHAg7DJeDFq/MT72Ujzn59treOaZo7uGRVdBIgXmrCtQ60ys4A5Ec8lbTfzLtbyUw38DWM/Zq8kP0jK5YSOTdDPex5sjh1KKVQ8cqvG3RlNRldNyK9Xn8SsR8iR+rCCxMQll3plrcyiSRBHcj7F9EAk6HtVh/eL/NHJyVsnHJ3tMsXc881+1FtqTqFEZdfUdFqFD14uEFdlqOS/wCtmZjNhwMooqt3e65ZrFZ2vmWCwtEXkPUlFTz3H2EdtsQPJHEe9K5pNUjf1L3U1vYpAGhugxdWUHcgMoYb+2EUxIOxe2/kv520nytaz6xNdK6ajIYk0uNDJc+nCoo3xBWRS5b4mbISyAMo4zJ61pn5/wDlG5u0t723utOjkIVbmZVaIE7fEVNV+dMgM0S2S0swLemxSJLEskbB43AZHU1BB3BBy5x12KuxV2KuxV2KuxV2KuxV/9X1TirsVdirsVdirsVdirRxV4B+Yfnq413WZrFLr0NEt5DFDEp4iZ12aRyPtCv2FzCz5Cdg7XS4YxFnmkg0y19HZQKAUIG9e3TMYbOUd2Efmp+lk04Xsl1JPLGFjRpiJKRr0WrAmg7ZlYcsrouFqMMQLAYP5Wi1HULh0gazhuCAZJZ7SKcNt0+MNxNfDMkzpwccLNI7zFouracbd78WzpMSIprWJYkJoKgoBxU0GGGQSTlxGDNfy8g5aGCDXkY608ArU/XmPn2+ZcvAPuDM0thwJpU5jW5qS6zY3ki+nb1Vj3HU42mIYreeRtSmDvI/AnqSORPyyyMqYzhaZ+U/Kdjps6SMtJv9+OOSkd6jqrZeJAtJxCqRX546BPqnlqxvLJTINMdnmij3PCQAFqD+WmZAOzgzxEF4AtralJPUn4NT4UX4g3z+nDEimgxNs7/KTycdU1Ge9vEA02CJkd32VnYUCiv8vXK5Gw5GLGQWceX7660PXRos4kutEnbjb3RRiLd2PwgsB/dOfh/yMxZgOfAvR4dHR+QI3H31rkAGRlSX6naJZwXTN9hYZS9aCqiMkjDAepZS2eEflw1nBqEuq3Vsl19Uj42kLjkvrTftFTseCZk6idCg4Wix8RJL2XS/OPmF4gsVkPToOIAoBTpSmYsZF2EscWP+cNa1O+tJ7TU7JGhnQo3JAStfssD1BDUIwiRu0ShExIYb+UT8dS1mJxSQwRV8aJJRvxzJz7hwNHtIh7BY6SskZYUrStfnmHEOeZUhNWC6VYXF4yNO0K/u4IxVpHOyIAP5m2w0tsa8n6F+kri41DzDDJFqNyGCJKtFjBFAE9lzJx00ZYF5B5m8q3eha3NZ6hFIsKuxjlUHjIhOzK3TLwQ6/JjNoPR9AuNW1FLHT42meZuKKKkgHqXp9kAYbRHGS+i7nQra28v2umfBSCJIjI3X4RSuQmXMx4j1ec3/AJCjW6ZopHBJryNGqf4ZSZNxxg8kTaeUtSszzjc08U6H6MplIN0Ism0eGcoUnqSO5FDkLSQmk1n8I44Cxp5d5zMTa08cXxTJWNxvQsZPhHUb75sYbC3VZdzTL4fK2jWNqqi0jkmVQZJnUO7MRVq8q03zEMyernDHEdGAeeOK38KxAJGBxCqAAPagy/HycTON2Y+V9KiTT452AEjKOTeO2Ykzu52IbI+/ltYVP1hkQNsAxp1wANvE94/IPzJPqflabTZ29RtIkWKCWtSYZByQH/V3XM3FKw6vUw4ZbPUMtcd2KuxV2KuxV2KuxV2Kv//W9U4q7FXYq7FXYq7FXYqlHm++ex8r6pdps8VtIUI6glaD8TkZGhbPGLkA+NvMs10b9Lbqka1+ZpXfMKO7vRGgmflvzNeW4Fvd1ktRsrncp9PhkZRRyTvzdDbajoLu1JEVedB3oKjBBqyCw8x8hqV1m45NUjt2/wAxmZL6XX4hUnofmLQ7rW9FNrZhDeRSJNArngDTZxyPSqnKYT4ZOTmxmcaCt5G8v3uiWElpqFFuZVFw0YYME+NkKgjYjocOaQlGwxwQMCQerNLZBT5dsx3LtXMKGlAPbbFbQ9xaF98CQUL6CRMOSdN64RMhNNomnoa0cHrsxpX38cmMrAwtY8ej/WRPHYwc9+Q9FPiJ8aLlnjlh4ARUSvIfggjiQ9EVOg/Vg4iUiIim8VszW7wuQVcEFaADf5YaYWjre3MMI5b0FFr7YAKUmy8t/MDzHqMdl5kliUJplpbGwhlIHxXNyRGxqdy1GYUH2Vy7HDq4uXIdwwr8otDOoXnEikEQDvXoWJov3KMjn5tuj2iX0ho2hWUcaqEGw3OCMWycylvmry3Z3VrKixgPxJBI36ZGce5ljn3vnbyd9f0b8yrizhjT6zeia1t/UA4eoTVSK7dm65kDeIcCceHIQ9f8i393cW09pfw+jd2UrQutOIMZ3jNPYDjmPkjR2czFMyjunmo6UJJULD4VIdPY9jtkK3bBPZLZ4NQtmJjJI60O4xFhmOEof9KMOSXVukgNPhdQ42/1gcmMpYywgoZJ0COqcIS+wMSJHtWtCUAxOZRhAWS8JHDtRmIoxPc+OVnK2cDX1JJm5Eb+NNsgZFICOhtzGAO3hii1Q28YJYAVOKqRReajxI/XiOaCaDFY/J+j35tdXuTJ65dpmjRuKORKzIXFKnYL3zIllI2cSGCJ9R5onVJR8XiwNae+Vhuk8u80RrNr0Fu37dPi/DMkbRcLJvKmdG7j0vRYUYiSTiFjXxIGYdWXOjsGA6lPd3k/Odi8hbv29hl3IJi+ov8AnGXS5ofLOo6jIpVbu4SKOvcQJRj/AME2XYRs4GqPqp7NlziuxV2KuxV2KuxV2KuxV//X9U4q7FXYq7FXYq7FXYqkHn+F5vJmrxp9o27Ef7Gh/hkJjYtuE+sPmK+0RrrWGfj9pRTb2zDxvQVs7T9CQB0ZTzLcaAVpXufbIzO7VJDSC5tmm0ub/eeYN6TnoGI+zXIhqkNmHaNALPzXNCgpFwop8SDufpzLu4uCBUnpulT/ABDfsMoIcsJvIQ1zAwoeSSRU8agOv/DLhjyIYz2kCjLVyyqexGVtto+MVAwKq+mKYaRa1rdT1FfGuGk246fE37G3tkhFiZNppkNa8d+2SEWJmUXDZLtRfkMkGJKPhgUA1Hzp0xYrbllVGduiKWJ/yV3JwLdbvD9Z1W7uPJOszCGNjeX8cVqktWjkmbkWmZG25xRkqpGZA2cMbsj/ACX0I2WiGZwS0rAK56sqilT88pkbk52KPDGns2mAenSmTi1zKE1deprvgkzjyeHataS6R+a2m6lEyrZXL+ndcgKp63wrItf5JeOOKVCmrPE3bKPJ95fXWt64l/Hwv45w1y9al3LNVzsBRttl+zgzBGnNEhm4AZKN0p9xysN/JQltDTYV7jJKEDLZRN9pK5EhkJIV9Ktj0UD6BgMWQkVv6LRei0yNMuNo2vDtgpbWOg7dMCqMhoDTBSbS2edo4p5B1ijdgf8AKI4r/wAMRlmMeprzGoqJcQW0UC9IkWMU/wAkUwHmyAoAMfv5qsxrsMkGEiwHU1E/maPsIlEgPTYGvfLr9LiEXNksVlcX90txIQUVQIk/lH9uYxNObGNhDSaAz3jcV6MafMZMG2yIp9i+Q9BTQvKGlaWqhWgt1MviZHHNyf8AZNmZEUHS5JXIp/kmDsVdirsVdirsVdirsVf/0PVOKuxV2KuxV2KuxV2KqF9bLdWc9s32Zo3jNf8AKUjARaQaNvnWOwnh1JkmFJIy0UleoZCVzBiKNPRRkDF1kjJezgjIT5sZJZ5nt7JLGWScVNCVA8aZFr5vK9Lull8wK7fDIwYH3A6Zlx+lwpCpM+0ybienyyot4KeCdvTV13eJlkA8eBrT6RjA0VyC4plCwWVlU1jajxHxRxUZGUaNMoysWmluagd8jSo1V2w0hUVPHv2wgIJVlUUrtXwyYYlWWMAmo27Gu3ywoVAoBoeu2+FV7EDpQdqdaYFQGoj1bWaDlxEsbxlh25KR/HBdJIsU8y1LyXe3S6P5eikUafZK89/cHZ5J5jvQduMYAyyeTp1YYcPU8nomi2EdpbxwQrwjQBVA8BlYbiy3S6d+wy6LTkQmrAFiKUr1GQkWUOTy78wPLU2q23O0IW+gJaEnYMD1U/rX/KyAlRbJR4gm3leN5xDrM6GC+vLWO3vrc0/v4DR2qP5xxf8A2WTnIENMMZiaPNkyHsenfKw2EKgA6Hw36jJoU3iBbpQdtv14FUXtwDuNsVtTeMU9+tMBShZkUDxyJZIOQU/icjTJBXJ9vowJtK7sFY0i2LXD8yPCKE1P/BOVGWw2iS0zNkBAXM1Ad8gG0lIL16hvfLA0yYiI3u/MEka9BxXl7dxkzyasf1PStI0YQW6IewqcxpObFNPK+jjUPMVlaKBWa7RW/wBVTyb/AIVcsxC6YZZcMC+nh0zOdM7FXYq7FXYq7FXYq7FXYq//0fVOKuxV2KuxV2KuxV2KtHFXlf5gaKLHXhdxLSHUgX9hOn2h/s1+LMTPHew7TR5bHD3MQhhLajOQu5UGnhmOXLlJKtfgSa3dH6b4aYgvK20w22tJccaKjAf8EcvgdqcfKN7ZTZPxbwpkZLFP7QliMrbU80mzlu3FlFQ3IBazUkL6idWiBO3qL1Rf21y4ji3HMNHF4Zo/SUeiTQP6U6NFIOsbqVP3GhyshuBB5I5G+EYoVFYVr3xQVdWIHc02JySFZCRUD/MY2hsSrxO9cFppoNLK3CJGkY9lHL9WO6OSVaxdiz2k3kHSIblj4e3+VkzHh3LGPrNDkoaRbuVeebeWQ1dj4nKwbcggcgnduOhyTBPNOJ5Cgr7ZbAtOQIbVB8ZPj28MjLmzhyYzdpWQg/dkC2JcJW0+blQ/VJWBam5RhsGA+np/LkYyr3LOHENuYZBa211dRCW1pcL3EZBI+jLOA8xuGkZRyPpKoUniYiSNk8eQP8cjuy2PJwk/ZBJ8EG304VpTklHYfF1rU4ppDSN7g+G/68BWkNIa9PoGRZIeSJmpQEselN/1Y0ttTaSIYvrGpSCwtaV5S/3r/wCTFD/eSMe1Bx/ysmMd82uWYchuWNzeq80txInp+rRYoCQzRwr9hCRsX/akp+1/q5GUr2DLHAjc/UUlvT8R3wBkUju32NcmGqSA8sWJmvZLkipMhIPt2yUlxh6dp0NSiuDQjbKJOSGSflJYfWfOzzU/d2EUsv8AspCI1/WcuwDdxtZKoPch0zLdY7FXYq7FXYq7FXYq7FXYq//S9U4q7FXYq7FXYq7FXYq7FUi856N+ldCniQf6TB+/tiOvOPen+yFVyGSNhtwz4ZW8dsWT9Jtx29WIkA9j4ZgdXcSN7pZqduZeY98YhkRTFfMOkfV7H1eNXLg1+W+Wx2aMhQds1GBpki1hkNh0GVluCaKQVo4BWtaeJH6sANFJFprZ+YNThjWL6y80I2WKekygeA9QMw/4LLBmPXdo/Lxvb0o+LXYD/f2UDjxUMlf+BNMPHHqEeFMcpIxNZ0OlX08k+CSkfrGPFDzXw8neEVHrPl4gf6BKQP8Ai0f0w8UPNhwZe8Kv6Z0Ba/7jnJ8GmNPwGG4J4MneFJ/NGnRV9HTLdT/M5Z/44PEiOi+DM8yl195s1eaMxwuLZKU4QKEBHzG+ROY9BTOOmj19SRw2ss05llJLE1LMa/ryo7uTsBsnELBF4KPlhYc0ythsD38MkGMk90tasKV6de+WwDTlQ2qD94wP3ZGXNljOzHL2oPI9a1yBbUBIqTxlG74CyCFtfrVpL+7cqQdqEg/hkYkjksog82Q23mnWo1C/WGcDakgD/rGXjMWg6eKL/wAWXp3kht5P9aFa/fXHxe8MfA7iVjeZwQSdPtWY9/TP8Dj4g7l8A/zihZfMhLVFhabnc+lX+OPGO5Iwn+cUPL5nuwTwtrVKdxCo/WTg8TyXwO+UkvuPM2rlSFm9Md1jCx/8RGDxpe5P5eHWykctyzSmV/ikP+7Gqzb/AOUd8rMieZbYwiOQUZZKqTX6cAZlIr0mpyYaix+/eiv4UyYaimnk63EdnGzfb5kUPh1wEtmOOzPrUKZFNQAB0+jKpN1bMv8AyNgDXuu3R3KtHCD7Es1MycDg647h62MyHBdirsVdirsVdirsVdirsVf/0/VOKuxV2KuxV2KuxV2KuxVojfFXhHma2/RHniaEjhCZWMQPThMOa/jmDlFSdxp58UUBqA9OZ67BjVffIDm5HMJdqkK3emTQgcn4nj86ZMNEwwu3qrqp6KKfdtkmoMj05zxAystoKbpTr19sWSokPI7YqjobMsKHrhW0dFpqlKE7dqYQEEopNJj49yfAYaRxKq6UKbKQfkMaW3HSE41617e+PCjiUZNPVdqbDociQyEkPKoT4QMiyV7eCpBP7PfCqPh+0B3HhkgwLI9JVlo432y6DjZShdajo5I6HBMM8RYxdrViPHvlJcikrMbIxIPQ1PywJIRUEQkYHvTfFCYRWamm3yyQYkq501T0G+Spjak+mKAa1PjTbGlBQk9kgPTp1wM0FNbimwpkUpZcW9Nx0wKgJomBNMaVCTsADiAgpNesACcmGuTG9SY+nQbEmn3mmSDUWR6PIkSp069MrkXJxjZllo7+m0ntscqtu6PSfyLhpoGpT9TNeN8XjxUDM3ANnVaw+t6Xl7iOxV2KuxV2KuxV2KuxV2Kv/9T1TirsVdirsVdirsVdirsVdiry785dDMj2WpxDgWrbyzAfZYfHET/wy5jaiPVzdHPenn02rK1oba9j9O6QbN+y1O6nMR2B2S64tLmS0E9tLxYgmhO2G0WxOBpBLST7YJD+FQe2Xjk0HYsj0+tBTIFnFPLWjAeGBmmtvCuwpv2HhiqZ26LWm2EKmEIjApSuG2JREdB0H04bYkL1banWnalaYUELmKlSCoB6bYopBXSgCu2+QLMJOjh5T4KdsDMIj1wo9u+KURa3ScgSdvGuSDAhkFlqcSQ0ruKnfwOWxk0TgUHql+sjEggLTpkZG2WOFMdublOWzV/hlRbwhuQLA9QeuBlSpaShZmQbV6YWJTuE7b4QxKIV+538cmCwIaldeJHSvfvjagIKVQRkWwJfcJXcYFS+eEb+GBKVXNKmn3YhSlN0abd8kGJKS352OENZYzqUnxIOpB6fLJMOrJdCt1ltxI1TJxr8soluXKpMn1a6khW1tv71tmfsowKC99/J7T/qfkWzrXlcNJMxPfk1K/hmfiFRdVqDcyzXLGh2KuxV2KuxV2KuxV2KuxV//9X1TirsVdirsVdirsVdirsVdiqV+ZtGXWdEu9OY0MyH0m/lkX4kP/BDIzjYpnjlwyBeDXMXqxG3mj/fISkgI3DKaEffmuIp3AlfJBzxfVrbgnSlKZEsgGFSBhdyFuvOv0Hpl8Ds0ZBunumsKAE+2CSYlP7NttvoyLYnFuTQfrwqmEb8TiqJimPSuNoIRCPU16+++EFSFUPTuONfcYbQqciOjbeFe3ywoQ18aQPTwP6sBQGHR6kisQT0J2yDfSF1HzTa28bNJKsSAfEWIAA9ycIQduaX6V52sbl629yk8YryKMGp92EimIkDyZLa+YoSvxPT3rhClD6h5mjRSQ2w6muJSGNv5wtRdcJriNHcjijOATXwBOR4SvFFOYtbheMkN88izCI03UFn1CMKaitMIYyZgjEpXxyTXbZmoOuK0pyTsR1+X+ZxSAoPJXoMbShJZAAR92BUvuJagjFUque5HXEIKT3NaHvuckGJSHU5CAfYb4QwKQU9S7QHpQ/jhJ2YwFlmmmyCKwKRAcuJAIyi93I3bsrcmNYkH+kyssY92c0H68NbrxUC+qNH0+PTtKtLCMUW2iSIU8VFCfvzYxFB0sjZtGYUOxV2KuxV2KuxV2KuxV2Kv//W9U4q7FXYq7FXYq7FXYq7FXYq7FXi/wCZWkNpPmc3yLSz1IeohA2EwFJF/wBl9rMPPCjbstJksV3MWlZJYz79Mx3MYfrMCx33w78xuPllsGiaL01vh8KUwyQE/tmGx9sg2BNbZ6rQ/dilHxP38MKoqN++BKukg+RwhCsJR4knt2xQqKSaVNB7YULbreFh7YsRzeU63O9pfyQseNTyjY9CD/HIt4Lz7zzaXepWotoySHcFgNwadjlkDTDJHiFFKtC8t3GkSC5jZklI3YdD7HJmVtMcXDyZbb6+3p0ctE/em4PyyFNloS/1u4cGO3ryI+2e3ywgIJYLqXlW8uLn6yOTu7VdmJJyYns1eBZt6Ppc0kVtGpY8lUA1PgMpLlAsz8ls09y0o3WPbl4k9cCJPR0PwDf5DJNam5O++2BmFCR6fPwxSos5Fe2BULK5pv1GKEBO3YfScQqW3DH7+uFCWXPQn9WKKY5qrg19+uSDXJLtMiWS5c+FBjNGPmynTIwiGvTt45QXIZZ+WOjDWPPEClOdpYD63cGlRVD+7B+bZkYo2XF1M6D6KGZjrW8VdirsVdirsVdirsVdirsVf//X9U4q7FXYq7FXYq7FXYq7FXYq7FUFq+j6dq9jJY6hAJ7aTqp6g9ipG6sPEYCLZRkYmw87vvyQiaQnTtZmt4ydopo1lp8mBU5QdOC5cdaRzDC/zD/KZvLfl/8ATjam97Ok0ccsZjWNAkhpUUJaoNMTi4d0jU8ZqmDWMhDCvTKS5AT+0eqimQbAmtu9CMUhMIn2xVFI42GFVdWBFD17HAlVVh88UIhWrv8AeMUFUYBkoemFixvXPLdrfrSVKnscaZiVMfXyPaQglQanx3wqZLJfK0XErx38MLElj2o+UiHPFSDXthtDVj5SblV1ONoTVPKsZHErsfbbBbIFtfIls71Jfj3FTTASyBZdomkQ2MISNeI8MCCU9SgUYULZG+iuBIQkh6+OKVCRmHXrgVDSvtXviqBm/a/VhVL5up7mm5xQld4aKcUFjGqNUnxyYapMn0L8qvNl35Ts/M+lR/Xo7ov6unr8MyqjFVdK7ShqdPtZZLGSLasecA0tsNH80XU/1K10a8e5JoyGF1oR15FgFXKhAuQc0R1e/flf5Fk8q6NJ9cYSarfMJbxl3VKCixKe4Tu37TZl44cIdbmycZtmeTanYq7FXYq7FXYq7FXYq7FXYq//0PVOKuxV2KuxV2KuxV2KuxV2KuxV2KuxVjn5i6ONX8k6vZceTm3aWId+cX7xafSuCQ2ZQNF8t2UpKq2YZDsolPrKQ7fiMgW1OLdiQK4EhM4jt7fxxSjIyKUPU98VVV8fDFKoGA+ffBaq6ONv1YWJVlkHY0OFC12BBrvhCFF4lP7NPHDaFos1I2Xbr0xVAXOnKXpQEnfGkh1tp6Cq8cUKzWSqT8OBQ2sAXt1wrauoC0/HAm1/q98CVrvUHx7YEhDFvHFKHkau+KoSVt/DFUHKdiT9OKEDO1Ae1cQqUXrfAckGJYxqbM5KruzHiq+JJoP15OLTMvsLydpJ0jyrpOmkANa2sUbgfzBRy/HMsOuPNON8KHYq7FXYq7FXYq7FXYq7FXYq7FXYq//R9U4q7FXYq7FXYq7FXYq7FXYq7FXYq7FVrorqVYVVgQw9jtir5H1nTzpfmHUtOP8Ax6XUsYHsGqv/AApGYkhu7HGbCKsZKZUW5O7ZthgZplE5+WBKOjIK++Kq4OKuLb/rwK4XCqeuSCCvS5HjXCxtVEwO528MIVcZ1A3I9zikBdDqtmjD1JlAr0rhBDLwyUV/os1XjkV++xGS2a6I5rHktYk5M6qRv4Y7LRKXSX8Er0WUEnIls4Cu9QbA74CxIWPMo6dPfCxWG4XahyKWvWr0wJWFwajvgZKLV74qhZjXthVBzMN64oS+5amIVJb+UUI6DJBjJDeUdIOuedtG0vcxzXSPMR1EcR9R/wAFy3GN3GzS2fYeZTgOxV2KuxV2KuxV2KuxV2KuxV2KuxV2Kv8A/9L1TirsVdirsVdirsVdirsVdirsVdirsVccVfO/556C+neck1RQBbatECKClJYQFevuw4tlGUOXgltTDrGY7ZjyDlhPbWTYZFmE0heo/XgZI6FtwMVRijap3GKqb1oSPHEKkupapFagl3CD374WNIGLzXYitJQQP2idsNJAak86WwHCKsh7EHbJAMxC0O/mGWZqM9Ae1cNNsY0uW5hk3B38a40ztfDqUtu4aKWgHWvQ5HhZ7FTl1Ca4ctJMeu2+2PCjYIN9Q9OSvrGo6HDSCVeLzZLB9urodq1xajC0dH5xsZUNX4sP2Sd8DTKBCgfNtgZAnOjE+OCmKdWl4syhlNQe+KowGrbZFk2wI+WKoK4fbY9MKpdLJ93jihLrmU/F+vFUi1CUb75IMCWef8466C175pv9dYfudNh+rxH/AItn60+SL/w2ZOIODqJPonLnGdirsVdirsVdirsVdirsVdirsVdirsVf/9P1TirsVdirsVdirsVdirsVdirsVdirsVdirCfzf8sHX/Jl0II+d/Yf6XagfaJjHxqP9ZOWRkLDZjlRfN1jOCFIPXMQuwiU+s5qild/DINgTi2m8cDNMoJK0riqOicFcCFspoDTFLENe8uPqshDO6CmxShp774gpLA9R8g+bNNYyWF8t9bn/dUy7j5EUOWikRt1nofmpmCuIIRTevKoP35MBvESmqeTPMc9CdRiibwWMn9Zw8LYIjqjovIfnUGlpfQ3AI+yyUofmpwcJZegcyhrzyx+ZEFV+pxS8T8VGbcfTiQUgQPUKQ8u/mMW4iwjUmtAWbI/BPDD+cgZ/KX5gl6tJbxk/skE0+ZrhDEw80FcaR52tDSWKC4XuY2KkffXGmswPRLLtfMC7Gzo/u1R+Ax4Q1yElbRvKfnG9mW6u5RDbg7Q8eoP41wSIpoo29U8uxz28IglJJQChI65TaaZFD4nFXTOACK/IZJjaWTSV8PfFkl1xIAP4+2BUru5uIO/jhpBY5qdzxUnr3IyYDXIvp38nPKj+XPItlDOoW+vq3t5tuHmoVU/6icRmXAUHW5JWWc5Jg7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq/wD/1PVOKuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KtEYq+XPzO8qHyt5wniiThp1+TdWFOgVj8cf8Azzb/AIXMfIKLm4Z2KSqyuAab75QXKiU8tpthkWYTK3m6YFR8Eu/t44rSJJBXFQvjgQjpTvTAzS+9tTGxI3XrihK5oYWIoKHucsE2yMqckbrXjuRkxJyI5AmNlf3FueS7A/a+jpk4yTOMSmR15yrB6ksvENkuJp8AXspz+YSeQAoDvXvWlMeJMcA5pFfXc0laVI8ciS3xACWyxzvUnocgZMZSAdBpkJPI0d2+4ZWZOPOdp3ZWSIoFN6dflkSWqkV9WVGBGBbVOXFd8IYlA3NwTUeGSQl80tBTFKW3M433wKUnvbiinJBgSmP5W+U282edre3lQtptgRd37U2Kofgj/wCej/8AC5djjZtxc06FPrIAAAAUA6DMlwnYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq//9X1TirsVdirsVdirsVdirsVdirsVdirsVdirsVYf+Z/kePzb5bltYwq6nan19OmPaRRuhP8sg+FsjKNhnjnwl8wW8s1vM8E6GKeFjHLG2zK6mhUjxBzEIdjGVsgsbsEdcrLYCm8M3Q1wM0xglJA98VR8LkjfAqKR6YpXSRrKhBxSkmo6dKDyj64VSaddRiqVFD4HG02gZtR1sfDGtD8q4QU8ZQ313XRu7bnoAMkvHJyX2ts1T0xZeKUSl3qUnwkUwMeMom3hvJXHIEj8MiglPLGx9NasKsfwxYplHHxAOAqsc0JxUoW4l+GgPzwsUumk33+jCqW3E461xVKbq5pWp+eEMSkl1NLNKkMCNNNKwjhiQVZ3Y0CqPEnLAGuRfUX5TeQx5R8rxwXCj9LXhFxqTjekhG0YP8ALGPhzKhGg66crLNskwdirsVdirsVdirsVdirsVdirsVdirsVdir/AP/W9U4q7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXUxV8w/85AWMGm/mGk0MYiGpWqzyEbBpUJRj8yAK5j5Ru5eCW1MO06/ptXceOUEOWCySyuuYG+QLYnVrKNsCUzifp7b4qionrtiqIV6Df7sUudeYxVDNaITTjXCq0aZGT8QAr3xStk0qJhQAH6MNLag2jxKKBK16bYpWDTYwdk3xQrR2qodh9GBCuFpWu2KC0zHoOgxVDyvTFUDcN1xVLbiSgNDvhQkt7dcaiv0e+EIKQ3t79oD8MmA1kvTv+ccPLumarq+p67dR+tNpTJFZct0SSQEs4H84AouX4o9XDzyPJ9EjLnGdirsVdirsVdirsVdirsVdirsVdirsVdirsVf/1/VOKuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2Kvnn/AJyltv8Acl5fuR1MU8de+xU/xynK5GB45a3DAgMfiGUU5YKfadqNCN/nlZDYCybT70Oo7++BmCn9rKGG2BKMRt6eGKoqPelcUohFBOFFolIQR0HthARbf1cAV8cNItUWIbGg9u2SRa17ZSRWlR1xpbUntk7DAniUJIKYCtoZ46HIpQ0pArTCqCnkZeiliSAaGm3jvilBXEihSfu+WKpFf3gSuIDEljV9fVJ3yYDAljup6iaGOM/Gep8MkGol9Gf84pWyp5K1SenxzagwY9/gjWn68yMfJw83N7ZljU7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq//Q9U4q7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq8G/5ygj5Dy83g1wPwXKczkafmXhYjoK9COmUOZSrDM6Hr8QxIQCnel6oUYVO3cZWQ2Asw0zUVcAg/RgpnaewShgDUYCyRkT7+IxQi4329v14qUVHICKdMkxXGYg/wwoWtMK1H3YbVwnX5nvgtacZ6DrucbTShJN7/ADwEpAQcste+C1QUz9emKpfPOorUjCqR6hfqgNSPauKLYnqmqAuQDXvkgwJY9d3zmtNiegydNZKBCb8j1PXCwp9R/wDOLRH+AL0DtqU23f7CZfj5OLm5vY8sanYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FX//R9U4q7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq8N/5ybFU8vj/Ln/4iuU5nJ03N4cY8x3MUniO5GKKbRmU16EYqm+l6s0bgMaHIkMgWZ6XqquqmtT3wMwU9hug1N8iyRaXFO+KqwuFHeowq43Q/aOFisN1QbGoxVaLk7kYq43e1a4qpNdcuv04EqbTClcUoC6uVUnffFWPanqaoD8QGFiWH6lrDSVCn6cmA1kpJNMzVqak4WBQ3Dk368kxVRCKDAl9K/wDOLTf86Xqkf8mpOf8Ago0OZGLk4mbm9nyxpdirsVdirsVdirsVdirsVdirsVdirsVdirsVf//S9U4q7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq7FXYq8R/5yYStt5ff/AItnH/CLlGbk5On5vFliBWn45i25lKTQ0wgqVIx+2FCwxkbjFKNsdSmt2FTtgKQWT2Ovq6gFvi8MjTIFNotXVgPiFPCuKbRY1NdiDhTa/wDSKV61xQ19fQE0PXp88VWG9FOtB33xVTbUEDCh+jFWv0igHXt+vFbULjV41BPICnbFbY/qPmBQDQ7+ONIMmLX+qSTMRUmuTAYEpa/JvlhDBr060H44qujiIOFCqYyFONq+hv8AnFo/86xrS+GoVp84lzIxcnFz83teWNDsVdirsVdirsVdirsVdirsVdirsVdirsVdir//0/VOKuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KvE/+ckzWLy8h6epcH/hFyjPycnTDd47Ag4iuYjnNyQe2G0FCvEAf4Y2hTKYqtaIE42rSrIhqpOFURFqEybHGk2i4tYlApXGltW/TUxG5rjSLb/TMg/axpNrTrEn8xONLax9YbxxpbQ8usyb0J+QOGkWgLjVZpNq/RjSLQMhlkJLMd8KrPSHbFDiijChciVxVVWPAypc8fw4qQ94/5xacfojzFF+0t5ExH+tF/ZmTi5OFqBu9wy1odirsVdirsVdirsVdirsVdirsVdirsVdirsVf/9T1TirsVdirsVdirsVdirsVdirRYAVJoPE4qoSahZRzrBJcRpMwqsZYBj9GNq2b2zAYmeOibOeQ2PvvgtVXmu3xCrfZ364VbqKV8OuKt1xV4b/zkk7fWfLyAbf6Q3t+yMx8/JytLzLy22i+EHMRzgFd4sIUoKWGhOFFKDJtiqziO2LEtFMVWMowqVvpimwxVaU98VWU/wArCq01PfbFVNjhCqZUE4q0R4DFDgMUNlRhVasXxdNsVCskR22wWlEJFTtjaVsyfDih6r/zjdr2maVJ5mXUbqK0gpbS+rM4RduaHqcyMPJxNQNw9e1H81/y708f6Rr1pWlQqSBzT/Y1y23GWad+bn5c6haG7t9dtvSVuDc24kH3BxtaR0f5g+SZJo4U1q0Mk392vqLv9ONqnkV1bS09KZJOQqvFga/ccKquKuxV2KuxV2KuxV2KuxV2KuxV2Kv/1fVOKuxV2KuxV2KuxV2KpVr/AJn0Ly/afW9XvY7SL9nmRyY/5K9TgJV4p50/5ybCiS18q2oLmqrfXP2fmiD+OQORNPI9X/OH8w9StSt3rEyKJQXjj+D5dMr4ynhSG+8x65c373VzqVw8/A+lKZG5LTwIwcRTwoNfM3mL0khj1G49Kch5R6jbsvc74eIrSJj/ADG87w3Qv01m6M9qwWJmclQAKDbpkhIopEv+bv5kG1nsTrdwYbo83Nfjr7HsMeIrSO0z/nID8ztNvoL/APShuViQQG1lFYmUCgLD+bCJrStB5982ecbgTeYLw3ZtWIthQKEEnxMBT5ZTlk5WmDJbKPkoPhmO5qMMO1cKEJNBXFaQjwDFCi0QwoWNDQYqptHTthUqZBA/hhYqR36CnjilTY02HXFVjHfCqw1xVZTc4Vcq174qvEdRgRTYTt3xVWSHxH0YkpVlh6VBwWtKojpikBRnX4TihhXnH1EtwykheVGAJ3+Yy3G42cbMYFeUW/UdT1y1xlVXPCYA/MDFVQO3CIBj7sCa4FpP9N80eYLR0ltdSuojGKRlZX2H348RRTPPLX59/mTojIn6RF/bru0V2PU2PUcvtDEZCvC+hfy2/PTyx5vjFrdSJpesKBytZmAV/eNjSvyywSti9MBBFQag7g5JXYq7FXYq7FXYq7FXYq7FX//W9U4q7FXYq7FXYq44qwj80/zKs/I+ipPxWfVLo8LK1ZqVp9p2pvwXIylSh8o+ZfM2s+ZdSk1DV7pp5ZNwDULGP5UU9BmMZW2AMdupSqlPpAHtjSUDI7Gbidy5FB298KomZlKyOBRggXfwIrgVREQ9S3BNFRDU+O2FUM8aejISal32HjQ4bVZIoMshpQRJT6aYoQboRHBGdixqQPfJBDM/I8dY5mrt6tK/IZTkcvT8noenrQV7GmUuYEw9Ko2+7FVGWHbChByxUqfvxQoPEKU8MKFJodhirmgqKYQqHktjTphRSHktmocVUPSbegp44pIWNC3hkmNKZiJHyxUNehyNNjgSqpbADFC8wbYquSAfLAVRCw4LVUWOmKSuMeKoaeMb++KsP83QcrCX/JofuOWwO7RmGzCQ9QpPVen05e4StEw9R/Buo9umBWkcqQD1BpgVFWUzyTBeg6Hv0xKU5QMCoFanuKA5WybNUNVVw3ZgQTXxFOmEIIfT35BfnFJrkUPlbWiP0nBHSyuDsZUQfZav7YGXRlbAh7jk0OxV2KuxV2KuxV2KuxV//9f1TirsVdirsVdiqC1vV7PR9Ju9TvHCW1nE0srHbZRWnzbpgJV8W+bvOGo+bPMN1rV7zLTNxhgBokMI+wlT+NMx5StkAk7Krg0IBP2VDcvnvkGaSXk9Lh4j16V9skAhDWTiS4Mm/BahcJCUdKGaP0wP3ruOTdvH8BgVZ/u6WYLQqOIH4nFVIxH90jH7I5viFQ0gBSg6St8R9sKFEhPrBYHaNdgffJILOvI8BGlRSEU9VmcD2rtlGQ7ufpx6WdWcdVplRclNIUqvvihuSIFaU3xVBXEJB9jhQUI0W3t0xYlS47UJrhVyx1HTFVwg26Vr2w2q2W0JA7eOEIQz2dK4UqZtD3wKpm0HhhRSz6uAdhTFXGGnbArSxVxVesW/TbBaqwjwKqLEaYq00Y3xVCyoKH2xVjXmC19W0nWm5Q0+YyyLXMbPNF2JDfs7ZkOBVKqso4sdvEfrxRbpzQ8lNfcfhiqZ6VDyQSBSJH7ZGSQmogO/KIMTTdjldsm5Lccm/ckAfyt4Yqv0zUr7StQg1HT5ZLe9tXWWGQmhDKdvnkolBD7Z/K3z7a+dPKtvqKOPr0YEV/CNisoG+3g3bMgG2tmOFXYq7FXYq7FXYq7FX//Q9U4q7FXYq7FXYq+fP+cl/PsZ9DyhZTbilxqgU7U/3XGx/wCGbK8hSA8GgUPRygZR0aQ8UH+qO+UFmrrKikoXUqDuUWin2qMCUq12y5wevCtWHw/D4H2wxKFC0tCkaxfZ23PsNzhJVXIVnCAk8erDxb+zBaVKgKPTf1DUV9zT9QxVTd25MFO9KV7U64VQslOYA3CihJ2oTtkkFE6Xo9xfSM4BjtakvMep7UWuRlKm3HiJejaHapBbQwoKIgAX5ZRI250RQpk1qKV22yLYExjHTEKVUoCNuuFCjLDyU+OKCgZYNjtv3xRSCkjIY7fdhQuQV6inviq6hHTcHFVWNQQK74Vpc1urCnXwOLOlI2wBrTFBCGkioelPfDbFDOm/TG1aMfbscUKZTelMipXpGcVV0jxSvMdOnTAqxkO4wqhZ1HE06YoSPUYuSMPY5MMSxJPL2m3d6j3LPFErfvvT7jLYyceeO+TIIf8ACOiTRiDT1uomYCdp/iPA7Gnhl1ho4CjfPf5U2FrZJr+gycdOdRJNasagK29UPh/k4THa2DELWD92Auydl6D78xyWaJ9JVYtSNqb1ZsCrZoQRy9KM1/aR/wCuIQhZSAKOGUHpXcffhCs6/Jb8xpvJvmiJnJOmXxEN9HU8eNfhce65bEsS+1La5hubeK4gYSQzKHjcdCrCoOWsVTFXYq7FXYq7FXYq/wD/0fVOKuxV2KuxVh35o/mDZ+SvLUt+4Et/NWPT7fu0lOp/yV6tkZSpQ+NL/VLjU9QuL+7kMtzcyNNcSSb1dz2/mzHJZhfEh5F3RQKf3lwwG/suRZItZo2jNJ9wNgkdQcVUiVdeldtgRxJ8cCpfNBx+ItVZCCwG5CjrhtUI0iqr0FJGPQdi+wH3YUW5mFAtSa7qOw7YraeeVPy+8x+aZWazjEFglRNfzbRgA78f5jTLIxtCc6h+XWg2N1FFb30moyREfWH4hYiR2Hc75DJIDZycGEk2VW5to4ohHGgVRsAOm2UOWRSYab8IWvbAVDILcAj+OCmYTKAAkD78Uogx9afRihYyEDYdcKoSSLrttihBTQ9xixKiqitK79sKq3AU3xVoLQinbCkIlCtOm574GSjK1K7/AEDCqBk4k0pixKlQVoMULXjJ+jFCmYyD88VpWjj2wJVFjNdu+KqgjOBVORCAfDCqCmXY4UJRqEfwH3GEFBSC3TjcHbY9ckWIRV3osd3EV6NSin55GM6TKFhONa8wPH+X+k6EZD9cBdbgf8VIaL9+ZJyXFwZQo0w1VqhUK0hP2ey5UhVEfFCDbRq1BUlupxVDPEQeRtY2A35I25+QxCEMVAbYtEa14vup9sKtAlWPw8Qe/VT8vDCint35QfnzdaFHa6FrtZtHQ8Irk7yQg9AfFBlkZ96KfT1le2l9axXdpKs9tMoaKVDVWB7g5axV8VdirsVdirsVf//S9U4q7FXYqhdU1Ky0ywnv72UQ2tshklkboAMCvjb81PzGuvOnmKS8NYtOg5Q2Fue0QO7t7vlEyzDDYC4PJmCbUVqHmwHQRqOgyKUZChCmQQotW2lnatfoyKURHJUhWuCXXbhEncHxxVEMYhG3NzVTX7O5rvtgVRmjiZf3Y5ClWHQ074pZv5K/JLSvMelx6nJrLcpGJe3hC8oyNgrV3rmVjw2LapFkJ/5x68uQ3EYe+uZwCC0VQooOxIyzwQjiTjza0WnWsPlzS0FtZ26L6iR7dei5jajJWwc3TYr9R5MQa0WNDt8hmG51Uld9b7dMmGshq2BUgYoCd2j1XAzCbWrim+KUapDEfdiruB+WBVCaHYjv2wopAyx1rXY+GKodYuL7ivywsSrGJQtR074pCiUPbcd8Uhok0ofoxSoSVJ8Tiqjw3woXrFXp9OLEu9Oh2xVTeLf3wIVVjA7bYqqpEevbxwJXlAAMUoaYgqe2KEBN0IySpZeJVTiEJI0QV6gb9TkiWATizKeiXbou5+VMrLYxO7me7u5JwvLmeMY/ZArtlwFBwMkrLQ9I0SWQgf76j8eg6YsFNxaKAPRdx03G/wA8KqUiWoqRFKppsdv4YhVCoJMccoNP91uOvtvhQ4cF23iJ/ZO6H78KG1fh+yVr2PQn2OAq9Z/KH849S8pzQ6bqJNxoErbg7vDXuvt7ZZGdIIfVOlavpurWaXmnXCXNtIAVkjNeu++XMUZirsVdirsVf//T9U4q7FVsjoiM7sFVQSzE0AA3JJxV8n/nb+b155k1OXRtMl9Py/aSFSyV/wBIdTQux/l/lXKZTKQHkpYsWO68Nzy6D3fxP8q5BkrQMznnGKKT8dzJ7j9kdsiyRKS2/LgFNy/Wo3G23VtvuwKjbaTUQx9KGOJTQLzHMmorSp2wFC55Jwf3t9Gh5fEvw0+X4Yra43ClWLXMTniT8NAtPnhW098o+bLzy3qceoaeyuHPC6tQapIlafQ3+Vk8eQxPkkxfQ3lvWdP1+wi1SyJMUpoynqjDqp+WZvECLDSR0YX5niMmvXzEbiSn0AADNZn+su30/wBAY/cQUr4ZU3pbd24YZINcggmiZJAPoyTGkfatTIlNJpbyAkUxSmEL7CuKUTxBoa9PDAq11HcYVQc8IPtTviqgIga0Xp0OFDvTqN9h2piq14etRsMVUWhqNht44pUmiqdjirXoDwoMVbEQUiu2LBoqtCKdN64U0tEYPzOKFRYx9rr7YFVFWmwFAcCVOQGlBiqDnXYmu3YYoQUq7bfThVAXS7HChJpVHqkYSxWX90YbFo0NGm+D3ocEQxyzoJMYmVQXb00I2RTvQeOWOEqxMFdVt7f4gNi5ABBHhgpXFb0gEFFJ3Kha09iThVRKXYrVwHqduIwqhpvXTeSBWFNyDQ/PfFBKHqhNI5BU9YZBkkL1biirvGGJ/dvun0HAVVA0gqKMoAoKn4TXwOKWZ/l7+aGv+Tb5JLNjPYN/vRZSE8G8eJ/myUZUxp9U+RfzK8t+cLJZbCYRXgH76ykIEin2/mGXg2ghluFDsVdir//U9U4q0SKVOwHWuKvn387vzfF0J/K2gyH0QxTUbuM7vTrGhH7P8zZVOaQHgMjRcmWNSxPZN6fNugylkh3iUsEb95IN1gT7I92bucbSqAJFvcyepOfsQqOQG3WnT/gsJSioGvj8MECKF25ybke5A+EYFXSLbr8N9em4fb/R46kE/wCTx7j54KV1uVjNbbTmkG6jmQhrv8Xc03xQjgb2g42MUSEVUFiR7noP+BwKvMd4YuLWqGu3KMgb9qV9zgTbIvJfnTUPK2om4gjd7ByFu7VySCOzKOzqMtxZTErQepahqGm6tctqFhIJbe5VJAR2JUbH3yrP9VufpvppJbyEVNBlDkpe8PLJMShLu3XsMLErIU44qj7csKD8cVTGBwRTFUbHSlfwxVf6fUjocCqEqVGFVFU3NBTCxbEQ3HQYslrQkdq4VCmbfvShPXFKkbcA7fTTAq0xgH398ULfTrviq0wKevbFFrBGcUNxxHfwxVU4gClPpxZBQmIBxQl8326jpihDMpaop8sVQV2PhphVJWA9Q++EsEpvG9e5fifgT4VfsPfCA42WVlTjNrG4AU3Mzbjv7Hc7ZJpVf9OanposSNUfCS7knxrsMbVY1rcAM1xO1QP5gBU7dMKoSSKyR/76pU/CeZNcVUpUhZ/3d0IyDShao/HCENCCVyfWVJY6U5rsfntjaFORVCCNJAANikvT6MVdFEqUKq8asdyDyjqP1YFVwAaMgBHf0zT8DjaUTY3t9Yzx3FlI9vcoarLGxjceHTrhBQQ94/LL/nIiUenpnnFuQAomqAUP/PVR/wASy2ORjT3rTtT0/UrRLywuEubWQVSWMhlP3ZahE1xV/9X0pr3mjQNBtjcavfRWkYFQrt8beyr9o4CVeBfmZ+flzrEMuk+Wi1np7grNev8ADNLXqqj/AHWnv9rKpTZAPE5JJZGLbv4oh4oT/lSd8qZUtjcL9otKo+3BCKID0+13xQtdgisJZBBGesMI5Owr3I3xSqQoEXnZW3GMirTS0r4bjFLkRHYRzzvcsOsEPSnyHw4qjT9YhQD/AEewiIoJZKPJ9A6VpgVYJ4Jvge8uHoOLmJGCgdQKinXGlVYLS2dkJtLzc0UtuPagLY2qsLcI/P0LhCpKChJG3Q0B9+mC1Vf3w5lXVWPX1FK13pgVOPLmvz6RdlZG/wBDdv38fbw5inTIyDfhyGJegtNHPEs0TB43AKkdwcqdhdqSxDChCXcQ7DCqFVVBoehwoREe1Aevb3xQjIXHL36YqjoZPHt0xQilNRt1xVa6A74ptQKb1xYlviaUOFlbgpHvjatFK9PuxVa0de1D44qpG3BNT1xVY8IoeOKqfDFitcKNvpxVsAAdMVWSClaYskDOxJI8MUFBSfhgQpkcRXthVLb4kAnEKkl5IIkZifZfcnJBrmaCUxwLxDTScIiaEHY75JwrXpLLwaO1holN5HH4gYUOeCcr+/uCgIqOiLt22xVQ4aWn2m9VwNyFZ9zv1OKFH1belRbyE0/kAwranI0TKxW2ZqmhJAqMVtClrIP/ALtgYftCoGFC5ZJpFpG0V2o6hvhanzxVU+IAEwSxHtwPJafLAqo1xGpo0wJHUSREfiMCVVDEw/dsG8QrfwbFXA0rUELWgBqOvzw2rLPJ35h+afKN0r6XORasavZyGsTjvseh+WSEiEGL2Mf85O6R+gzJ+i5v02CEFrUekSQfj5/y7dMt49kU/wD/1oHqep6nqd093qlw9zcSMXeSViSfl/LmJZbKQEiq9SFBC9FILUqeo6DFKnJFD1cqZBugkegP/PNcVUfQMpCO8024KpAvBQvga0xQthX0JCA0VmT0/wB2vTvWlRilXEKleSpPeLQM0spEUQJPh4YqvREZhGJGBA3isl/Z7Vc4qqLaGJAq28EDNv6kzeo5HY0J2OBV8l7I6hRPK6r8PpwKEBHue5xVVEEjIn+huSD/AHssjb0/ZFOnzxVFxW1y67WcdQfif1GBJP04FU3jnRSJYZObN2PqVNduvTAly05svMCQfbD/AA9NuhxKhkXlPXfqkv1S6kpaSGkR7KT0yBDlYclc2ccKHbeoqKZFy7UZk8R1xVBehVq9vDChU9EilenYYoXJyBArsDiqKhm+L+HtiqOgkDLt92KKVq7eGKqTgUp498VU+RBoRhVdyTFXBxiltpa0JxWlMyLQjFUPNIKUHXFULzYk74oK6lduvauKFQIw2B2HXFKjMKBiOmKUun7+JwIQwoTXsO2KFsv2a027YqlV5vvhVjWozs0/CNeTR/cPfJBxM0r2Q5SGE8p5PVm6qB2bttkmhUSO+uFZaiCMU5rtyI+fQYFQxj05JKMXuZFqDx+MGvffbJWrfK8NTDZ8IyKFnY1HhsoxVQb9I8WDtEteijtv4nGkKYF6yECeLmRsophStAveB/ewM3SvcYoXmGzayf17dmvuQp6ZX02HfcbhsJrvQpR28gG8U0LDrRgdu1MCUSsd2q8l9UgijM4X+OKqghZwAx+LtVVP6sVa9Aht6KK9fH6K4qiREgSqE79f9rAl3oLSnHfp0xQ//9fns3qFqhGKsdjxJ2/DMNtWtFK1WZWHInizREqafT2xtVJEnRyeTpRahlgpX5YqtkjmnKl47iZqgAUEYJPbfFWmjaIiscVooLAlzzZqdgPEYq4M0pJKvMSoXlJ8MQA/yevw4odcXlrAjRz3SLU7Rw7AHx+HEAragmpQc1W2thI52DTnjUDff54aW1v6SnLlGugjAENHaxEsCByI5AHoMeFbVuLSlWSwvrjZTVgQCHFa0Y9/2cPAUcSISyu6EjT7tAQPhdeffenFq4DEp4l/6QEVEe7eGao/czcgNv8AXH8cFJRZlMkJLxiVf2pIxWoPcV3yNK1GrniIWV4WHxxMfiBHv7YCkFmflLzN6rJYXrhZBtGzbNt+ycgQ5uLJ0LLbmNeJ/DFvtLmXcjFUQkQKjau2KFNoaHuKYqtKFSDTFKKt5GFCPpGKlHoeSnFjTfE+GIVSeOvfbCtod1KnxxSt5t9HjirXqCnQk4qoyzGh2xShyzE4qvijJNa0GLEolEAFKVr7YFXMoUUAxWkvuX69qfdilAzVPz7YoUEHbthQ6VTw6U70xVI9VlEMbnvx2J98QGMpUGLxGW45eieMVTykberdfh8cnycAm1yiJZCI0M9xT4nJoARvuf4Y2haForNdzGWRjyEUYIFPkP44VVAk0KH0/StYWI+0OT7+wxVTnSJ4yZLiaRWJB41UE/TthCoRre2A2hpQ/CzMOo2OFDlhVk2hWrClRgS4W0f2fq60Ub+BOG0NJaV5H6qFWlVbkaUBwWl3pIGLPEjAdjIRTFV6bSD4YVB3oWJ2wqqcoVFWljWn2eEZb9eBFrRdRH7AkkYfyRoAPpONJXLcio5kKw3HKRVI+4HDSrf0zacuH1gc6058+/3UwUUW/wD/0OPx2vmmFj9b029kHjGHBArT9eUmDK1ZZ7+OPjcafqYRTspRqChoRkfDK2Gn1YqHDQXyL9mjLINl6ilMHhlSVn6VMlEFpeTyb/EIpCPHoR2GHgK8QR1jpXmS+lrpfl25aRiAHmHppXqD8dMIxlbZBY/lF561DhJq11BZQSFf3aEkfvH4J8XwrxZvh6/aywYWPEj18k/l1pB4av5it4QEVnQyx1o03oluMYd/UiYfGn8nxYfCC2hbrzn+S2mRuUWbVbhFekcUDGNnEwQrzlK/u5Yh6qGnw/Zw0FtC3n57+UrdJY9H8rSUYTrFNcSxoeXIG2kZY0O6rtOtf3n2cOyoeT/nIexkuQ7+U4VhFwsvBbhq+kY+Ese69Xf40b/dX7ONhG6lF+eehPDwl0aa1k+rSRcopRIPUZ6qQGA/Y2Zjh2XdPIfO/kTXlkgDxl2a3trSC5QL8UlA7sT14nImAKbVbzyfZkS3Og3zRRxzm0i4fHHNMn2wqdKD2yo42VpLcwX9lKY9RtyWjJH1yHePkOx49KZSYsrU0mcUnU+qkZBRkID7jx6dcjTIFm/lvzilzHFZ3rVmpRJDsT7OD3yBDl4svQp1IyrIaEGh7YHJpG2zBgBiFV3j2r1xQh5V+HFIaglUNQmp61xTSZQNVa0+nFgQiONRthUrOIB6YhCk8AO46+GFKibfb4sCtNbmnvilRNpvuMVtr6sOlMUKqQgbUwJXgADptiqlKCRtsMVS64BJPgMUJe4NST9GKF0cQAFR17YVU5xt0xVhOt3cc14yvVoozRY1/aP82GLi5p70g5FmK8pmEEKV4xjYn2JH6sk462OnoBVPCBjVQBWRv9UYqi/RmdOZQW8CrvJsHK+JY+/8uKoQy2qVKBp5F3Z+gbt9pskq1zcyrWNY40FDUgsRU0O5oNsbQgzNbxM/K6VW6fDx6natBitqM01gAQ0xcr9kgtvvSm2K2p/WInLCG1uJAOhCnf3+jJUUWiTDPJHx+ozKB1qKV369emHgK8Sp+jtWkJ46cQysQDUdhXfHgK8QRlt5c80TvSO2SPlTdqsR3OwH7IyXhFHEnNp+W2sy8Xu3ortGlWAReU5og3/m65IYkcTrzQvJWmw11XWIFb0p3WBX5Fmt24+nRa/Gx6K/HJDGAi0ruPNP5O2Mr+nb3GoorwlfTQIWjK1lFX2qrbb4aiEJcfzL8jfDEPLh9PkQz805FfUBU0pTaLkuGwtP/9GrL/ldFP8ATP8AD1fVm5+rWlPqm1fT/wB18vs/8X4UJtYf4+5RfX/8OcOVt63P6zyp9Vb1ufH/AC+P1in+7OHH4cKhXtf056Nh6/6F+s0sPrPL61Xq3r86bf3PD1afsceOKlDyf444Q/o79BfWPTg5ep9Zp6n1luPLlt/vP/ef8U/5WFWE61/0MT9Wb6h9U9KicP0X6XqU+sn0ac/3nPn/AHf/ABT9r4cVeUeY/wDlYlD/AIh/SnRq+v6vpcfUatKfu+Prcv8AnplZtQx9eHIdOW1ela+/vkSyaNOH0jFStfhxGKFOTh+GFVJuPbCrW/Lbr7dfoxVnP5d/8rC/S2m/oL1OPqz/AFH16/V/W9M+pSu3qYQr13RvrX6G0f8ASnp8fqU31jjWv13l/u+uRnSQx/Vf0NQ/VK/XN/X+r8eHvX9nKCzS5K/V15f39f3XHrSu1MqLIM+0j69+jYvr9PXoKUrWnvlZdljuk707lQcq098AZJutOO9PbJKhJuG+BUKK8zx8cWSZWta7/wBmLFGCnfEILYpT4a0whiVp4198KrW4bdMUhpuFe2BSsPHtTFCm1K9sChocePviycOuKqM3TFCW3XTFKDPHmK4oVk4bVpTtiqE1j1fqU/1WnrcTxr1p7VxYz5POBXhN6P8AvRy/e9eVf2a+2TDrzzaX1PW/f8vrVR6Pqf3ff7P7PL/hsKEba+rRqcfrNTXlSvT/AD6YlVr+hz/02vq8RT1a8eu3Gm1K/wAmIUoGf6z64+sf7zftfVacq70ry3yQQVVf8M8x9b5epvw+s8/w/ZyYYBNLP/C3E8PRrRPTpwpXl8Ve/GmWKnUP+F+bcfS9P1JONONfT/a6/wDJLJCkJvaf4a9M8ufrcTT7NOdRwpx/a4df2MnspT22/wAH+vF6Hpej9Ym+3/vj0D9X6f8AF/8Ae/7qxCEqvP8AEno/7if0LX6rp/L1fVp63rH6zSv+6+nr1/55YVYxrn/K+PVk+pfUfR9TUuP1T0/7rb1a8vi48P8Aeb/dmFXl/mj/AJWnWT/EP6Q+xbetz5enTh/o3Lh8Pqcf7v8AayBSw1uXJvUrzqeXKta+9d64CocPTp8XXAlV/wBH4d+f8MKH/9k="
+           style="width:120px; height:145px; object-fit:cover; object-position: center top; display:block;" />
+    </div>
+    <div style="background:#0a1628; color:#c8a96e; font-size:7pt; text-align:center; padding:4px 0; font-weight:700; letter-spacing:1px; width:120px;">FOUNDER</div>
+  </div>
+  <!-- Info -->
+  <div style="flex:1; min-width:0; padding-left:8px;">
+    <div style="font-size:14pt; font-weight:700; color:#0a1628; margin-bottom:2px;">JJ (정경준)</div>
+    <div style="font-size:8.5pt; color:#c8a96e; font-weight:600; letter-spacing:1px; margin-bottom:10px;">Founder &amp; Protocol Designer · BELTA Labs</div>
+    <table style="margin:0; font-size:8.5pt;">
+      <tbody>
+        <tr><td style="width:110px; color:#778899; padding:3px 10px 3px 0; border:none; background:none; font-weight:600;">학력</td><td style="border:none; background:none; padding:3px 0; color:#2a2a3e;">경북대학교 컴퓨터학부 소프트웨어전공</td></tr>
+        <tr><td style="color:#778899; padding:3px 10px 3px 0; border:none; background:none; font-weight:600;">군 경력</td><td style="border:none; background:none; padding:3px 0; color:#2a2a3e;">Cryptologic Operator — 대한민국 (9개월)<br>UNIFIL, UN 레바논 평화유지군 (약 1년)</td></tr>
+        <tr><td style="color:#778899; padding:3px 10px 3px 0; border:none; background:none; font-weight:600;">창업 경험</td><td style="border:none; background:none; padding:3px 0; color:#2a2a3e;">학원 대리수령 시스템 설계 · 운영 — 연 매출 ₩50M+, 3년<br>기획 · Development · 운영 전 과정 Solo 수행</td></tr>
+        <tr><td style="color:#778899; padding:3px 10px 3px 0; border:none; background:none; font-weight:600;">전문 영역</td><td style="border:none; background:none; padding:3px 0; color:#2a2a3e;">DeFi 프로토콜 설계 · 퀀트 백테스트 (Python) · 스마트 컨트랙트 아키텍처</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div style="page-break-inside:avoid;">
+<h2 style="page-break-before:always;">13.1 Solo Founder의 실행 근거</h2>
+<div class="highlight">
+  <p>Cryptologic Operator 및 UNIFIL 근무 경험은 고압적 환경에서의 독립적 판단과 시스템 운용 능력을 검증한다. 학원 대리수령 시스템은 아이디어 구상부터 실제 운영까지 solo로 수행한 검증된 실행 사례다. 이 두 경험이 공통으로 요구하는 역량 — 독립적 실행, 시스템 설계, 리스크 판단 — 은 프로토콜 설계와 운영에서 동일하게 적용된다.</p>
+</div>
+
+<h2 style="page-break-before:always;">13.2 채용 계획</h2>
+<table>
+  <thead><tr><th>포지션</th><th>채용 시점</th><th>주요 역할</th></tr></thead>
+  <tbody>
+    <tr><td>Solidity Development자 (V4 Hook 전문)</td><td>Grant 확보 직후</td><td>ILHedgeHook.sol, ILCalculator.sol Development</td></tr>
+    <tr><td>보안 감사 파트너</td><td>Phase 1 완료 후</td><td>전문 감사 기관 2회 감사</td></tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+<!-- ══════════ 14. GRANT ══════════ -->
+<div style="padding: 2mm 20mm 2mm;">
+<div class="section-label">Section 14</div>
+<h1>Grant Request — Budget and Milestones</h1>
+
+<div class="highlight gold">
+  <strong>Requested Grant: $70,000~140,000 &nbsp;|&nbsp; UFSF + Arbitrum Foundation + Audit 지원금</strong><br>
+  Uniswap Foundation Grant Program — V4 Hook Ecosystem &nbsp;|&nbsp; 신청 조건: Testnet 3개월 데이터 + 1차 감사 보고서
+</div>
+
+<div style="page-break-inside:avoid;">
+<h2>14.1 그랜트 현실적 예상 금액 (Testnet 3개월 기준)</h2>
+<table>
+  <thead><tr><th>그랜트 출처</th><th class="r">예상 금액</th><th>Condition</th></tr></thead>
+  <tbody>
+    <tr><td>UFSF (Uniswap Foundation)</td><td class="r">$50~100K</td><td>V4 Hook, 온체인 IL 정산 로그, 감사 보고서</td></tr>
+    <tr><td>Arbitrum Foundation</td><td class="r">$20~40K</td><td>Arbitrum 배포 우선 약속, 에포크 데이터</td></tr>
+    <tr><td>UFSF Audit 지원금</td><td class="r">$30~60K</td><td>감사 비용 직접 지원 (Development비 별도)</td></tr>
+    <tr><td><strong>합계 예상</strong></td><td class="r"><strong>$70~140K+</strong></td><td>Audit 지원금으로 감사비 자체 커버 가능</td></tr>
+  </tbody>
+</table>
+
+<h2>14.2 그랜트 심사 필수 조건</h2>
+<table>
+  <thead><tr><th>Item</th><th>Details</th></tr></thead>
+  <tbody>
+    <tr><td>에포크별 IL 정산 로그</td><td>온체인 기록 (Sepolia/Unichain)</td></tr>
+    <tr><td>블랙스완 시나리오 재현</td><td>LUNA급 급락 fork 테스트 2~3개</td></tr>
+    <tr><td>감사 보고서</td><td>최소 1차 완료 후 신청</td></tr>
+    <tr><td>깃허브 공개 코드</td><td>오픈소스 (MIT 또는 BUSL)</td></tr>
+    <tr><td>운영 Period</td><td>Testnet 3개월 이상</td></tr>
+  </tbody>
+</table>
+
+<h2>14.3 Grant 마일스톤</h2>
+<table>
+  <thead><tr><th>마일스톤</th><th>Period</th><th>딜리버러블</th></tr></thead>
+  <tbody>
+    <tr><td>M1 — Hook MVP + Testnet 배포</td><td>1~3개월차</td><td>BELTAHook.sol Testnet 배포, 에포크 12회+ 실행, IL 계산 정확도 보고서</td></tr>
+    <tr><td>M2 — 1차 감사 완료 + 그랜트 신청</td><td>4~5개월차</td><td>보안 감사 보고서, 취약점 수정, UFSF/Arbitrum 신청서 제출</td></tr>
+    <tr><td>M3 — Mainnet Pilot 개시</td><td>5개월차~</td><td>Pool $100K 실 운용, 에포크 24회 IL/프리미엄 실측 데이터, VC 피칭 개시</td></tr>
+  </tbody>
+</table>
+
+<h2>14.4 왜 Uniswap Foundation이 펀딩해야 하는가</h2>
+
+<div class="highlight gold" style="margin-bottom:12px;">
+  <strong>핵심 논거 3가지:</strong>
+</div>
+
+<p><strong>① LP Retention — Uniswap의 핵심 과제 직접 해결.</strong> V3 LP의 49.5%가 HODL 대비 손실 상태(학술 연구). IL은 LP 이탈의 1순위 원인이며, 이탈은 TVL 감소 → 슬리피지 증가 → 거래량 감소로 직결된다. BELTA는 LP 순수익을 +4.0%/yr → +7.8%/yr로 거의 2배 개선하여 이 악순환을 차단한다.</p>
+
+<p><strong>② V4 Hook Native — 거버넌스 변경 제로.</strong> 이 프로토콜은 Uniswap V4 Hook만으로 구현되며, 코어 프로토콜 수정이 전혀 필요 없다. V4 Hook 시스템의 가장 실용적인 DeFi 보험 유즈케이스이며, V4 생태계 확장이라는 Foundation의 핵심 미션과 직접 부합한다.</p>
+
+<p><strong>③ 실측 검증 완료.</strong> 실제 ETH 가격 5.1년(2020~2025, COVID/LUNA/FTX/Aug2024 포함)으로 Sliding window Stress Test를 완료하였다. Phase 4에서 T-CAGR +9.3%, IL/수입 0.89x, Senior +7.2%/yr 보호. 이론이 아닌 실측 기반 프로토콜이다.</p>
+
+<hr class="section">
+<p class="disclaimer">본 백서는 정보 제공 및 그랜트 신청 목적으로 작성되었으며 투자 권유가 아닙니다. DeFi 프로토콜 투자에는 스마트 컨트랙트 리스크, 시장 리스크, 규제 리스크가 수반됩니다.<br>
+© 2025 BELTA Labs Pte. Ltd. All rights reserved.</p>
+</div>
+
+</body>
+</html>
+</div>

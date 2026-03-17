@@ -86,6 +86,9 @@ contract FakeLPFlowTest is Test {
     uint256[4] epochSwapVolume;
     uint256[4] rangeLiquidations; // Range Protection 발동 횟수
 
+    // --- DEX Pool State Tracking ----------------------------
+    uint256 swapDayCounter; // 스왑 일차 카운터
+
     // --- Cumulative -----------------------------------------
     uint256 totalPremiumsAll;
     uint256 totalILClaimsAll;
@@ -141,6 +144,7 @@ contract FakeLPFlowTest is Test {
         _runEpoch(2, "SIDEWAYS -0.4% (Sep 2025 ATH Zone)");
         _runEpoch(3, "BEAR -22% (Dec 2025 Selloff)");
 
+        _printDEXPoolReport();
         _printLPPerspective();
         _printProtocolPerspective();
         _printRangeProtectionReport();
@@ -178,12 +182,12 @@ contract FakeLPFlowTest is Test {
         _centerRanges(currentTick);
 
         // Fund all participants
-        _fundAccount(lp1, 100 ether, 500_000e6);
-        _fundAccount(lp2, 50 ether, 200_000e6);
-        _fundAccount(lp3, 10 ether, 50_000e6);
-        _fundAccount(swapper, 500 ether, 1_000_000e6);
-        _fundAccount(address(modifyLiqRouter), 500 ether, 1_000_000e6);
-        _fundAccount(address(swapRouter), 500 ether, 1_000_000e6);
+        _fundAccount(lp1, 10_000 ether, 20_000_000e6);
+        _fundAccount(lp2, 5_000 ether, 10_000_000e6);
+        _fundAccount(lp3, 1_000 ether, 2_000_000e6);
+        _fundAccount(swapper, 50_000 ether, 100_000_000e6);
+        _fundAccount(address(modifyLiqRouter), 50_000 ether, 100_000_000e6);
+        _fundAccount(address(swapRouter), 50_000 ether, 100_000_000e6);
 
         vm.prank(swapper);
         weth.approve(address(swapRouter), type(uint256).max);
@@ -220,12 +224,15 @@ contract FakeLPFlowTest is Test {
         priceAtStart[idx] = sqrtBefore;
         _centerRanges(currentTick);
 
-        // 2. All LPs add liquidity with BELTA opt-in
+        // 2. Reset swap day counter for this epoch
+        swapDayCounter = 0;
+
+        // All LPs add liquidity with BELTA opt-in
         bytes memory optIn = abi.encodePacked(bytes1(0x01));
-        _approveAndAddLiquidity(lp1, lp1Lower, lp1Upper, 100_000, optIn);
-        _approveAndAddLiquidity(lp2, lp2Lower, lp2Upper, 50_000, optIn);
-        _approveAndAddLiquidity(lp3, lp3Lower, lp3Upper, 10_000, optIn);
-        console.log("  [+] 3 LPs added liquidity (160K total - thin pool for price sensitivity)");
+        _approveAndAddLiquidity(lp1, lp1Lower, lp1Upper, 500_000_000, optIn);
+        _approveAndAddLiquidity(lp2, lp2Lower, lp2Upper, 200_000_000, optIn);
+        _approveAndAddLiquidity(lp3, lp3Lower, lp3Upper, 50_000_000, optIn);
+        console.log("  [+] 3 LPs added liquidity (750M + 100M pool base = 850M total)");
 
         // 3. Execute 7 daily swaps (real ETH price pattern)
         uint256 volume = _executeRealSwaps(idx);
@@ -311,53 +318,53 @@ contract FakeLPFlowTest is Test {
         //   zeroForOne=true with USDC   → not possible (token1 is USDC, selling token0=WETH)
         // Use helper: _swapUSDC(true=up, false=down, usdc amount)
 
-        // Liquidity = 160K total. 4x from base calibration.
-        // Qualitative match to real ETH patterns, triggers Range Protection on crashes.
+        // Liquidity = ~850M total (750M test + 100M pool base).
+        // Scaled: ~50K-300K USDC per swap for meaningful price moves.
         // LP3 ±180 ticks (~180bps), LP2 ±600 ticks (~600bps), LP1 ±1200 ticks (~1200bps)
 
         if (epochIdx == 0) {
             // ── BULL: May 2025 Rally (+12.2%) ──
-            _swapDirection(true, 12e6);    // Day 1: buy
-            _swapDirection(true, 8e6);     // Day 2: buy
-            _swapDirection(false, 4e6);    // Day 3: pullback
-            _swapDirection(true, 16e6);    // Day 4: big buy
-            _swapDirection(true, 8e6);     // Day 5: buy
-            _swapDirection(true, 12e6);    // Day 6: buy
-            _swapDirection(true, 8e6);     // Day 7: buy
-            volumeUSDC = 68e6;
+            _swapDirection(true, 60_000e6);     // Day 1: buy
+            _swapDirection(true, 40_000e6);     // Day 2: buy
+            _swapDirection(false, 20_000e6);    // Day 3: pullback
+            _swapDirection(true, 80_000e6);     // Day 4: big buy
+            _swapDirection(true, 40_000e6);     // Day 5: buy
+            _swapDirection(true, 60_000e6);     // Day 6: buy
+            _swapDirection(true, 40_000e6);     // Day 7: buy
+            volumeUSDC = 340_000e6;
 
         } else if (epochIdx == 1) {
             // ── CRASH: Feb 2025 Trump Tariff (-34%) ──
-            _swapDirection(false, 20e6);   // Day 1: -5% sell
-            _swapDirection(false, 60e6);   // Day 2: -15% PANIC sell
-            _swapDirection(false, 32e6);   // Day 3: -8% continued
-            _swapDirection(true, 12e6);    // Day 4: +3% dead cat bounce
-            _swapDirection(false, 20e6);   // Day 5: -5% resume
-            _swapDirection(false, 8e6);    // Day 6: -2% bleed
-            _swapDirection(false, 24e6);   // Day 7: -6% final dump
-            volumeUSDC = 176e6;
+            _swapDirection(false, 100_000e6);   // Day 1: -5% sell
+            _swapDirection(false, 300_000e6);   // Day 2: -15% PANIC sell
+            _swapDirection(false, 160_000e6);   // Day 3: -8% continued
+            _swapDirection(true, 60_000e6);     // Day 4: +3% dead cat bounce
+            _swapDirection(false, 100_000e6);   // Day 5: -5% resume
+            _swapDirection(false, 40_000e6);    // Day 6: -2% bleed
+            _swapDirection(false, 120_000e6);   // Day 7: -6% final dump
+            volumeUSDC = 880_000e6;
 
         } else if (epochIdx == 2) {
             // ── SIDEWAYS: Sep 2025 ATH Zone (-0.4%) ──
-            _swapDirection(true, 4e6);     // Day 1: +1%
-            _swapDirection(false, 8e6);    // Day 2: -2%
-            _swapDirection(true, 8e6);     // Day 3: +1.5%
-            _swapDirection(false, 4e6);    // Day 4: -0.5%
-            _swapDirection(true, 4e6);     // Day 5: +0.5%
-            _swapDirection(false, 4e6);    // Day 6: -1%
-            _swapDirection(true, 4e6);     // Day 7: +1%
-            volumeUSDC = 36e6;
+            _swapDirection(true, 20_000e6);     // Day 1: +1%
+            _swapDirection(false, 40_000e6);    // Day 2: -2%
+            _swapDirection(true, 40_000e6);     // Day 3: +1.5%
+            _swapDirection(false, 20_000e6);    // Day 4: -0.5%
+            _swapDirection(true, 20_000e6);     // Day 5: +0.5%
+            _swapDirection(false, 20_000e6);    // Day 6: -1%
+            _swapDirection(true, 20_000e6);     // Day 7: +1%
+            volumeUSDC = 180_000e6;
 
         } else {
             // ── BEAR: Dec 2025 Selloff (-22%) ──
-            _swapDirection(false, 12e6);   // Day 1: -3%
-            _swapDirection(false, 20e6);   // Day 2: -5%
-            _swapDirection(true, 8e6);     // Day 3: +2% bounce
-            _swapDirection(false, 32e6);   // Day 4: -8% crash
-            _swapDirection(false, 12e6);   // Day 5: -3%
-            _swapDirection(false, 8e6);    // Day 6: -2%
-            _swapDirection(false, 12e6);   // Day 7: -3%
-            volumeUSDC = 104e6;
+            _swapDirection(false, 60_000e6);    // Day 1: -3%
+            _swapDirection(false, 100_000e6);   // Day 2: -5%
+            _swapDirection(true, 40_000e6);     // Day 3: +2% bounce
+            _swapDirection(false, 160_000e6);   // Day 4: -8% crash
+            _swapDirection(false, 60_000e6);    // Day 5: -3%
+            _swapDirection(false, 40_000e6);    // Day 6: -2%
+            _swapDirection(false, 60_000e6);    // Day 7: -3%
+            volumeUSDC = 520_000e6;
         }
     }
 
@@ -395,6 +402,45 @@ contract FakeLPFlowTest is Test {
     // =========================================================
     //  RESULTS
     // =========================================================
+
+    function _printDEXPoolReport() internal view {
+        console.log("");
+        console.log("================================================================");
+        console.log("  DEX POOL STATE CHANGES (Uniswap V4)");
+        console.log("================================================================");
+
+        for (uint256 i = 0; i < 4; i++) {
+            uint256 startSqrt = uint256(priceAtStart[i]);
+            uint256 endSqrt = uint256(priceAtEnd[i]);
+
+            console.log("");
+            console.log("  Epoch", i + 1, ":", _epochName(i));
+            console.log("    sqrtPriceX96 start:", startSqrt);
+            console.log("    sqrtPriceX96 end:  ", endSqrt);
+
+            // Price change via sqrtPrice ratio
+            if (startSqrt > 0) {
+                uint256 sqrtRatio = endSqrt * 10000 / startSqrt;
+                uint256 priceRatioBps = sqrtRatio * sqrtRatio / 10000;
+                if (priceRatioBps >= 10000) {
+                    console.log("    Price Impact: +", priceRatioBps - 10000, "bps");
+                } else {
+                    console.log("    Price Impact: -", 10000 - priceRatioBps, "bps");
+                }
+            }
+
+            console.log("    Swap Volume:", epochSwapVolume[i] / 1e6, "USDC");
+            console.log("    Est. Fees (0.3%):", epochSwapVolume[i] * 30 / 10000 / 1e6, "USDC");
+        }
+
+        // Final pool reserves
+        uint256 finalWeth = weth.balanceOf(address(poolManager));
+        uint256 finalUsdc = usdc.balanceOf(address(poolManager));
+        console.log("");
+        console.log("  -- Final Pool Reserves -----------------");
+        console.log("  WETH in pool:", finalWeth);
+        console.log("  USDC in pool:", finalUsdc / 1e6, "USDC");
+    }
 
     function _printLPPerspective() internal view {
         console.log("");
@@ -536,16 +582,11 @@ contract FakeLPFlowTest is Test {
     //  HELPERS
     // =========================================================
 
-    /// @notice Swap in a direction using USDC amount
+    /// @notice Swap in a direction using USDC amount + log DEX pool state
     /// @param priceUp true = buy WETH with USDC (ETH price UP), false = sell WETH for USDC (ETH price DOWN)
     /// @param usdcAmount amount of USDC (6 decimals)
     function _swapDirection(bool priceUp, uint256 usdcAmount) internal {
-        // priceUp (buy WETH): zeroForOne=false, sell USDC(token1) exact input
-        // priceDown (sell WETH): zeroForOne=true — but we need WETH input
-        //   Approximate: at ~$2000/ETH, X USDC ≈ X/2000 ETH = X * 1e12 / 2000 wei
-        //   But safer: use USDC as exact-output for sells
         if (priceUp) {
-            // zeroForOne=false: exact input USDC → receive WETH
             vm.prank(swapper);
             swapRouter.swap(
                 key,
@@ -558,8 +599,6 @@ contract FakeLPFlowTest is Test {
                 ""
             );
         } else {
-            // zeroForOne=true: exact output USDC → pay WETH
-            // amountSpecified > 0 means exact output
             vm.prank(swapper);
             swapRouter.swap(
                 key,
@@ -572,6 +611,25 @@ contract FakeLPFlowTest is Test {
                 ""
             );
         }
+
+        // --- DEX Pool State Log ---
+        swapDayCounter++;
+        (uint160 sqrtP, int24 tick, uint24 protocolFee, uint24 lpFee) = poolManager.getSlot0(poolId);
+        uint128 activeLiq = poolManager.getLiquidity(poolId);
+        uint256 wethBal = weth.balanceOf(address(poolManager));
+        uint256 usdcBal = usdc.balanceOf(address(poolManager));
+
+        // sqrtPrice → approx ETH price: price = (sqrtP / 2^96)^2 * 1e12 (USDC 6dec / WETH 18dec)
+        // Simplified: show tick and reserves instead of complex price math
+        console.log("    [DEX] Day", swapDayCounter);
+        if (priceUp) {
+            console.log("      Swap: BUY WETH", usdcAmount / 1e6, "USDC in");
+        } else {
+            console.log("      Swap: SELL WETH", usdcAmount / 1e6, "USDC out");
+        }
+        console.log("      Tick:", _abs24(tick), tick >= 0 ? "(+)" : "(-)");
+        console.log("      Active Liquidity:", uint256(activeLiq));
+        console.log("      Pool WETH:", wethBal, "/ USDC:", usdcBal / 1e6);
     }
 
     function _approveAndAddLiquidity(

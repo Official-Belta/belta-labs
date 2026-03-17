@@ -239,15 +239,19 @@ contract BELTAHook is IHooks {
         uint256 coveredIL = ilBps > COVERAGE_CAP_BPS ? COVERAGE_CAP_BPS : ilBps;
 
         // Accrue premium (accounting only — no token transfer in hook)
+        // Premium = 12% of fee income, converted to USDC denomination
         uint256 premiumRate = _getDynamicPremiumRate(poolId);
-        uint256 premium = _absDelta(feesAccrued) * premiumRate / BPS;
+        uint256 feesUSDC = _feesToUSDC(feesAccrued, sqrtPriceX96);
+        uint256 premium = feesUSDC * premiumRate / BPS;
         pos.premiumOwed += premium;
         accumulatedPremiums[poolId] += premium;
         emit PremiumAccrued(poolId, lp, premium);
 
         // Calculate IL payout (accounting only)
+        // Payout = IL% * position value in USDC
         if (coveredIL > 0) {
-            uint256 payout = uint256(pos.liquidity) * coveredIL / BPS;
+            uint256 posValue = _positionValueUSDC(pos.liquidity, sqrtPriceX96, pos.tickLower, pos.tickUpper);
+            uint256 payout = posValue * coveredIL / BPS;
             pos.ilClaimable += payout;
             pendingILClaims[poolId] += payout;
             emit ILCalculated(poolId, lp, ilBps, payout);
@@ -468,7 +472,8 @@ contract BELTAHook is IHooks {
         uint256 coveredIL = ilBps > COVERAGE_CAP_BPS ? COVERAGE_CAP_BPS : ilBps;
 
         if (coveredIL > 0) {
-            uint256 payout = uint256(pos.liquidity) * coveredIL / BPS;
+            uint256 posValue = _positionValueUSDC(pos.liquidity, sqrtPriceX96, pos.tickLower, pos.tickUpper);
+            uint256 payout = posValue * coveredIL / BPS;
             pos.ilClaimable += payout;
             pendingILClaims[poolId] += payout;
             emit ILCalculated(poolId, lp, ilBps, payout);
@@ -528,11 +533,62 @@ contract BELTAHook is IHooks {
         return hookData[0] == 0x01;
     }
 
-    function _absDelta(BalanceDelta delta) internal pure returns (uint256) {
-        int128 a0 = delta.amount0();
-        int128 a1 = delta.amount1();
-        uint256 abs0 = a0 >= 0 ? uint256(int256(a0)) : uint256(int256(-a0));
-        uint256 abs1 = a1 >= 0 ? uint256(int256(a1)) : uint256(int256(-a1));
-        return abs0 + abs1;
+    /// @notice Convert fee BalanceDelta to USDC-denominated value
+    /// @dev token0 = WETH (18 dec), token1 = USDC (6 dec)
+    ///      Uses pool sqrtPriceX96 to convert WETH fees to USDC equivalent
+    function _feesToUSDC(BalanceDelta fees, uint160 sqrtPriceX96) internal pure returns (uint256) {
+        int128 a0 = fees.amount0(); // WETH fees (18 dec)
+        int128 a1 = fees.amount1(); // USDC fees (6 dec)
+
+        uint256 usdcFees = a1 >= 0 ? uint256(int256(a1)) : uint256(int256(-a1));
+        uint256 wethFees = a0 >= 0 ? uint256(int256(a0)) : uint256(int256(-a0));
+
+        if (wethFees > 0 && sqrtPriceX96 > 0) {
+            // price(token1/token0) = sqrtPriceX96^2 / 2^192
+            // usdcValue = wethAmount * price
+            // Split to avoid overflow: (weth * sqrtP >> 96) * sqrtP >> 96
+            uint256 wethInUSDC = (wethFees * uint256(sqrtPriceX96) >> 96) * uint256(sqrtPriceX96) >> 96;
+            usdcFees += wethInUSDC;
+        }
+
+        return usdcFees;
+    }
+
+    /// @notice Calculate LP position value in USDC (token1) terms
+    /// @dev Converts Uniswap V4 abstract liquidity units to approximate USDC value
+    ///      token0 = WETH (18 dec), token1 = USDC (6 dec)
+    ///      Uses: value = amount1 + amount0_in_usdc
+    ///            amount1 = L * (sqrtP - sqrtPa) / 2^96
+    ///            amount0_usdc = L * (sqrtPb - sqrtP) * sqrtP / (sqrtPb * 2^96)
+    function _positionValueUSDC(
+        uint128 liquidity,
+        uint160 sqrtPriceX96,
+        int24 tickLower,
+        int24 tickUpper
+    ) internal pure returns (uint256) {
+        uint160 sqrtPa = TickMath.getSqrtPriceAtTick(tickLower);
+        uint160 sqrtPb = TickMath.getSqrtPriceAtTick(tickUpper);
+        uint160 sqrtP = sqrtPriceX96;
+
+        // Clamp price to range
+        if (sqrtP < sqrtPa) sqrtP = sqrtPa;
+        if (sqrtP > sqrtPb) sqrtP = sqrtPb;
+
+        uint256 L = uint256(liquidity);
+
+        // Token1 (USDC) component: L * (sqrtP - sqrtPa) / 2^96
+        uint256 amount1 = L * (uint256(sqrtP) - uint256(sqrtPa)) >> 96;
+
+        // Token0 (WETH) component converted to USDC:
+        // amount0 = L * (sqrtPb - sqrtP) / (sqrtP * sqrtPb / 2^96)
+        // amount0_usdc = amount0 * sqrtP^2 / 2^192
+        //              = L * (sqrtPb - sqrtP) * sqrtP / (sqrtPb * 2^96)
+        uint256 amount0USDC = 0;
+        if (sqrtP < sqrtPb) {
+            amount0USDC = L * (uint256(sqrtPb) - uint256(sqrtP)) / uint256(sqrtPb);
+            amount0USDC = amount0USDC * uint256(sqrtP) >> 96;
+        }
+
+        return amount1 + amount0USDC;
     }
 }

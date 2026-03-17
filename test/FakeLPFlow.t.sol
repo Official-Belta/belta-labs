@@ -290,9 +290,9 @@ contract FakeLPFlowTest is Test {
         epochPoolTVL[idx] = pool.totalAssets();
 
         console.log("  ----------------------------------------");
-        console.log("  Premiums:     ", epochPremiums[idx]);
-        console.log("  IL Claims:    ", epochILClaims[idx]);
-        _logNetIncome(epochPremiums[idx], epochILClaims[idx]);
+        console.log("  Premiums:     ", epochPremiums[idx] / 1e6, "USDC");
+        console.log("  IL Claims:    ", epochILClaims[idx] / 1e6, "USDC");
+        _logNetIncomeUSDC(epochPremiums[idx], epochILClaims[idx]);
         console.log("  Pool TVL:     ", epochPoolTVL[idx] / 1e6, "USDC");
     }
 
@@ -460,8 +460,8 @@ contract FakeLPFlowTest is Test {
             console.log("  Epoch", i + 1, ":", _epochName(i));
             console.log("    Swap Volume:        ", epochSwapVolume[i] / 1e6, "USDC");
             console.log("    Est. Fee Income:    ", feeEst / 1e6, "USDC");
-            console.log("    BELTA Premium Owed: ", epochPremiums[i]);
-            console.log("    BELTA IL Payout:    ", epochILClaims[i]);
+            console.log("    BELTA Premium Owed: ", epochPremiums[i] / 1e6, "USDC");
+            console.log("    BELTA IL Payout:    ", epochILClaims[i] / 1e6, "USDC");
             console.log("    Range Liquidations: ", rangeLiquidations[i]);
         }
 
@@ -469,14 +469,14 @@ contract FakeLPFlowTest is Test {
         console.log("  -- 4-Epoch Totals (28 real days) -------");
         console.log("  Total Swap Volume:    ", totalVolume / 1e6, "USDC");
         console.log("  Total Fee Income:     ", totalFees / 1e6, "USDC (est. 0.3%)");
-        console.log("  Total BELTA Premiums: ", totalPremiumsAll);
-        console.log("  Total BELTA Payouts:  ", totalILClaimsAll);
+        console.log("  Total BELTA Premiums: ", totalPremiumsAll / 1e6, "USDC");
+        console.log("  Total BELTA Payouts:  ", totalILClaimsAll / 1e6, "USDC");
 
         console.log("");
         if (totalILClaimsAll >= totalPremiumsAll) {
-            console.log("  >> LP is BETTER OFF with BELTA (+", totalILClaimsAll - totalPremiumsAll, ") <<");
+            console.log("  >> LP is BETTER OFF with BELTA (+", (totalILClaimsAll - totalPremiumsAll) / 1e6, "USDC) <<");
         } else {
-            console.log("  >> Insurance cost:", totalPremiumsAll - totalILClaimsAll, "(low IL period) <<");
+            console.log("  >> Insurance cost:", (totalPremiumsAll - totalILClaimsAll) / 1e6, "USDC (low IL period) <<");
         }
     }
 
@@ -489,25 +489,25 @@ contract FakeLPFlowTest is Test {
         for (uint256 i = 0; i < 4; i++) {
             console.log("");
             console.log("  Epoch", i + 1, ":", _epochName(i));
-            console.log("    Premiums In:   ", epochPremiums[i]);
-            console.log("    IL Claims Out: ", epochILClaims[i]);
-            _logNetIncome(epochPremiums[i], epochILClaims[i]);
+            console.log("    Premiums In:   ", epochPremiums[i] / 1e6, "USDC");
+            console.log("    IL Claims Out: ", epochILClaims[i] / 1e6, "USDC");
+            _logNetIncomeUSDC(epochPremiums[i], epochILClaims[i]);
             console.log("    Pool TVL:      ", epochPoolTVL[i] / 1e6, "USDC");
         }
 
         console.log("");
         console.log("  -- Aggregate ---------------------------");
-        console.log("  Total Premiums:  ", totalPremiumsAll);
-        console.log("  Total Claims:    ", totalILClaimsAll);
+        console.log("  Total Premiums:  ", totalPremiumsAll / 1e6, "USDC");
+        console.log("  Total Claims:    ", totalILClaimsAll / 1e6, "USDC");
 
         if (totalPremiumsAll >= totalILClaimsAll) {
-            console.log("  Net Income:      +", totalPremiumsAll - totalILClaimsAll);
+            console.log("  Net Income:      +", (totalPremiumsAll - totalILClaimsAll) / 1e6, "USDC");
             console.log("  Status: PROFITABLE");
             if (totalPremiumsAll > 0) {
                 console.log("  Loss Ratio:      ", totalILClaimsAll * 100 / totalPremiumsAll, "%");
             }
         } else {
-            console.log("  Net Deficit:     -", totalILClaimsAll - totalPremiumsAll);
+            console.log("  Net Deficit:     -", (totalILClaimsAll - totalPremiumsAll) / 1e6, "USDC");
             console.log("  Status: DEFICIT (Treasury absorbs)");
         }
 
@@ -565,12 +565,12 @@ contract FakeLPFlowTest is Test {
 
         console.log("  LP Results:");
         console.log("    Fee Income:         ", totalFees / 1e6, "USDC");
-        console.log("    Premium Paid:       ", totalPremiumsAll);
-        console.log("    IL Coverage Rcvd:   ", totalILClaimsAll);
+        console.log("    Premium Paid:       ", totalPremiumsAll / 1e6, "USDC");
+        console.log("    IL Coverage Rcvd:   ", totalILClaimsAll / 1e6, "USDC");
         console.log("");
         console.log("  Protocol Results:");
-        console.log("    Premiums Collected: ", totalPremiumsAll);
-        console.log("    Claims Paid:       ", totalILClaimsAll);
+        console.log("    Premiums Collected: ", totalPremiumsAll / 1e6, "USDC");
+        console.log("    Claims Paid:       ", totalILClaimsAll / 1e6, "USDC");
         console.log("    Final Pool TVL:    ", epochPoolTVL[3] / 1e6, "USDC");
         console.log("");
         console.log("================================================================");
@@ -717,11 +717,11 @@ contract FakeLPFlowTest is Test {
         }
     }
 
-    function _logNetIncome(uint256 premiums, uint256 claims) internal pure {
+    function _logNetIncomeUSDC(uint256 premiums, uint256 claims) internal pure {
         if (premiums >= claims) {
-            console.log("    Net Income:    +", premiums - claims);
+            console.log("    Net Income:    +", (premiums - claims) / 1e6, "USDC");
         } else {
-            console.log("    Net Loss:      -", claims - premiums);
+            console.log("    Net Loss:      -", (claims - premiums) / 1e6, "USDC");
         }
     }
 

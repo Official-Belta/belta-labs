@@ -200,4 +200,62 @@ A. "IL 리스크 때문에 못 했던 좁은 범위 / 고변동성 페어 LP 전
 
 ---
 
+---
+
+## 멀티 에이전트 팀 운영 (Multi-Terminal Workflow)
+
+이 프로젝트는 **5개 터미널**에서 Claude Code를 병렬 실행하여 팀처럼 운영합니다.
+
+### 팀 구성
+
+| 터미널 | 역할 | 담당 영역 | 모델 |
+|---|---|---|---|
+| 1 | 스마트컨트랙트 개발자 | `src/`, `test/`, `script/` | Opus |
+| 2 | 마케팅 전략가 | `docs/` (백서 제외), 홈페이지 콘텐츠 | Sonnet |
+| 3 | 대시보드 엔지니어 | `frontend/` | Sonnet |
+| 4 | 전략 기획 팀장 | 읽기 전용 — 전략 설계 후 실행팀에 전달 | Opus |
+| 5 | 비서 (백서 작성) | `docs/whitepaper*.html` 전용 | Sonnet |
+
+### 컨텍스트 공유 규칙
+
+1. **작업 시작/완료 시** 자기 팀 로그 파일을 업데이트한다 (`.claude/team-context/`)
+2. **다른 팀에 영향 주는 변경** (ABI 변경, 파라미터 변경 등)은 "다른 팀에 알릴 사항" 섹션에 기록한다
+3. **팀 간 요청**은 `status.md`의 요청사항 테이블에 기록한다
+4. **자기 담당 영역 외 파일은 수정하지 않는다**
+
+### 팀 컨텍스트 파일
+
+```
+.claude/team-context/
+├── status.md        # 전체 진행 상황 + 팀 간 요청
+├── contracts.md     # 스마트컨트랙트팀 로그
+├── marketing.md     # 마케팅팀 로그
+├── dashboard.md     # 대시보드팀 로그
+├── strategy.md      # 전략팀 로그
+└── secretary.md     # 비서 (백서 작성) 로그
+```
+
+### 실행 방법
+
+각 터미널에서 런처 스크립트를 실행합니다:
+
+```bash
+# 터미널 1
+./team/run-contracts.sh
+
+# 터미널 2
+./team/run-marketing.sh
+
+# 터미널 3
+./team/run-dashboard.sh
+
+# 터미널 4
+./team/run-strategy.sh
+
+# 터미널 5
+./team/run-secretary.sh
+```
+
+---
+
 *최종 업데이트: 2026년 3월 | Claude.ai ↔ Claude Code 연동용*
